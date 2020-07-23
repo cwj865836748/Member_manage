@@ -53,117 +53,17 @@
           </div>
         </div>
       </el-col>
-
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="project" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.projectCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.projectCount" :duration="800" class="card-panel-num"/>
-          </div>
-        </div>
+    </el-row>
+    <el-row :gutter="40">
+       <el-col :xs="24" :sm="24" :lg="12">
+         <Pie ref="Pie"/>
+       </el-col>
+      <el-col :xs="24" :sm="24" :lg="12">
+        <Bullet ref="Bullet"/>
       </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="sold-unit" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.soldUnitCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.soldUnitCount" :duration="1000" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="message" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.messageCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.messageCount" :duration="1200" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="today-cancel-unit" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.todayCancelUnitCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.todayCancelUnitCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="extension" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.extensionCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.extensionCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="withdrawal-pending" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.withdrawalPendingCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.withdrawalPendingCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="commission-progress" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.commissionProgressCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.commissionProgressCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="recharge-pending" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.rechargePendingCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.rechargePendingCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
+    </el-row>
+    <el-row>
+    <City ref="City"/>
     </el-row>
   </div>
 </template>
@@ -171,11 +71,13 @@
 <script>
   import CountTo from 'vue-count-to'
   import {Common} from "@/api";
-
+  import Pie from './pie';
+  import City from './city';
+  import Bullet from './bullet';
   export default {
     name: 'Dashboard',
     components: {
-      CountTo
+      CountTo,Pie,Bullet,City
     },
     data() {
       return {
@@ -183,21 +85,21 @@
           agentCount: 0,
           departmentStaffCount: 0,
           ownerCount: 0,
-          outsiderCount: 0,
-          projectCount: 0,
-          soldUnitCount: 0,
-          messageCount: 0,
-          todayCancelUnitCount: 0,
-          extensionCount: 0,
-          withdrawalPendingCount: 0,
-          commissionProgressCount: 0,
-          rechargePendingCount: 0,
+          outsiderCount: 0
         },
 
       }
     },
     created() {
-      this.getStatistics()
+      // this.getStatistics()
+      console.log(this.$route)
+    },
+    mounted() {
+      window.onresize =  ()=> {
+        this.$refs.Pie.pieInit.resize();
+        this.$refs.Bullet.histogramInit.resize();
+        this.$refs.City.cityInit.resize()
+      }
     },
     methods: {
       getStatistics() {

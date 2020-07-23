@@ -1,6 +1,6 @@
-import {Admin} from '@/api'
+import {Common} from '@/api'
 import {getToken, setToken, removeToken} from '@/utils/auth'
-import router, {resetRouter} from '@/router'
+import router, {resetRouter,asyncRoutes} from '@/router'
 
 const state = {
   token: getToken(),
@@ -11,6 +11,7 @@ const state = {
   roles: [],
   permissions: [],
   staffId: '',
+  userInfo:{}
 }
 
 const mutations = {
@@ -38,46 +39,21 @@ const mutations = {
   SET_SHOW_BID_PRICE: (state, showBidPrice) => {
     state.showBidPrice = showBidPrice
   },
+  SET_USERINFO: (state, userInfo) => {
+    state.userInfo = userInfo
+  },
 }
 
 const actions = {
   // user login
   login({commit}, userInfo) {
-    const {username, password} = userInfo
+    const {username, password,captcha} = userInfo
     return new Promise((resolve, reject) => {
-      Admin.logIn({username: username.trim(), password: password}).then(response => {
-        const {data} = response
-
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  // get user info
-  getInfo({commit}) {
-    return new Promise((resolve, reject) => {
-      Admin.getInfo().then(response => {
-        const {user} = response
-        // 默认头像 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
-        user.avatar = require('@/assets/images/logo.png')
-
-        if (!user) {
-          reject('Verification failed, please Login again.')
-        }
-
-        const {username, avatar, remark, staffId, showBidPrice} = user
-
-        commit('SET_NAME', username) // 用户名
-        commit('SET_AVATAR', avatar)  //头像
-        commit('SET_INTRODUCTION', remark) // 备注
-        commit('SET_STAFFID', staffId) // 部门人员ID
-        commit('SET_SHOW_BID_PRICE', showBidPrice) // 是否展示承包价
-        // commit('SET_SHOW_BID_PRICE', true) // 是否展示承包价
-
+      Common.logIn({username: username.trim(), password,captcha}).then(response => {
+        const {result} = response
+        commit('SET_TOKEN', result.token)
+        commit('SET_USERINFO', result.userInfo)
+        setToken(result.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -87,29 +63,30 @@ const actions = {
 
   // get Roles
   getMenu({commit}) {
-    return new Promise((resolve, reject) => {
-      Admin.getMenu().then(response => {
-        const {data} = response
-
-        commit('SET_ROLES', data.menuList)
-        commit('SET_PERMISSIONS', data.permissions)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
+    return new Promise(resolve => {
+      // let accessedRoutes = addDynamicRoutes(roles)
+      //添加上错误域名
+      // accessedRoutes.push({path: '*', redirect: '/404', hidden: true})
+      const accessedRoutes = asyncRoutes
+      commit('SET_ROLES', accessedRoutes)
+      resolve(accessedRoutes)
     })
   },
 
   // user logout
   logout({commit, state, dispatch}) {
     return new Promise((resolve, reject) => {
-      commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
-      commit('SET_PERMISSIONS', [])
-      removeToken()
-      resetRouter()
-      dispatch('tagsView/delAllViews', null, {root: true})
-      resolve()
+      Common.logout().then(() => {
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        commit('SET_PERMISSIONS', [])
+        resetRouter()
+        dispatch('tagsView/delAllViews', null, {root: true})
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+
     })
   },
 

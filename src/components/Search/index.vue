@@ -21,6 +21,7 @@
             v-model="item.value"
             :placeholder="$t('common.pleaseEnter')"
             clearable
+            :disabled="(gridDetail&&!gridDetail.gridName)||false"
           />
         </el-form-item>
 
@@ -98,14 +99,51 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item v-if="item.type==6" :label="item.label">
+          <el-cascader
+            style="width: 260px"
+            v-model="item.value"
+            :options="areaOptions"
+            :props="defaultProps"
+            :disabled="item.disabled||false"
+            ></el-cascader>
+        </el-form-item>
+        <el-form-item v-if="item.type==7" :label="item.label">
+          <el-select
+            v-model="item.value"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词"
+            :remote-method="remoteMethod"
+            :loading="selectLoading">
+            <el-option
+              v-for="item in gridPersonOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="item.type==8" :label="item.label">
+          <el-date-picker
+            v-model="item.value"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd"
+          >
+          </el-date-picker>
+        </el-form-item>
       </template>
 
       <el-form-item>
-        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleSearch">
-          {{ $t('common.search') }}
+        <el-button :disabled="(gridDetail&&!gridDetail.gridName)||false" class="filter-item" type="primary" @click="handleSearch">
+          查询
         </el-button>
-        <el-button class="filter-item" type="danger" icon="el-icon-refresh" @click="handleReset">
-          {{ $t('common.reset') }}
+        <el-button :disabled="(gridDetail&&!gridDetail.gridName)||false" class="filter-item" @click="handleReset">
+          重置
         </el-button>
       </el-form-item>
     </el-form>
@@ -114,18 +152,40 @@
 
 <script>
   import {formatDate} from '@/config/base'
+  import {houseApi} from '@/api'
 
   export default {
     props: {
       fields: {
         type: Array,
         default: null
+      },
+      gridDetail:{
+        type: Object,
+        default: null
+      },
+      firstDisable:{
+        type: Boolean,
+        default: false
       }
     },
     data() {
       return {
-        formatDate
+        formatDate,
+        defaultProps: {
+          children: 'areaList',
+          label: 'name',
+          value:'id',
+          checkStrictly:this.firstDisable
+        },
+        selectLoading:false,
+        gridPersonOptions:[],
+        areaOptions:[],
+        num:0
       }
+    },
+    created() {
+      this.getTree()
     },
     mounted() {
     },
@@ -143,12 +203,58 @@
         this.fields.map(v => {
           if (v.type == 5) {
             v.value = []
-          } else {
+          }else if(v.disabled){
+          }
+          else {
             v.value = ''
           }
         })
         this.$emit('change')
-      }
+      },
+      remoteMethod(query){
+        this.selectLoading = true;
+        const list = []
+        houseApi.getAllRole(query).then(re=>{
+          this.selectLoading = false;
+          re.result&&re.result.forEach(item=>{
+            let obj ={
+              label:item.name,
+              value:item.id
+            }
+            list.push(obj)
+          })
+          this.gridPersonOptions=list
+        })
+      },
+      //获取树
+      async getTree(){
+        const type = this.fields.some(item=> item.type === 6)
+        if (!type){
+          return
+        }
+        const {code,result} = await houseApi.getAreaList()
+        if (code===200){
+          this.areaOptions=this.getTreeData(result)
+          this.$emit('getArea',this.areaOptions)
+        }
+      },
+      getTreeData(data){
+        // 循环遍历json数据
+        for(var i=0;i<data.length;i++){
+          if(this.firstDisable&&this.num===0){
+            data[i].disabled=true
+            this.num++
+          }
+          if(data[i].areaList&&data[i].areaList.length<1){
+            // children若为空数组，则将children设为undefined
+            data[i].areaList=undefined;
+          }else {
+            // children若不为空数组，则继续 递归调用 本方法
+            this.getTreeData(data[i].areaList);
+          }
+        }
+        return data;
+      },
     }
   }
 </script>

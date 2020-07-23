@@ -96,10 +96,10 @@ const mutations = {
 const actions = {
   generateRoutes({commit}, roles) {
     return new Promise(resolve => {
-      // let accessedRoutes = addDynamicRoutes(roles)
+      let accessedRoutes = roles
       //添加上错误域名
       // accessedRoutes.push({path: '*', redirect: '/404', hidden: true})
-      const accessedRoutes = asyncRoutes
+      // const accessedRoutes = asyncRoutes
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

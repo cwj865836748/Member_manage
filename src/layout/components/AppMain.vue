@@ -23,12 +23,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  $bg:#F0F2F5;
 .app-main {
   /* 50= navbar  50  */
   min-height: calc(100vh - 50px);
   width: 100%;
   position: relative;
   overflow: hidden;
+  background:$bg ;
 }
 
 .fixed-header+.app-main {

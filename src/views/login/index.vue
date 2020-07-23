@@ -11,7 +11,7 @@
 
       <div class="title-container">
         <h3 class="title">
-          {{ $t('login.title') }}
+          同安会员管理系统
         </h3>
 <!--        <lang-select class="set-language"/>-->
       </div>
@@ -23,7 +23,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          :placeholder="$t('login.username')"
+          placeholder="请输入账号"
           name="username"
           type="text"
           tabindex="1"
@@ -55,6 +55,21 @@
         </el-form-item>
       </el-tooltip>
 
+      <el-form-item prop="captcha" style="border:none;background: transparent" >
+        <el-input
+          ref="captcha"
+          v-model="loginForm.captcha"
+          placeholder="验证码"
+          name="captcha"
+          type="text"
+          tabindex="3"
+          autocomplete="off"
+          style="width:65%;background: rgba(0,0,0,0.1)"
+        />
+        <img :src="captchaImg" @click="getCaptcha" style="vertical-align: top;height: 47px"/>
+
+      </el-form-item>
+
       <el-button
         :loading="loading"
         type="primary"
@@ -64,70 +79,22 @@
         {{ $t('login.logIn') }}
       </el-button>
 
-      <el-button type="text" class="fr" @click="handleForgotPassword">
-        {{ $t('login.forgotPassword') }}
-      </el-button>
+<!--      <el-button type="text" class="fr" @click="handleForgotPassword">-->
+<!--        {{ $t('login.forgotPassword') }}-->
+<!--      </el-button>-->
 
     </el-form>
-
-    <el-dialog :title="$t('login.retrievePassword')" :visible.sync="showDialog" width="40%">
-      <el-form ref="dataForm" :rules="rules" :model="temp">
-        <el-row :gutter="60">
-          <el-col :span="16" :offset="1">
-            <el-form-item :label="$t('common.email')" prop="email">
-              <!--<el-input :placeholder="$t('common.pleaseEnter')" v-model="temp.email" clearable/>-->
-              <el-input v-model="temp.email" :placeholder="$t('common.pleaseEnter')" clearable/>
-            </el-form-item>
-
-            <el-form-item :label="$t('common.captcha')" prop="code">
-              <el-input v-model="temp.code" :placeholder="$t('common.pleaseEnter')" clearable>
-                <el-button v-if="isSend" slot="append" type="danger" @click="sendEmailCode">{{ $t('common.get') }}{{
-                  $t('common.captcha') }}
-                </el-button>
-                <el-button v-else slot="append" type="danger">{{ time }}s</el-button>
-              </el-input>
-            </el-form-item>
-
-            <el-form-item :label="$t('login.newPassword')" prop="password">
-              <el-input v-model="temp.password" :placeholder="$t('common.pleaseEnter')" clearable show-password/>
-            </el-form-item>
-            <el-form-item :label="$t('login.reNewPassword')" prop="rePassword">
-              <el-input v-model="temp.rePassword" :placeholder="$t('common.pleaseEnter')" clearable show-password/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="showDialog = false">
-          {{ $t('common.cancel') }}
-        </el-button>
-        <el-button type="primary" @click="resetPassword">
-          {{ $t('common.confirm') }}
-        </el-button>
-      </div>
-    </el-dialog>
 
   </div>
 </template>
 
 <script>
-  import LangSelect from '@/components/LangSelect'
   import {validateRequire, validEmail} from '@/utils/validate'
-  import {Admin} from '../../api'
+  import {Common} from '../../api'
 
   export default {
     name: 'Login',
-    components: {LangSelect},
     data() {
-      const validatePass = (rule, value, callback) => {
-        if (value.toString().length < 6 || value.toString().length > 18) {
-          callback(new Error(rule.text))
-        } else {
-          callback()
-        }
-      }
-
       const validateRePass = (rule, value, callback) => {
         if (value !== this.temp.password) {
           callback(new Error(rule.text))
@@ -137,7 +104,7 @@
       }
 
       const validatePassword = (rule, value, callback) => {
-        if (value.length < 6) {
+        if (value.length < 6|| value.length > 18) {
           callback(new Error(this.$t('login.tip1')))
         } else {
           callback()
@@ -145,57 +112,27 @@
       }
       return {
         loginForm: {
-          username: 'admin',
-          password: '123456'
+          username: '',
+          password: '',
+          captcha:''
         },
+        captchaImg:null,
         loginRules: {
           username: [{required: true, trigger: 'blur', validator: validateRequire, text: this.$t('login.username')}],
-          password: [{required: true, trigger: 'blur', validator: validatePassword, text: this.$t('login.password')}]
+          password: [{required: true, trigger: 'blur', validator: validatePassword, text: this.$t('login.password')}],
+          captcha: [{required: true, trigger: 'blur', validator: validateRequire, text: '验证码'}]
         },
         passwordType: 'password',
         capsTooltip: false,
         loading: false,
         redirect: undefined,
-        otherQuery: {},
-        showDialog: false,
-        temp: {
-          email: '',
-          code: '',
-          password: '',
-          rePassword: ''
-        },
-        rules: {
-          email: [
-            {required: true, trigger: 'blur', validator: validateRequire, text: this.$t('common.email')},
-            {type: 'email', message: this.$t('admin.tip1'), trigger: 'blur'}
-          ],
-          code: [{required: true, trigger: 'blur', validator: validateRequire, text: this.$t('common.captcha')}],
-          password: [{
-            required: true,
-            trigger: 'blur',
-            validator: validateRequire,
-            text: this.$t('login.newPassword')
-          },
-            {pattern: /^[a-zA-Z0-9_-]{6,18}$/, message: this.$t('common.pwdTntensityTip')}],
-          rePassword: [{
-            required: true,
-            trigger: 'blur',
-            validator: validateRequire,
-            text: this.$t('login.reNewPassword')
-          }, {
-            trigger: 'blur',
-            validator: validateRePass,
-            text: this.$t('login.tip2')
-          }]
-
-        },
-        time: 60,
-        isSend: true
+        otherQuery: {}
       }
     },
     watch: {
       $route: {
         handler: function (route) {
+          console.log(route)
           const query = route.query
           if (query) {
             this.redirect = query.redirect
@@ -206,6 +143,7 @@
       }
     },
     created() {
+      this.getCaptcha()
     },
     mounted() {
       if (this.loginForm.username === '') {
@@ -214,9 +152,12 @@
         this.$refs.password.focus()
       }
     },
-    destroyed() {
-    },
     methods: {
+      async getCaptcha() {
+        console.log(123)
+        const {result} = await Common.getCaptcha()
+        this.captchaImg = `data:image/png;base64,${result}`
+      },
       checkCapslock({shiftKey, key} = {}) {
         if (key && key.length === 1) {
           if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
@@ -243,6 +184,7 @@
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true
+            debugger
             this.$store.dispatch('user/login', this.loginForm)
               .then(() => {
                 this.$router.push({path: this.redirect || '/', query: this.otherQuery})
@@ -264,63 +206,7 @@
           }
           return acc
         }, {})
-      },
-      resetTemp() {
-        this.temp = {
-          email: '',
-          code: '',
-          password: '',
-          rePassword: ''
-        }
-      },
-      handleForgotPassword() {
-        this.resetTemp()
-        this.time = 60
-        this.isSend = true
-        this.showDialog = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
-      sendEmailCode() {
-        if (validEmail(this.temp.email)) {
-          Admin.sendEmailCode({email: this.temp.email}).then((res) => {
-            this.isSend = false
-
-            const interval = window.setInterval(() => {
-              if ((this.time--) <= 0) {
-                this.time = 60
-                this.isSend = true
-                window.clearInterval(interval) // 停止
-              }
-            }, 1000)
-
-            this.$message({
-              message: res.msg || this.$t('common.success'),
-              type: 'success'
-            })
-          })
-        } else {
-          this.$message({
-            message: this.$t('login.tip4'),
-            type: 'error'
-          })
-        }
-      },
-      resetPassword() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            Admin.resetPassword(this.temp).then((res) => {
-              this.showDialog = false
-              this.$message({
-                message: res.msg || this.$t('common.success'),
-                type: 'success'
-              })
-            })
-          }
-        })
       }
-
     }
   }
 </script>

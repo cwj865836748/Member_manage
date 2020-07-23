@@ -1313,10 +1313,10 @@ export default {
 
   },
   statistics: {
-    agentCount: '代理数量',
-    departmentStaffCount: '部门人员数量',
-    ownerCount: '业主数量',
-    outsiderCount: '外部人员数量',
+    agentCount: '房东总数',
+    departmentStaffCount: '租户总数',
+    ownerCount: '兑换次数',
+    outsiderCount: '奖品总数',
     projectCount: '项目数量',
     soldUnitCount: '已售单位数量',
     messageCount: '留言待解决数量',
@@ -1325,6 +1325,9 @@ export default {
     withdrawalPendingCount: '提现待处理数量',
     commissionProgressCount: '佣金处理待处理数量',
     rechargePendingCount: '充值待处理数量',
+    userTotal:'用户占比统计',
+    timeTotal:'时间维度兑换次数统计',
+    placeTotal:'镇-村统计各个区域各个用户的占比'
   },
   performanceReport: {
     totalSales: '总销售额',
@@ -1333,6 +1336,6 @@ export default {
     rolePerformance: '个人业绩报告',
     agentRolePerformance: '代理业绩报告',
     introducerRolePerformance: '介绍人业绩报告',
-  },
+  }
 }
 

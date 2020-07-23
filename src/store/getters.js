@@ -14,6 +14,7 @@ const getters = {
   permissions: state => state.user.permissions,
   permission_routes: state => state.permission.routes,
   errorLogs: state => state.errorLog.logs,
-  showBidPrice: state => state.user.showBidPrice
+  showBidPrice: state => state.user.showBidPrice,
+  userInfo:state=>state.user.userInfo
 }
 export default getters

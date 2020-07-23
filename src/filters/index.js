@@ -89,3 +89,41 @@ export function appVersionTypeFilter(type, val) {
   return appVersionType.filter(t => t.value === type)[0][val || 'type']
 }
 
+export function isEnabled(val) {
+  return val===1?'启用':'禁用'
+}
+export function sex(val) {
+  return val===1?'男':'女'
+}
+export function certificateType(val) {
+  return val===1?'身份证':'其他'
+}
+export function msgStatusType(val) {
+  return val===1?'已发送':'未发送'
+}
+export function redemptionType(val) {
+  return val===0?'未领取':(val===1?'已领取':'已过期')
+}
+export function msgType(val){
+  return val===0?'活动通知':(val===1?'公告通知':'系统通知')
+}
+export function shelfType(val){
+  return val===1?'已上架':'未上架'
+}
+export function logType(val){
+  return val===1?'操作日志':'登录日志'
+}
+export function activeType(val){
+  switch (val) {
+    case 0:
+      return '待发布'
+    case 1:
+      return '已发布'
+    case 2:
+      return '已开启'
+    case 3:
+      return '已结束'
+  }
+}
+
+

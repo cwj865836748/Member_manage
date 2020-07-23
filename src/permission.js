@@ -25,7 +25,8 @@ router.beforeEach(async (to, from, next) => {
       // if is logged in, redirect to the home page
       next({path: '/'})
       NProgress.done()
-    } else {
+    }
+    else {
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       // const hasName = store.getters.name
@@ -34,19 +35,18 @@ router.beforeEach(async (to, from, next) => {
       } else {
         try {
           // get user info
-          store.dispatch('user/getInfo')
+          // store.dispatch('user/getInfo')
 
-          const {menuList} = await store.dispatch('user/getMenu')
+          const menuList = await store.dispatch('user/getMenu')
 
           // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', menuList)
+          const accessRoutes = await store.dispatch('permission/generateRoutes',menuList)
 
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)
-
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
-          next({...to, replace: true})
+          next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')

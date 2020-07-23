@@ -22,12 +22,13 @@ import * as filters from './filters' // global filters
 import global from './config/global.js' //global v  +ariable function
 import {isAuth} from '@/utils'
 import '@/components/global.js' // 注册全局组件
-
+import echarts from 'echarts'
 import './utils/number' //解决计算精度丢失问题
 import './utils/array'  //引入数组方法
 
 Vue.use(global)
 Vue.prototype.isAuth = isAuth // 权限方法
+Vue.prototype.$echarts = echarts
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size

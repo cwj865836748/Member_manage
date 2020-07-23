@@ -8,7 +8,10 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import systemRouter from './modules/system'
-
+import userRouter from './modules/user'
+import houseManageRouter from "@/router/modules/houseManage";
+import manageRouter from "@/router/modules/manage";
+import pointsMalRouter from "@/router/modules/pointsMall";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -80,20 +83,6 @@ export const constantRoutes = [
         meta: {title: 'dashboard', icon: 'dashboard', affix: true}
       }
     ]
-  },
-  {
-    path: '/profile',
-    component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: {title: 'profile', icon: 'user', noCache: true}
-      }
-    ]
   }
 ]
 
@@ -104,7 +93,13 @@ export const constantRoutes = [
 export const asyncRoutes = [
 
   /** when your routing map is too long, you can split it into small modules **/
-  systemRouter,
+  houseManageRouter,
+  manageRouter[0],
+  pointsMalRouter,
+  manageRouter[1],
+  manageRouter[2],
+  userRouter,
+
 
 
   // 404 page must be placed at the end !!!

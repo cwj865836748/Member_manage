@@ -7,9 +7,9 @@
       :before-upload="beforeUploadHandle"
       :http-request="uploadImage"
       :on-remove="handleRemove"
-      list-type="picture-card"
     >
-      <i class="el-icon-plus"/>
+      <img v-if="fileList.length" :src="fileList[0].url" class="avatar">
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
   </div>
 </template>

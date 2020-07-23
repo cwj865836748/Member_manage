@@ -167,7 +167,11 @@
           limit: 10
         },
         searchFields: [
-          {type: 0, label: this.$t('common.email'), value: '', options: '', field: 'username'}
+          {type: 1, label: '角色', value: '', options: '', field: 'username'},
+          {type: 0, label: '姓名', value: '', options: '', field: 'username'},
+          {type: 0, label: '手机号', value: '', options: '', field: 'username'},
+          {type: 1, label: '状态', value: '', options: '', field: 'username'},
+          {type: 6, label: '权限区域', value: '', options: '', field: 'username'}
         ],
         dialogFormVisible: false,
         dialogFormStatus: 'create',
