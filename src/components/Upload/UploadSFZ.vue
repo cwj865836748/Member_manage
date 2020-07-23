@@ -29,7 +29,7 @@
       },
       methods: {
         emitInput(val) {
-          console.log(this.type)
+          val.type=this.type
           this.$emit('input', val)
         },
         handleImageSuccess() {
@@ -50,7 +50,6 @@
         uploadFile(file) {
           const that = this
           return new Promise((resolve, reject) => {
-            console.log(file)
           const formData = new FormData()
           formData.append('multipartFile', file.file)
           Common.authCard(formData).then((res) => {

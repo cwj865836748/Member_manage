@@ -53,6 +53,7 @@ service.interceptors.request.use(
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
       config.headers['X-Access-Token'] = getToken()
+      config.headers['lang_type'] = getLanguage() == 'zh' ? 'zh' : 'en-us' // zh or en-us
     }
     return config
   },

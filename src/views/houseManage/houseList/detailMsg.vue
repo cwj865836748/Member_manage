@@ -213,7 +213,7 @@
   </div>
   <div class="flex-x-bottom">
      <el-button style="margin-right: 10px" @click="$router.push('/houseManage/detail')">取消</el-button>
-    <el-button type="primary">提交</el-button>
+    <el-button type="primary" @click="handleSubmit">提交</el-button>
   </div>
 
 </div>
@@ -263,19 +263,26 @@
               this.addForm={}
             }
         },
-        getSFZ(val,type){
-            console.log(val)
-          this.addForm={
-            birthday: val.birthday,
-            cardNo: val.cardNo,
-            census: val.census,
-            certificateType: val.certificateType,
-            name: val.name,
-            nation: val.nation,
-            phone: val.phone,
-            photoPath: val.photo,
-            sex: val.sex,
-            type
+        getSFZ(val){
+          // this.addForm={
+          //   birthday: val.birthday,
+          //   cardNo: val.cardNo,
+          //   census: val.census,
+          //   certificateType: val.certificateType,
+          //   name: val.name,
+          //   nation: val.nation,
+          //   phone: val.phone,
+          //   photoPath: val.photo,
+          //   sex: val.sex,
+          //   type
+          // }
+          this.addForm=val
+        },
+        async handleSubmit(){
+            const landlords=[this.addForm]
+            const {code} = await houseListApi.addLandlordInfo({landlords,systemId:''})
+          if (code===200){
+            this.$message.success('提交成功')
           }
         },
         deleteId(){

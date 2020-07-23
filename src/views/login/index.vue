@@ -154,7 +154,7 @@
     },
     methods: {
       async getCaptcha() {
-        console.log(123)
+
         const {result} = await Common.getCaptcha()
         this.captchaImg = `data:image/png;base64,${result}`
       },

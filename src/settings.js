@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'EZT-CMS',
+  title: '同安会员管理系统',
 
   /**
    * @type {boolean} true | false

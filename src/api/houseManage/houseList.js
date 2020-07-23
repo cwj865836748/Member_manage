@@ -44,7 +44,14 @@ class houseList {
     return request({
       url: '/web/gridFloor/addLandlordInfo',
       method: 'post',
-      data
+      data,
+      transformRequest: function (data) {
+        // 对 data 进行任意转换处理
+        return JSON.stringify(data);
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
   }
   addFamiliesInfo(data) {
