@@ -8,7 +8,7 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import systemRouter from './modules/system'
-import userRouter from './modules/user'
+import userRouter from '@/router/modules/user'
 import houseManageRouter from "@/router/modules/houseManage";
 import manageRouter from "@/router/modules/manage";
 import pointsMalRouter from "@/router/modules/pointsMall";
@@ -101,10 +101,11 @@ export const asyncRoutes = [
   userRouter,
 
 
-
-  // 404 page must be placed at the end !!!
-  {path: '*', redirect: '/404', hidden: true}
+  //
+  // // 404 page must be placed at the end !!!
+  // {path: '*', redirect: '/404', hidden: true}
 ]
+
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
@@ -115,7 +116,7 @@ const createRouter = () => new Router({
 const router = createRouter()
 
 export function resetRouter() {
-  const newRouter = createRouter()
+  const newRouter = createRouter({})
   router.matcher = newRouter.matcher // reset router
 }
 

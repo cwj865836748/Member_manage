@@ -1,3 +1,4 @@
+import fileDownload from "js-file-download";
 <template>
   <div class="app-container">
   <search ref="search" :fields="searchFields" @change="handleSearch"/>
@@ -11,27 +12,10 @@
       >
         添加
       </el-button>
-      <el-button
-        class="filter-item"
-        size="small"
-      >
-        导入模板
-      </el-button>
-      <el-button
-        class="filter-item"
-        size="small"
-      >
-        导入
-      </el-button>
-      <el-button
-        class="filter-item"
-        size="small"
-      >
-        导出
-      </el-button>
+      <UploadXls  @downMo="downMo" @uploadFile="uploadFile" :btnShow="true" @upOut="upOut"/>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
@@ -47,22 +31,22 @@
       </el-table-column>
       <el-table-column  align="center" label="积分" prop="integral">
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="isEnabled">
+      <el-table-column  align="center" label="状态" prop="isEnabled" width="150px">
         <template slot-scope="scope">
-          {{scope.row.isEnabled|isEnabled}}
+          <el-tag :type="scope.row.isEnabled?'success':'danger'"> {{scope.row.isEnabled|isEnabled}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt">
+      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px">
       </el-table-column>
       <el-table-column
         label="操作"
         align="center"
       >
         <template slot-scope="{row}">
-          <el-button type="text"  size="small" @click="handleCreateEdit('edit',row)">
+          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
             编辑
           </el-button>
-          <el-button type="text" size="small" @click="handleView(row)">
+          <el-button type="primary" size="small" @click="handleView(row)">
             查看
           </el-button>
 <!--          <el-button type="text" size="small" @click="handleDelete(row)" style="color: red">-->
@@ -80,7 +64,7 @@
       @pagination="getList"
     />
     <el-dialog :title="isAdd==='create'?'添加用户':'编辑用户'" :visible.sync="addVisible" width="500px">
-      <el-form :model="addForm" ref="addForm" label-width="100px" class="demo-ruleForm" :rules="addRules">
+      <el-form :model="addForm" ref="addForm" label-width="auto" label-position="right" class="demo-ruleForm" :rules="addRules">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name" placeholder="请输入姓名"/>
         </el-form-item>
@@ -102,11 +86,10 @@
         <el-form-item label="民族" prop="nation">
           <el-input v-model="addForm.nation" placeholder="请输入名族"/>
         </el-form-item>
-        <el-form-item label="出生" prop="birthday" >
+        <el-form-item label="出生日期" prop="birthday" >
           <el-date-picker
             v-model="addForm.birthday"
             type="date"
-            format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
             placeholder="选择日期">
           </el-date-picker>
@@ -133,16 +116,16 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" >扫描身份证</el-button>
+          <UploadSFZ @getsfz="getsfz"/>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createEditData('addForm')">确定</el-button>
-          <el-button type="primary" @click="addVisible=false">取消</el-button>
+        <el-form-item class="flex-x-end">
+          <el-button size="small"  @click="addVisible=false">取消</el-button>
+          <el-button  size="small" type="primary" @click="createEditData('addForm')">确定</el-button>
         </el-form-item>
       </el-form>
 
     </el-dialog>
-    <el-dialog title="用户信息" v-if="userVisible" :visible.sync="userVisible">
+    <el-dialog title="用户信息" v-if="userVisible" :visible.sync="userVisible" width="1000px">
       <el-row>
         <el-col :span="5">
           <div class="formSize">正面照</div>
@@ -166,22 +149,23 @@
         <div class="formSize" style="font-weight: bold">房源信息</div>
         <el-table v-loading="listLoading" :data="detailList.roles" border fit highlight-current-row stripe style="width: 100%">
           <el-table-column
+            fixed
             align="center" label="序号"
             type="index"
             width="50">
           </el-table-column>
-          <el-table-column  align="center" label="所属区域" prop="county"/>
-          <el-table-column  align="center" label="乡镇街道" prop="town">
+          <el-table-column  align="center" label="所属区域" prop="county" width="150px"/>
+          <el-table-column  align="center" label="乡镇街道" prop="town" width="150px">
             <!--        <template slot-scope="{row}">-->
             <!--          <span>{{ row.areaCode +'  '+ row.mobile }}</span>-->
             <!--        </template>-->
           </el-table-column>
-          <el-table-column  align="center" label="居村委" prop="village"/>
-          <el-table-column  align="center" label="详细地址" prop="areaName"/>
-          <el-table-column  align="center" label="户室" prop="roomName"/>
-          <el-table-column  align="center" label="网格" prop="gridName"/>
-          <el-table-column  align="center" label="理事" prop="gridPerName"/>
-          <el-table-column  align="center" label="所属角色" prop="roleName"/>
+          <el-table-column  align="center" label="居村委" prop="village" width="150px"/>
+          <el-table-column  align="center" label="详细地址" prop="areaName" width="250px"/>
+          <el-table-column  align="center" label="户室" prop="roomName" width="150px"/>
+          <el-table-column  align="center" label="网格" prop="gridName" width="150px"/>
+          <el-table-column  align="center" label="理事" prop="gridPerName" width="150px"/>
+          <el-table-column  align="center" label="所属角色" prop="roleName" width="150px"/>
         </el-table>
 
       </el-row>
@@ -196,6 +180,9 @@
   import {webUserApi} from '@/api'
   import {roleType,statusType,sexType,cardType} from '@/config/userManage'
   import {validateRequire} from '@/utils/validate'
+  import UploadSFZ from "@/components/Upload/UploadSFZ";
+  import UploadXls from "@/components/Upload/UploadXls";
+  import fileDownload from "js-file-download"
     export default {
         name: "index",
       data(){
@@ -253,14 +240,29 @@
             isAdd:'create'
           }
       },
-      components: {Pagination, Search},
+      components: {Pagination, Search,UploadSFZ,UploadXls},
       created() {
         this.getList()
       },
       methods: {
         handleSearch() {
-          this.listQuery.page = 1
+          this.listQuery.pageNo = 1
           this.getList()
+        },
+        getsfz(val){
+          if (val.national){
+            this.addForm.nation=val.national
+          }
+          if(val.gender){
+            this.addForm.sex=val.gender==='男'?1:2
+          }
+          if(val.address){
+            this.addForm.census=val.address
+          }
+          if(!val.certificateType){
+            this.addForm.certificateType=1
+          }
+          this.addForm={...this.addForm,...val}
         },
         // 获取数据
         getList() {
@@ -319,6 +321,7 @@
             if (valid) {
               if (this.isAdd ==='create') {
                 webUserApi.add(this.addForm).then((res) => {
+                  console.log(this.addForm)
                   this.getList()
                   this.$message({
                     message: res.message || this.$t('common.success'),
@@ -365,6 +368,40 @@
               message: this.$t('common.isCancel')
             })
           })
+        },
+        uploadFile(file){
+          return new Promise((resolve, reject) => {
+            const formData = new FormData()
+            formData.append('file', file.file)
+            webUserApi.exportXls(formData).then((res) => {
+              let buf = new Buffer(res).toString();
+              //判断大小 小于80即有错误码，判断
+              if (buf.length <= 80) {
+                this.$message({
+                  message: '导入成功',
+                  type: 'success'
+                })
+                this.getList()
+              }else {
+                fileDownload(res, `模板导入失败.xls`);
+                this.$message({
+                  message: '导入失败',
+                  type: 'error'
+                })
+              }
+              resolve(true)
+            }).catch(err => {
+              reject(false)
+            })
+          })
+        },
+        async downMo(){
+          const data = await webUserApi.exportTemplate()
+          fileDownload(data, `前端用户导入模板.xls`);
+        },
+        async upOut(){
+          const data = await webUserApi.exportXlsOut()
+          fileDownload(data, `前端用户列表.xls`);
         }
       }
     }
@@ -373,6 +410,8 @@
 <style lang="scss" scoped>
 .formSize {
   margin-bottom: 10px;
-  font-size: 16px;
+  font-size: 14px;
+  color: #606266;
+
 }
 </style>

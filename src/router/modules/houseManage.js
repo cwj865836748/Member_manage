@@ -9,30 +9,30 @@ const houseManageRouter = {
   name: 'houseManage',
   meta: {
     title: '房源管理',
-    icon: 'lock'
+    icon: 'sold-unit'
   },
   children: [
     {
       path: 'gridding',
       component: () => import('@/views/houseManage/gridding'),
       name: 'gridding',
-      meta: { title: '网格化' }
+      meta: { title: '网格化', icon: 'international'}
     },
     {
       path: 'houseList',
       component: () => import('@/views/houseManage/houseList'),
       name: 'houseList',
-      meta: { title: '房源列表' }
+      meta: { title: '房源列表',icon: 'list' }
     },
     {
-      path: 'detail',
+      path: '/houseManage/detail',
       component: () => import('@/views/houseManage/houseList/detail'),
       name: 'detail',
       hidden:true,
       meta: { title: '房源详情' }
     },
     {
-      path: 'detailMsg',
+      path: '/houseManage/detailMsg',
       component: () => import('@/views/houseManage/houseList/detailMsg'),
       name: 'detailMsg',
       hidden:true,

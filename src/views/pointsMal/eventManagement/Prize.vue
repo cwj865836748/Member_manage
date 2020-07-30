@@ -3,18 +3,25 @@
     <div class="app-content">
       <div class="prizeList">
         <el-row :gutter="20" >
-          <el-col :span="4">
-            <img :src="activeDetail.cover" style="width: 100%;height: 100%"/>
+          <el-col :span="3" >
+            <div class="leftImg">
+              <img :src="activeDetail.cover?activeDetail.cover:$defaultImg" />
+            </div>
+
           </el-col>
-          <el-col :span="16">
+          <el-col :span="17">
             <div class="flex">
               <div class="activeName">{{activeDetail.name}}</div>
-              <div class="activeStatus">{{activeDetail.status|activeType}}</div>
+
+              <div class="activeStatus ">
+                <el-tag :type="activeDetail.status===1?'danger':(activeDetail.status===2?'success':(activeDetail.status===3?'':'info'))"> {{activeDetail.status|activeType}}</el-tag>
+
+              </div>
             </div>
-            <div style="   margin-bottom: 20px;">
+            <div class="formSize" style="margin-bottom: 20px;">
               活动时间：{{activeDetail.startTime}}~{{activeDetail.endTime}}
             </div>
-            <div style="   margin-bottom: 20px;">
+            <div class="formSize" style="   margin-bottom: 20px;">
               活动介绍：{{activeDetail.introduce}}
             </div>
           </el-col>
@@ -26,33 +33,20 @@
       <div class="myPrize">
         <search ref="search" :fields="searchFields" @change="handleSearch"/>
         <div class="filter-container">
-          <el-button
-            class="filter-item"
-            type="primary"
-            icon="el-icon-plus"
-            size="small"
-          >
-            导入
-          </el-button>
-          <el-button
-            class="filter-item"
-            icon="el-icon-plus"
-            size="small"
-          >
-            导入模板下载
-          </el-button>
+          <UploadXls  @downMo="downMo" @uploadFile="uploadFile"/>
+
         </div>
         <el-row :gutter="40">
-          <el-col :span="6">
+          <el-col :span="4" style="margin-bottom: 10px">
              <div class="prizeDetail" @click="handleCreateEdit('create')">
                <div class="text">+添加奖品</div>
              </div>
           </el-col>
-          <el-col :span="6" v-for="(item,index) in list" :key="index">
+          <el-col :span="4" v-for="(item,index) in list" :key="index" style="margin-bottom: 10px">
             <div class="prizeDetail" @click="handleCreateEdit('edit',item)">
                <div class="prizeDetail-head">
-                 <img :src="item.cover?item.cover:''">
-                 <div class="title">{{item.status|shelfType}}</div>
+                 <img :src="item.cover?item.cover:$defaultImg">
+                 <div :class="['title',item.status?'greenSize':'redSize']">{{item.status|shelfType}}</div>
                </div>
                <div class="prizeDetail-content">
                  <div class="prizeDetail-content-size">
@@ -75,16 +69,24 @@
                </div>
             </div>
           </el-col>
+
         </el-row>
       </div>
     </div>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.pageNo"
+      :limit.sync="listQuery.pageSize"
+      @pagination="getList"
+    />
     <el-dialog :title="isAdd==='create'?'添加奖品':'修改奖品'" :visible.sync="addVisible" width="1000px">
-      <el-form :model="addForm" ref="addForm" label-width="100px" class="demo-ruleForm" :rules="addRules">
+      <el-form :model="addForm" ref="addForm" label-width="auto" label-position="right" class="demo-ruleForm" :rules="addRules">
         <el-form-item label="奖品名称:" prop="name">
           <el-input v-model="addForm.name" placeholder="请输入奖品名称"/>
         </el-form-item>
         <el-form-item label="兑换说明:" prop="remarks">
-          <el-input  v-model="addForm.remarks" type="textarea" placeholder="请输入兑换说明"/>
+          <el-input  v-model="addForm.remarks" autosize type="textarea" placeholder="请输入兑换说明"/>
         </el-form-item>
         <el-form-item label="奖品数量:" prop="count">
           <el-input-number v-model="addForm.count" controls-position="right" :min="0" size="mini"></el-input-number>
@@ -108,9 +110,9 @@
         <el-form-item label="上传图片:" prop="cover">
           <Upload @input="myUpload" :url="this.addForm.cover" ref="Upload"/>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createEditData('addForm')">确定</el-button>
-          <el-button type="primary" @click="addVisible=false">取消</el-button>
+        <el-form-item class="flex-x-end">
+          <el-button size="small" @click="addVisible=false">取消</el-button>
+          <el-button size="small" type="primary" @click="createEditData('addForm')">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -124,7 +126,9 @@
   import {shelfType} from '@/config/userManage'
   import {recordApi} from '@/api'
   import {validateRequire} from '@/utils/validate'
-  import Upload from '@/components/Upload/Upload'
+  import Upload from '@/components/Upload/Upload2'
+  import UploadXls from "@/components/Upload/UploadXls";
+  import fileDownload from "js-file-download"
     export default {
         name: "Prize",
       data(){
@@ -172,10 +176,17 @@
               status:''
             },
             activityId:this.$route.query.id,
-            activeDetail:null
+            activeDetail:{
+              cover:'',
+              name:'',
+              status:'',
+              startTime:'',
+              endTime:'',
+              introduce:''
+            }
           }
       },
-      components: {Pagination, Search,Upload},
+      components: {Pagination, Search,Upload,UploadXls},
       watch: {
         '$route': function (to, from) {
           if(from.name==='eventManagement'){
@@ -282,7 +293,38 @@
             }
           })
 
-        }
+        },
+        uploadFile(file){
+          return new Promise((resolve, reject) => {
+            const formData = new FormData()
+            formData.append('file', file.file)
+            formData.append('id', this.activityId)
+            recordApi.importExcel(formData).then((res) => {
+              let buf = new Buffer(res).toString();
+              //判断大小 小于80即有错误码，判断
+              if (buf.length <= 80) {
+                this.$message({
+                  message: '导入成功',
+                  type: 'success'
+                })
+                this.getList()
+              }else {
+                fileDownload(res, `模板导入失败.xls`);
+                this.$message({
+                  message: '导入失败',
+                  type: 'error'
+                })
+              }
+              resolve(true)
+            }).catch(err => {
+              reject(false)
+            })
+          })
+        },
+        async downMo(){
+          const data = await recordApi.exportTemplate()
+          fileDownload(data, `活动奖品导入模板.xls`);
+        },
       }
     }
 </script>
@@ -294,7 +336,7 @@
 }
   .prizeList {
     padding: 10px;
-    border-bottom: 1px slategrey solid;
+    border-bottom: 1px #E8E8E8 solid;
     margin-bottom: 20px;
   }
   .flex {
@@ -302,76 +344,106 @@
     margin-bottom: 20px;
     .activeName {
       font-size: 20px;
-      font-weight: bold;
+      color: #606266;
+      box-sizing: border-box;
+      padding-top: 5px;
     }
     .activeStatus {
-      border: 2px solid #FFA39E;
-      background: #FEF0EF;
-      color: #F5222D;
+
       margin-left: 30px;
-      border-radius: 3px;
+
     }
   }
   .prizeDetail {
-    width: 100%;
-    height: 300px;
-    border: 1px solid #E8E8E8 ;
-    position: relative;
-    .text {
-      font-size: 20px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-    }
-    &-head{
-      height: 50%;
-      position: relative;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-      .title {
-        position: absolute;
-        right: 10px;
-        top: 5px;
-        text-align: center;
-        height: 20px;
-        line-height: 20px;
-        border-radius: 5px;
-        background-color: #fff;
-      }
-    }
-    &-content{
-      height: 50%;
-      padding: 10px 10px 0 10px;
-      box-sizing: content-box;
-      &-size {
-        font-size: 20px;
-        font-weight: bold;
-        height:60px;
-        padding: 10px 0 0 30px;
-        box-sizing: border-box;
-      }
-      &-count {
-        display: flex;
-        &-sz {
-          width: 33%;
-          padding-right: 10px;
-          border-right: 1px slategrey solid;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          height: 60px;
-          justify-items: center;
-          font-size: 20px;
-          padding-top: 10px;
-        }
-        &-sz:last-child {
-          border-right:none;
-        }
-      }
+     width: 100%;
+     height: 270px;
+     border: 1px solid #E8E8E8 ;
+     position: relative;
+     .text {
+       font-size: 16px;
+       position: absolute;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%,-50%);
+       cursor: pointer;
+     }
+     &-head{
+       height: 50%;
+       position: relative;
+       img {
+         width: 100%;
+         height: 100%;
+       }
+       .title {
+         position: absolute;
+         right: 10px;
+         top: 5px;
+         text-align: center;
+         height: 20px;
+         line-height: 20px;
+         border-radius: 4px;
+         background-color: #fff;
+         font-size: 14px;
+         width: 50px;
+         &.redSize {
+           color: #F56C6C;
+           border: 1px solid #FDE2E2;
+           background: #FEF0F0;
+
+         }
+         &.greenSize {
+           color: #13CE66;
+           border: 1px solid #D0F5E0;
+           background: #E7FAF0;
+         }
+       }
+     }
+     &-content{
+       height: 50%;
+       padding: 10px 10px 0 10px;
+       box-sizing: content-box;
+       &-size {
+         font-size: 16px;
+         color: #606266;
+         height:50px;
+         padding: 10px 0 0 30px;
+         box-sizing: border-box;
+       }
+       &-count {
+         display: flex;
+         &-sz {
+           width: 33%;
+           border-right: 1px slategrey solid;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           height: 50px;
+           justify-content: center;
+           font-size: 14px;
+           color: #606266;
+         }
+         &-sz:last-child {
+           border-right:none;
+         }
+       }
+     }
+   }
+  .prizeDetail:hover {
+    border: 1px solid #61AFFE ;
+  }
+  .leftImg {
+    height: 150px;
+    width: 150px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
+.formSize {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #606266;
 
+}
 </style>

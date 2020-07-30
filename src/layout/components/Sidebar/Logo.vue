@@ -24,8 +24,8 @@ export default {
   },
   data() {
     return {
-      title: 'EZT-CMS',
-      logo: require('@/assets/images/logo.png')
+      title: '同安会员管理系统',
+      logo: require('@/assets/images/icon.png')
     }
   }
 }
@@ -47,7 +47,8 @@ export default {
     height: 50px;
     line-height: 50px;
     background: #2b2f3a;
-    text-align: center;
+    text-align: left;
+    padding-left: 10px;
     overflow: hidden;
 
   &

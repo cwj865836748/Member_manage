@@ -77,7 +77,25 @@ class HouseManage {
       }
     })
   }
-
+  exportXls(data){
+    return request({
+      url: '/web/grid/importData',
+      method: 'post',
+      data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      responseType:'arraybuffer',
+      isLoading: true
+    })
+  }
+  exportTemplate(){
+    return request({
+      url: '/web/grid/exportTemplate',
+      method: 'get',
+      responseType:'arraybuffer'
+    })
+  }
   /**
    * 添加网格
    * @param data

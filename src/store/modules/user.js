@@ -11,12 +11,13 @@ const state = {
   roles: [],
   permissions: [],
   staffId: '',
-  userInfo:{}
+  userInfo:localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')): {}
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -53,6 +54,7 @@ const actions = {
         const {result} = response
         commit('SET_TOKEN', result.token)
         commit('SET_USERINFO', result.userInfo)
+        localStorage.setItem('userInfo',JSON.stringify(result.userInfo))
         setToken(result.token)
         resolve()
       }).catch(error => {
@@ -66,8 +68,9 @@ const actions = {
     return new Promise(resolve => {
       // let accessedRoutes = addDynamicRoutes(roles)
       //添加上错误域名
-      // accessedRoutes.push({path: '*', redirect: '/404', hidden: true})
+
       const accessedRoutes = asyncRoutes
+      // accessedRoutes.push({path: '*', redirect: '/404', hidden: true})
       commit('SET_ROLES', accessedRoutes)
       resolve(accessedRoutes)
     })
@@ -77,10 +80,14 @@ const actions = {
   logout({commit, state, dispatch}) {
     return new Promise((resolve, reject) => {
       Common.logout().then(() => {
+
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         commit('SET_PERMISSIONS', [])
+        localStorage.removeItem('userInfo')
+        removeToken()
         resetRouter()
+        // location.reload()
         dispatch('tagsView/delAllViews', null, {root: true})
         resolve()
       }).catch(error => {

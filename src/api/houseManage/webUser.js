@@ -1,6 +1,32 @@
 import request from '@/utils/request'
 
 class webUser {
+  exportXls(data){
+    return request({
+      url: '/web/personInfo/exportXls',
+      method: 'post',
+      data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      responseType:'arraybuffer',
+      isLoading: true
+    })
+  }
+  exportTemplate(){
+    return request({
+      url: '/web/personInfo/exportXls',
+      method: 'get',
+      responseType:'arraybuffer'
+    })
+  }
+  exportXlsOut(){
+    return request({
+      url: '/web/personInfo/exportPersonList',
+      method: 'get',
+      responseType:'arraybuffer'
+    })
+  }
   /**s
    * @params
    * 前端人员分页列表

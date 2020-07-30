@@ -5,8 +5,9 @@
     :show-file-list="false"
     :before-upload="beforeAvatarUpload"
     :on-success="handleImageSuccess"
+    :disabled="infoId?true:false"
   >
-    <el-button size="small" type="primary">扫描身份证</el-button>
+    <el-button size="small" type="primary" :disabled="infoId?true:false">扫描身份证</el-button>
   </el-upload>
 </template>
 
@@ -18,6 +19,10 @@
         type:{
           type:Number,
           default:0
+        },
+        infoId:{
+          type:String,
+          default:''
         }
       },
       data() {
@@ -30,7 +35,7 @@
       methods: {
         emitInput(val) {
           val.type=this.type
-          this.$emit('input', val)
+          this.$emit('getsfz', val)
         },
         handleImageSuccess() {
           this.emitInput(this.msg)

@@ -2,7 +2,7 @@
   <div class="app-container">
     <search ref="search" :fields="searchFields" @change="handleSearch"/>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
@@ -12,11 +12,11 @@
       <el-table-column  align="center" label="IP" prop="ip">
       </el-table-column>
       <el-table-column  align="center" label="日志类型" prop="logType">
-        <template slot-scope="{row}">
-          {{row.logType|logType}}
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.logType===1?'':'warning'"> {{scope.row.logType|logType}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt">
+      <el-table-column  align="center" label="更新时间" prop="createdAt">
       </el-table-column>
     </el-table>
 
@@ -41,7 +41,7 @@
     data(){
       return {
         searchFields: [
-          {type: 0, label: '日志内容', value: '', options: '', field: 'name'},
+          {type: 0, label: '日志内容', value: '', options: '', field: 'content'},
           {type: 8, label: '更新时间', value: '', options: '', field: 'time'},
           {type: 1, label: '日志类型', value: '', options: logType, field: 'type'},
         ],

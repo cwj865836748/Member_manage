@@ -1,4 +1,4 @@
-import router from './router'
+import router,{asyncRoutes}  from './router'
 import store from './store'
 import {Message} from 'element-ui'
 import NProgress from 'nprogress' // progress bar
@@ -21,6 +21,7 @@ router.beforeEach(async (to, from, next) => {
   const hasToken = getToken()
 
   if (hasToken) {
+
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({path: '/'})
@@ -29,17 +30,18 @@ router.beforeEach(async (to, from, next) => {
     else {
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
+
       // const hasName = store.getters.name
       if (hasRoles) {
+
         next()
       } else {
         try {
           // get user info
           // store.dispatch('user/getInfo')
-
           const menuList = await store.dispatch('user/getMenu')
-
           // generate accessible routes map based on roles
+
           const accessRoutes = await store.dispatch('permission/generateRoutes',menuList)
 
           // dynamically add accessible routes

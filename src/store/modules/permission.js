@@ -1,5 +1,7 @@
 import {asyncRoutes, constantRoutes} from '@/router'
+import {roleApi} from '@/api'
 import Layout from '@/layout'
+import store from '../../store'
 // 获取组件的方法
 const _import = require('@/router/_import_' + process.env.NODE_ENV)
 
@@ -96,12 +98,57 @@ const mutations = {
 const actions = {
   generateRoutes({commit}, roles) {
     return new Promise(resolve => {
-      let accessedRoutes = roles
-      //添加上错误域名
-      // accessedRoutes.push({path: '*', redirect: '/404', hidden: true})
-      // const accessedRoutes = asyncRoutes
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+      roleApi.getMenuTreeByRole({roleId:store.state.user.userInfo.role}).then(res=>{
+        roleApi.queryById({id:store.state.user.userInfo.role}).then(re=>{
+          if(re.result.isSystem){
+            //添加上错误域名
+            roles.forEach(role=>{
+              role.hidden=false
+              role.children&&role.children.forEach(roleCid=>{
+                if (roleCid.meta.title.includes('房源详情')||roleCid.meta.title.includes('房源成员信息')||roleCid.meta.title.includes('奖品管理')){
+                  roleCid.hidden=true
+                }else {
+                  roleCid.hidden=false
+                }
+
+              })
+            })
+            let accessedRoutes =roles
+            commit('SET_ROUTES', accessedRoutes)
+            resolve(accessedRoutes)
+          }else {
+            const arr =[]
+            const {result} = res
+            result.forEach(item=>{
+              if(item.isOwn&&!item.menus.length){
+                arr.push(item.name)
+              }else if(item.menus.length){
+                item.menus.forEach(menus=>{
+                  menus.isOwn&&arr.push(menus.name)
+                })
+              }
+            })
+            roles.forEach(role=>{
+              role.hidden=true
+              role.children&&role.children.forEach(roleCid=>{
+                roleCid.hidden=!arr.includes(roleCid.meta.title)
+                if(!roleCid.hidden){
+                  role.hidden=false
+                }
+              })
+            })
+            let accessedRoutes =roles
+            //添加上错误域名
+            commit('SET_ROUTES', accessedRoutes)
+            resolve(accessedRoutes)
+          }
+        })
+
+      })
+
+
+
+
     })
   }
 }

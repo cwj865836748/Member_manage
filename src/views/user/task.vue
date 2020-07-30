@@ -13,7 +13,7 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
@@ -24,23 +24,27 @@
       </el-table-column>
       <el-table-column  align="center" label="描述" prop="description">
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="status">
+      <el-table-column  align="center" label="状态" prop="status" width="100px">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status===0?'success':'danger'"> {{scope.row.status|isTaskEnabled}}</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         label="操作"
         align="center"
+        width="250px"
       >
         <template slot-scope="{row}">
-          <el-button type="text"  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===-1">
+          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===-1">
             编辑
           </el-button>
-          <el-button type="text" size="small" @click="resume(row)" v-if="row.status===-1">
-            启用
+          <el-button type="success" size="small" @click="resume(row)" v-if="row.status===-1">
+            恢复
           </el-button>
-          <el-button type="text" size="small" @click="pause(row)" v-if="row.status===0">
-            禁用
+          <el-button type="info" size="small" @click="pause(row)" v-if="row.status===0">
+            暂停
           </el-button>
-          <el-button type="text" size="small" @click="handleDelete(row)">
+          <el-button type="danger" size="small" @click="handleDelete(row)">
             删除
           </el-button>
         </template>
@@ -55,7 +59,7 @@
       @pagination="getList"
     />
     <el-dialog :title="isAdd==='create'?'添加任务':'编辑任务'" :visible.sync="addVisible" width="500px">
-      <el-form :model="addForm" ref="addForm" label-width="100px" class="demo-ruleForm" :rules="addRules">
+      <el-form :model="addForm" ref="addForm" label-width="auto" label-position="right" class="demo-ruleForm" :rules="addRules">
         <el-form-item label="任务类名" prop="jobClassName">
           <el-input v-model="addForm.jobClassName" placeholder="请输入任务类名"></el-input>
         </el-form-item>
@@ -66,7 +70,7 @@
           <el-input v-model="addForm.parameter" placeholder="请输入参数"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="description">
-          <el-input type="textarea" v-model="addForm.description" placeholder="请输入描述"></el-input>
+          <el-input autosize type="textarea" v-model="addForm.description" placeholder="请输入描述"></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="addForm.status" placeholder="请选择状态">
@@ -74,9 +78,9 @@
             <el-option :value="0" label="启用"/>
           </el-select>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createEditData('addForm')">确定</el-button>
-          <el-button type="primary" @click="addVisible=false">取消</el-button>
+        <el-form-item class="flex-x-end">
+          <el-button size="small" @click="addVisible=false">取消</el-button>
+          <el-button size="small" type="primary" @click="createEditData('addForm')">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -247,7 +251,7 @@
           cancelButtonText: this.$t('common.cancel'),
           type: 'warning'
         }).then(async() => {
-          await taskApi.resume({jobClassName:row.jobClassName})
+          await taskApi.pause({jobClassName:row.jobClassName})
           this.getList()
         }).catch(() => {
           this.$message({

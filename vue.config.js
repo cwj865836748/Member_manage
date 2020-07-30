@@ -31,27 +31,27 @@ module.exports = {
   // lintOnSave: process.env.NODE_ENV === 'development',
   lintOnSave: false,
   productionSourceMap: false,
-  devServer: {
-    port: port,
-    open: false,
-    overlay: {
-      warnings: false,
-      errors: true
-    },
-    proxy: {
-      [process.env.VUE_APP_BASE_API]: {
-        // target: 'http://192.168.0.24:8060',  //本地服务器
-        // target: 'http://193.112.135.67:8060',  //测试服务器
-        // target: 'http://106.52.146.32:8060',  //测试服务器2
-        target: 'http://mis-test.synbop.com', // 正式服务器
-        // secure: true,  // 如果是https接口，需要配置这个参数
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      }
-    }
-  },
+  // devServer: {
+  //   port: port,
+  //   open: false,
+  //   overlay: {
+  //     warnings: false,
+  //     errors: true
+  //   },
+  //   proxy: {
+  //     [process.env.VUE_APP_BASE_API]: {
+  //       // target: 'http://192.168.0.24:8060',  //本地服务器
+  //       // target: 'http://193.112.135.67:8060',  //测试服务器
+  //       // target: 'http://106.52.146.32:8060',  //测试服务器2
+  //       target: 'https://mis.synbop.com', // 正式服务器
+  //       secure: true,  // 如果是https接口，需要配置这个参数
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         ['^' + process.env.VUE_APP_BASE_API]: ''
+  //       }
+  //     }
+  //   }
+  // },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.

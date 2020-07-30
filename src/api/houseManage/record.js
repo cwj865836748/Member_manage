@@ -114,6 +114,32 @@ class record {
       data
     })
   }
+  importExcel(data){
+    return request({
+      url: '/web/activity/importExcel',
+      method: 'post',
+      data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      responseType:'arraybuffer',
+      isLoading: true
+    })
+  }
+  exportTemplate(){
+    return request({
+      url: '/web/activity/exportXls',
+      method: 'get',
+      responseType:'arraybuffer'
+    })
+  }
+  exportXlsOut(){
+    return request({
+      url: '/web/integralLog/exportXls',
+      method: 'get',
+      responseType:'arraybuffer'
+    })
+  }
 }
 
 export const recordApi = new record()

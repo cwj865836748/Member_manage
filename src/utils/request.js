@@ -53,7 +53,6 @@ service.interceptors.request.use(
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
       config.headers['X-Access-Token'] = getToken()
-      config.headers['lang_type'] = getLanguage() == 'zh' ? 'zh' : 'en-us' // zh or en-us
     }
     return config
   },
@@ -81,7 +80,7 @@ service.interceptors.response.use(
     const res = response.data
     if (response.config && response.config.responseType) return res
     // if the custom code is not 200, it is judged as an error.
-    if (res.code !== RETURN_CODE.SUCCESS) {
+    if (res.code&&res.code !== RETURN_CODE.SUCCESS) {
       // token 失效
       if (res.code === RETURN_CODE.TOKEN_FAIL) {
         Message({

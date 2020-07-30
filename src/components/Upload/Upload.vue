@@ -1,4 +1,6 @@
 <template>
+  <el-row :gutter="40">
+    <el-col :span="12">
   <el-upload
     class="avatar-uploader"
     action=""
@@ -7,9 +9,17 @@
     :before-upload="beforeAvatarUpload"
     :on-success="handleImageSuccess"
   >
-    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+
+    <i class="el-icon-plus avatar-uploader-icon"></i>
   </el-upload>
+    </el-col>
+    <el-col :span="12">
+      <img v-if="url" :src="url" class="avatar" @click="showPic">
+    </el-col>
+    <el-dialog title="图片" :visible.sync="addVisible" width="500px">
+      <img :src="url" class="avatar" @click="showPic" style="width: 100%;height: 100%">
+    </el-dialog>
+  </el-row>
 </template>
 
 <script>
@@ -25,18 +35,26 @@
         url:{
           type:String,
           default:''
+        },
+        type:{
+          type:Number,
+          default:0
         }
       },
       data() {
         return {
-          imageUrl: ''
+          imageUrl: '',
+          addVisible:false
         };
       },
       created() {
       },
       methods: {
+        showPic(){
+          this.addVisible=true
+        },
         emitInput(val) {
-          this.$emit('input', val)
+          this.$emit('input', val,this.type)
         },
         handleImageSuccess() {
           this.emitInput(this.imageUrl)

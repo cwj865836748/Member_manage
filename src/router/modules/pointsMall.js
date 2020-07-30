@@ -9,34 +9,34 @@ const pointsMallRouter = {
   name: 'pointsMal',
   meta: {
     title: '积分商城',
-    icon: 'lock'
+    icon: 'shopping'
   },
   children: [
     {
       path: 'redemptionRecord',
       component: () => import('@/views/pointsMal/redemptionRecord'),
       name: 'redemptionRecord',
-      meta: { title: '兑奖记录' }
+      meta: { title: '兑奖记录' ,icon:'table'}
     },
     {
       path: 'pointsRecord',
       component: () => import('@/views/pointsMal/pointsRecord'),
       name: 'pointsRecord',
-      meta: { title: '积分记录' }
+      meta: { title: '积分记录',icon:'tab' }
     },
     {
       path: 'eventManagement',
       component: () => import('@/views/pointsMal/eventManagement'),
       name: 'eventManagement',
-      meta: { title: '活动管理' }
+      meta: { title: '活动管理',icon:'guide' }
     },
     {
-      path: 'prize',
+      path: '/pointsMal/prize',
       component: () => import('@/views/pointsMal/eventManagement/Prize'),
       name: 'prize',
       meta: { title: '奖品管理' },
       hidden:true
-    }
+    },
   ]
 }
 

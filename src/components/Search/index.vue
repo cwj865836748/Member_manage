@@ -30,7 +30,6 @@
             v-model="item.value"
             :placeholder="$t('common.pleaseSelect')"
             clearable
-            @change="handleSearch"
           >
             <el-option
               v-for="(vo,ko) in item.options"
@@ -128,11 +127,12 @@
         <el-form-item v-if="item.type==8" :label="item.label">
           <el-date-picker
             v-model="item.value"
-            type="daterange"
+            type="datetimerange"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            value-format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :default-time="['00:00:00', '23:59:59']"
           >
           </el-date-picker>
         </el-form-item>
@@ -176,12 +176,12 @@
           children: 'areaList',
           label: 'name',
           value:'id',
-          checkStrictly:this.firstDisable
+          checkStrictly:this.firstDisable,
+          expandTrigger: 'hover'
         },
         selectLoading:false,
         gridPersonOptions:[],
-        areaOptions:[],
-        num:0
+        areaOptions:[]
       }
     },
     created() {
@@ -241,9 +241,8 @@
       getTreeData(data){
         // 循环遍历json数据
         for(var i=0;i<data.length;i++){
-          if(this.firstDisable&&this.num===0){
+          if(this.firstDisable&&data[i].name==='同安区'){
             data[i].disabled=true
-            this.num++
           }
           if(data[i].areaList&&data[i].areaList.length<1){
             // children若为空数组，则将children设为undefined

@@ -29,7 +29,7 @@ import './utils/array'  //引入数组方法
 Vue.use(global)
 Vue.prototype.isAuth = isAuth // 权限方法
 Vue.prototype.$echarts = echarts
-
+Vue.prototype.$defaultImg = require('@/assets/images/photo@2x.png')
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)

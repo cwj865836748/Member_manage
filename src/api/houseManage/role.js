@@ -60,6 +60,13 @@ class role {
       params
     })
   }
+  getMenuTreeByRole(params){
+    return request({
+      url: `/web/menu/getMenuTreeByRole`,
+      method: 'get',
+      params
+    })
+  }
 }
 
 export const roleApi = new role()

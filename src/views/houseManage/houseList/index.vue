@@ -4,7 +4,7 @@
     <search ref="search" :fields="searchFields" @change="handleSearch"/>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
@@ -15,11 +15,15 @@
       <el-table-column  align="center" label="详细地址" prop="address"/>
       <el-table-column  align="center" label="网格" prop="gridName"/>
       <el-table-column  align="center" label="理事" prop="gridPersonName"/>
-      <el-table-column  align="center" label="住户" prop="residentCount"/>
-      <el-table-column  align="center" label="安全消防等级" prop="securityLevel"/>
+      <el-table-column  align="center" label="住户数量" prop="residentCount"/>
+      <el-table-column  align="center" label="安全消防等级" prop="securityLevel">
+        <template slot-scope="{row}">
+          <el-tag :type="row.securityLevel==='绿色'?'success':(row.securityLevel==='红色'?'danger':(row.securityLevel==='黄色'?'warning':'info'))"> {{row.securityLevel}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column  align="center" label="操作" prop="cz">
         <template slot-scope="{row}">
-          <el-button type="text" size="small" @click="handleView(row)">
+          <el-button type="primary" size="small" @click="handleView(row)">
             查看
           </el-button>
         </template>
@@ -90,7 +94,7 @@
         })
       },
       handleView(row){
-        sessionStorage.setItem('houseId',row.id)
+        sessionStorage.setItem('house',JSON.stringify(row))
         this.$router.push({
           path:'/houseManage/detail'
         })

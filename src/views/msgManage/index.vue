@@ -13,44 +13,43 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="消息内容" prop="content"/>
-      <el-table-column  align="center" label="已读数量" prop="readCount">
-      </el-table-column>
+      <el-table-column  align="center" label="消息内容" prop="content" width="250px"/>
       <el-table-column  align="center" label="类型" prop="type">
         <template slot-scope="{row}">
           {{row.type|msgType}}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="status">
-        <template slot-scope="{row}">
-          {{row.status|msgStatusType}}
+      <el-table-column  align="center" label="已读数量" prop="readCount">
+      </el-table-column>
+      <el-table-column  align="center" label="角色" prop="rolesName" />
+
+      <el-table-column  align="center" label="区域" prop="areaName" width="250px">
+      </el-table-column>
+      <el-table-column  align="center" label="状态" prop="status" width="150px">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status?'success':'danger'"> {{scope.row.status|msgStatusType}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="区域" prop="area">
-        <template slot-scope="{row}">
-          {{row.area}}
-        </template>
-      </el-table-column>
-      <el-table-column  align="center" label="角色" prop="roles"/>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt"/>
+      <el-table-column  align="center" label="更新时间" prop="updateAt" width="200px"/>
 
       <el-table-column
         label="操作"
         align="center"
+        width="250"
       >
         <template slot-scope="{row}">
-          <el-button type="text"  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===0">
+          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===0">
             编辑
           </el-button>
-          <el-button type="text" size="small" @click="sendMessage(row)" v-if="row.status===0">
+          <el-button type="primary" size="small" @click="sendMessage(row)" v-if="row.status===0">
             发送
           </el-button>
-          <el-button type="text" size="small" @click="handleDelete(row)" style="color: red">
+          <el-button type="danger" size="small" @click="handleDelete(row)" >
             删除
           </el-button>
         </template>
@@ -64,10 +63,10 @@
       :limit.sync="listQuery.pageSize"
       @pagination="getList"
     />
-    <el-dialog :title="isAdd==='create'?'添加消息':'编辑消息'" :visible.sync="addVisible" width="1000px">
-      <el-form :model="addForm" ref="addForm" label-width="100px" class="demo-ruleForm" :rules="addRules">
+    <el-dialog :title="isAdd==='create'?'添加消息':'编辑消息'" :visible.sync="addVisible" width="600px">
+      <el-form :model="addForm" ref="addForm" label-width="auto" label-position="right" class="demo-ruleForm" :rules="addRules">
         <el-form-item label="消息内容:" prop="content">
-          <el-input v-model="addForm.content" type="textarea"/>
+          <el-input v-model="addForm.content" type="textarea" autosize placeholder="请输入消息内容"/>
         </el-form-item>
         <el-form-item label="区域:" prop="area">
           <el-cascader
@@ -79,7 +78,7 @@
             ></el-cascader>
         </el-form-item>
         <el-form-item label="角色:" prop="roles">
-          <el-select v-model="addForm.roles" multiple placeholder="请选择">
+          <el-select v-model="addForm.roles" multiple placeholder="请选择角色">
             <el-option
               v-for="item in roleType"
               :key="item.value"
@@ -88,7 +87,7 @@
             </el-option>
           </el-select>        </el-form-item>
         <el-form-item label="类型:" prop="type">
-          <el-select v-model="addForm.type">
+          <el-select v-model="addForm.type" placeholder="请选择类型">
             <el-option
               v-for="item in msgType"
               :key="item.value"
@@ -96,9 +95,9 @@
               :value="item.value"/>
           </el-select>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createEditData('addForm')">确定</el-button>
-          <el-button type="primary" @click="addVisible=false">取消</el-button>
+        <el-form-item class="flex-x-end">
+          <el-button size="small" @click="addVisible=false">取消</el-button>
+          <el-button size="small" type="primary" @click="createEditData('addForm')">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>

@@ -6,23 +6,51 @@
 <script>
 export default {
   name: 'city',
+  props:{
+    cityData:{
+      type:Object,
+      default:null
+    }
+  },
+
   data () {
     return {
-      cityInit:null,
-      tooltipData:[
-        {name:'湖里区',a:'1',b:'2',c:'3',d:'4'},
-        {name:'湖里区',a:'1',b:'2',c:'3',d:'4'},
-        {name:'湖里区',a:'1',b:'2',c:'3',d:'4'},
-        {name:'湖里区',a:'1',b:'2',c:'3',d:'4'},
-      ]
+      cityInit:null
     }
   },
   mounted () {
-    var option= {
+    let color = [
+      {
+        c1: '#FEB692',
+        c2: '#EA5455' //业主
+      },
+      {
+        c1: '#FDEB71',
+        c2: '#F8D800'//房东
+      },
+      {
+        c1: '#ABDCFF',//理事
+        c2: '#0396FF'
+      },
+      {
+        c1: '#81FBB8',//租户
+        c2: '#28C76F'
+      }]
+    let option= {
+
       tooltip: {
         trigger: 'item',
         formatter:(params)=>{
-          return this.tooltipData[0].name + '<br/>' +this.tooltipData[0].a ;
+          let icon  =`<div style='background: linear-gradient(${color[0].c1}, ${color[0].c2});;height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
+          let icon1  =`<div style='background: linear-gradient(${color[1].c1}, ${color[1].c2});height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
+          let icon2  =`<div style='background: linear-gradient(${color[2].c1}, ${color[2].c2});height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
+          let icon3  =`<div style='background: linear-gradient(${color[3].c1}, ${color[3].c2});height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
+           let tip=''
+          this.cityData.result[params.dataIndex].villageFloor.forEach(item=>{
+            const title = item.areaName+icon+item.ownerCount+icon1+item.landlordCount+icon2+item.gridPersonCount+icon3+item.tenantCount+'<br>'
+            tip=tip+title
+          })
+          return  tip
         }
       },
       title: [
@@ -31,11 +59,20 @@ export default {
           left: '1.5%',
           top: '0%',
           textStyle: {
-            color: '#333',
+            color: 'rgba(0,0,0,.45)',
             fontSize: 18,
             align: 'center'
           }
         }],
+      dataZoom: [
+        {
+          show: true,
+          realtime: true,
+          height: 10,
+          start: 0,
+          end: 50
+        }
+      ],
 
       legend: {
         // orient 设置布局方式，默认水平布局，可选值：'horizontal'（水平） ¦ 'vertical'（垂直）
@@ -51,7 +88,7 @@ export default {
         // itemHeight: 10, // 设置高度
 
         itemGap: 30, // 设置间距,
-        data: ['武器库开门', '入库枪支', '出库枪支'],
+        data: ['业主数量', '房东数量', '理事数量', '租户数量'],
         // textStyle: {
         //   color: ['#0FEA8A', '#33B1FF', '#FF2756'],
         //   fontSize: 12
@@ -62,121 +99,98 @@ export default {
         type: 'category',
         // nameGap: 15,
         boundaryGap: true,
-        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-        // axisLabel: {
-        //   textStyle: {
-        //     // 文字样式
-        //     color: '#333',
-        //     fontSize: 14,
-        //     padding: [4, 0]
-        //   }
-        // },
-
-        // axisLine: {
-        //   lineStyle: {
-        //     color: '#0A2A83' // 左边线的颜色
-        //   }
-        // },
-        // axisTick: {
-        //   show: false
-        // }
-
+        data: this.cityData.PidName,
+        axisLabel: {
+          textStyle: {
+            // 文字样式
+            fontSize: 14,
+            // padding: [4, 0]
+          }
+        }
       }],
 
       yAxis: [
         {
           type: 'value',
-          nameGap: 15,
-          // boundaryGap: true,
-          // axisLine: {
-          //   show: true
-          // },
-          // splitLine: { // gird区域中的分割线
-          //   show: true, // 是否显示
-          //   lineStyle: {
-          //     color: '#0A2A83'
-          //   }
-          // },
-          // axisLabel: {
-          //   textStyle: {
-          //     color: '#0060FF',
-          //     fontSize: 12
-          //
-          //   },
-          // }
+          nameGap: 15
         }
       ],
       series: [
         {
-          name: '武器库开门',
+          name: '业主数量',
           type: 'bar',
-          data: [4, 2],
-          barWidth: 20,
+          data: this.cityData.ownerCount,
+          barWidth: 30,
           // barGap: '100%',
-          color: '#0FEA8A',
           itemStyle: {
             normal: {
               label: {
                 show: true, // 开启显示
                 position: 'inside', // 在上方显示
-                // textStyle: { // 数值样式
-                //   color: '#fff',
-                //   fontSize: 9
-                // },
                 formatter: '{c}'
-              }
+              },
+              color: new this.$echarts.graphic.LinearGradient(
+                0, 0, 0, 1,
+                [
+                  {offset: 0, color: `${color[0].c1}`},
+                  {offset: 1, color: `${color[0].c2}`}
+                ]
+              )
             }
           }
         },
         {
-          name: '入库枪支',
+          name: '房东数量',
           type: 'bar',
-          data: [10, 41],
-          barWidth: 20,
+          data: this.cityData.landlordCount,
+          barWidth: 30,
           // barGap: '100%',
-          color: '#33B1FF',
           itemStyle: {
             normal: {
               label: {
                 show: true, // 开启显示
                 position: 'inside', // 在上方显示
-                // textStyle: { // 数值样式
-                //   color: '#fff',
-                //   fontSize: 9
-                // },
                 formatter: '{c}'
-              }
+              },
+              color: new this.$echarts.graphic.LinearGradient(
+                0, 0, 0, 1,
+                [
+                  {offset: 0, color: `${color[1].c1}`},
+                  {offset: 1, color: `${color[1].c2}`}
+                ]
+              )
             }
           }
         },
         {
-          name: '出库枪支',
+          name: '理事数量',
           type: 'bar',
-          data: [18, 41],
-          barWidth: 20,
+          data: this.cityData.gridPersonCount,
+          barWidth: 30,
           // barGap: '100%',
-          color: '#FF2756',
           itemStyle: {
             normal: {
               label: {
                 show: true, // 开启显示
                 position: 'inside', // 在上方显示
-                // textStyle: { // 数值样式
-                //   color: '#fff',
-                //   fontSize: 9
-                // },
                 formatter: '{c}'
-              }
+              },
+            color: new this.$echarts.graphic.LinearGradient(
+              0, 0, 0, 1,
+              [
+                {offset: 0, color: `${color[2].c1}`},
+                {offset: 1, color: `${color[2].c2}`}
+              ]
+            )
             }
           }
         },
         {
-          name: '出库枪支',
+          name: '租户数量',
           type: 'bar',
-          data: [18, 41],
-          barWidth: 20,
+          data: this.cityData.tenantCount,
+          barWidth: 30,
           // barGap: '100%',
-          color: '#808080',
           itemStyle: {
             normal: {
               label: {
@@ -187,7 +201,14 @@ export default {
                 //   fontSize: 9
                 // },
                 formatter: '{c}'
-              }
+              },
+              color: new this.$echarts.graphic.LinearGradient(
+                0, 0, 0, 1,
+                [
+                  {offset: 0, color: `${color[3].c1}`},
+                  {offset: 1, color: `${color[3].c2}`}
+                ]
+              )
             }
           }
         }

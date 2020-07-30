@@ -27,7 +27,36 @@ class another {
       method: 'get'
     })
   }
-
+//
+  add(data) {
+    return request({
+      url: `/web/menu/add`,
+      method: 'post',
+      data
+    })
+  }
+  //
+  edit(data) {
+    return request({
+      url: `/web/menu/edit`,
+      method: 'put',
+      data,
+      transformRequest: function (data) {
+        // 对 data 进行任意转换处理
+        return JSON.stringify(data);
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+  //
+  delete(id) {
+    return request({
+      url: `/web/menu/delete?id=${id}`,
+      method: 'delete'
+    })
+  }
 }
 
 export const anotherApi = new another()

@@ -5,14 +5,9 @@
               :tree-props="{children: 'areaList'}"
               row-key="id"
     >
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
-        <template slot-scope="scope">
-          {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column  align="center" label="区域名称" prop="name"/>
+      <el-table-column  align="left" label="区域名称" prop="name"/>
 
-      <el-table-column  align="center" label="区域代码" prop="id">
+      <el-table-column  align="left" label="区域代码" prop="id">
       </el-table-column>
     </el-table>
 
@@ -26,7 +21,7 @@
 
   import {houseApi} from '@/api'
   export default {
-    name: "area",
+    name: "areaId",
     data(){
       return {
 

@@ -1,29 +1,24 @@
+import fileDownload from "js-file-download";
 <template>
   <div class="app-container">
 
     <search ref="search" :fields="searchFields" @change="handleSearch"/>
     <div class="filter-container">
-      <el-button
-        class="filter-item"
-        type="primary"
-        size="small"
-      >
-        导出
-      </el-button>
+     <UploadXls :temOut="false" :inExcel="false" :btnShow="true" @upOut="upOut"/>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column  align="center" label="积分栏目" prop="type"/>
-      <el-table-column  align="center" label="积分使用" prop="content"/>
-      <el-table-column  align="center" label="积分" prop="operation"/>
+      <el-table-column  align="center" label="积分使用" prop="content" width="200px"/>
       <el-table-column  align="center" label="用户" prop="memberName"/>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt"/>
+      <el-table-column  align="center" label="积分" prop="operation"/>
       <el-table-column  align="center" label="所属活动" prop="activityName"/>
       <el-table-column  align="center" label="兑换数量" prop="count"/>
+      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px"/>
     </el-table>
 
     <pagination
@@ -40,6 +35,9 @@
   import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
   import Search from '@/components/Search'
   import {recordApi} from '@/api'
+  import UploadXls from "@/components/Upload/UploadXls";
+  import fileDownload from "js-file-download"
+
   export default {
     name: "index",
     data(){
@@ -60,13 +58,13 @@
         total: 0
       }
     },
-    components: {Pagination, Search},
+    components: {Pagination, Search,UploadXls},
     created() {
       this.getList()
     },
     methods: {
       handleSearch() {
-        this.listQuery.page = 1
+        this.listQuery.pageNo = 1
         this.getList()
       },
       // 获取数据
@@ -88,8 +86,9 @@
           this.listLoading = false
         })
       },
-      handleRedeem(row){
-
+     async upOut(){
+        const data = await recordApi.exportXlsOut()
+        fileDownload(data, `积分记录列表.xls`);
       }
     }
   }

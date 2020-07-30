@@ -13,45 +13,51 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column  align="center" label="活动名称" prop="name"/>
+      <el-table-column  align="center" label="活动时间" prop="startTime" width="300px">
+        <template slot-scope="{row}">
+          {{row.startTime}}~{{row.endTime}}
+        </template>
+      </el-table-column>
       <el-table-column  align="center" label="奖品数量" prop="prizeCount"/>
 
       <el-table-column  align="center" label="已兑数量" prop="exchangeCount"/>
-      <el-table-column  align="center" label="状态" prop="status">
+      <el-table-column  align="center" label="状态" prop="status" width="150px">
         <template slot-scope="{row}">
-          {{row.status|activeType}}
+          <el-tag :type="row.status===1?'danger':(row.status===2?'success':(row.status===3?'':'info'))"> {{row.status|activeType}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="活动时间" prop="startTime"/>
 
-      <el-table-column  align="center" label="更新时间" prop="updatedAt"/>
+
+      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px"/>
 
       <el-table-column
         label="操作"
         align="center"
+        width="300px"
       >
         <template slot-scope="{row}">
-          <el-button type="text"  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===0">
+          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===1">
             编辑
           </el-button>
-          <el-button type="text" size="small" @click="handleView(row)">
+          <el-button type="primary" size="small" @click="handleView(row)">
             查看
           </el-button>
-          <el-button type="text" size="small" @click="sendMsg(row)" v-if="row.status===0">
+          <el-button type="success" size="small" @click="sendMsg(row)" v-if="row.status===1">
             发布
           </el-button>
-          <el-button type="text" size="small" @click="handleOver(row)" v-if="row.status===2">
+          <el-button type="danger" size="small" @click="handleOver(row)" v-if="row.status===3">
             结束
           </el-button>
-          <el-button type="text" size="small" @click="handleDelete(row)" v-if="row.status===0||row.status===1">
+          <el-button type="danger" size="small" @click="handleDelete(row)" v-if="row.status===1||row.status===2">
             删除
           </el-button>
-          <el-button type="text" size="small" @click="handleOut(row)" v-if="row.status===1">
+          <el-button type="info" size="small" @click="handleOut(row)" v-if="row.status===2">
             撤回
           </el-button>
         </template>
@@ -66,7 +72,7 @@
       @pagination="getList"
     />
     <el-dialog :title="isAdd==='create'?'添加活动':'编辑活动'" :visible.sync="addVisible" width="1000px">
-      <el-form :model="addForm" ref="addForm" label-width="100px" class="demo-ruleForm" :rules="addRules">
+      <el-form :model="addForm" ref="addForm" label-width="auto" label-position="right"  class="demo-ruleForm" :rules="addRules">
         <el-form-item label="活动名称:" prop="name">
           <el-input v-model="addForm.name" placeholder="请输入活动名称"/>
         </el-form-item>
@@ -77,18 +83,21 @@
             value-format="yyyy-MM-dd HH:mm:ss"
             range-separator="至"
             start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            end-placeholder="结束日期"
+            :default-time="['00:00:00', '23:59:59']"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="活动介绍:" prop="introduce">
-          <el-input  v-model="addForm.introduce" type="textarea" placeholder="请输入活动介绍"/>
+          <el-input  v-model="addForm.introduce" autosize type="textarea" placeholder="请输入活动介绍"/>
         </el-form-item>
         <el-form-item label="上传封面:" prop="type">
            <Upload @input="myUpload" :url="this.addForm.cover" ref="Upload"/>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createEditData('addForm')">确定</el-button>
-          <el-button type="primary" @click="addVisible=false">取消</el-button>
+        <el-form-item class="flex-x-end">
+          <el-button size="small" @click="addVisible=false">取消</el-button>
+          <el-button size="small" type="primary" @click="createEditData('addForm')">确定</el-button>
+
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -101,7 +110,7 @@
   import {activeType} from '@/config/userManage'
   import {recordApi} from '@/api'
   import {validateRequire} from '@/utils/validate'
-  import Upload from '@/components/Upload/Upload'
+  import Upload from '@/components/Upload/Upload2'
   export default {
     name: "index",
     data(){

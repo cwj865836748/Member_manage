@@ -13,7 +13,7 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
@@ -27,15 +27,16 @@
       <el-table-column
         label="操作"
         align="center"
+        width="250px"
       >
         <template slot-scope="{row}">
-          <el-button type="text"  size="small" @click="handleCreateEdit('edit',row)">
+          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
             编辑
           </el-button>
-          <el-button type="text" size="small" @click="authorization(row)">
+          <el-button type="success" size="small" @click="authorization(row)">
             授权
           </el-button>
-          <el-button type="text" size="small" @click="handleDelete(row)">
+          <el-button type="danger" size="small" @click="handleDelete(row)">
             删除
           </el-button>
         </template>
@@ -50,16 +51,17 @@
       @pagination="getList"
     />
     <el-dialog :title="isAdd==='create'?'添加角色':'编辑角色'" :visible.sync="addVisible" width="500px">
-      <el-form :model="addForm" ref="addForm" label-width="100px" class="demo-ruleForm" :rules="addRules">
+      <el-form :model="addForm" ref="addForm" label-width="auto" label-position="right" class="demo-ruleForm" :rules="addRules">
         <el-form-item label="角色名称" prop="name">
           <el-input v-model="addForm.name" placeholder="请输入角色名称"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="description">
-          <el-input type="textarea" v-model="addForm.description" placeholder="请输入描述"></el-input>
+          <el-input type="textarea" autosize v-model="addForm.description" placeholder="请输入描述"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createEditData('addForm')">确定</el-button>
-          <el-button type="primary" @click="addVisible=false">取消</el-button>
+        <el-form-item class="flex-x-end">
+          <el-button size="small" @click="addVisible=false">取消</el-button>
+
+          <el-button size="small" type="primary" @click="createEditData('addForm')">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -69,7 +71,7 @@
                 :data="treeData"
                 show-checkbox
                 default-expanded-all
-                :default-checked-keys="menuObj.menuIds"
+                node-key="id"
                 :props="defaultProps"
                 @check="checkGroupNode"
               />
@@ -135,6 +137,7 @@
     components: {Pagination, Search},
     created() {
       this.getList()
+      this.getTree()
     },
     methods: {
       async getTree(){
@@ -159,10 +162,26 @@
           this.listLoading = false
         })
       },
-      authorization(row){
+       authorization(row){
         this.dialogFormVisible=true
         this.menuObj.roleId=row.id
-        this.getTree()
+         this.getMenuTreeByRole()
+
+      },
+      async getMenuTreeByRole(){
+        const {result}  =  await roleApi.getMenuTreeByRole({roleId:this.menuObj.roleId})
+        const arr = []
+        result.length&&result.forEach(item=>{
+          if (item.menus&&item.menus.length){
+            item.menus.forEach(items=>{
+              items.isOwn&&arr.push(items.id)
+            })
+          }else {
+            item.isOwn&&arr.push(item.id)
+          }
+        })
+        this.$refs.tree.setCheckedKeys(arr)
+        this.menuObj.menuIds=arr
       },
       // 重置
       resetForm() {

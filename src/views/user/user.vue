@@ -13,33 +13,37 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
+      <el-table-column  align="center" label="账号" prop="username"/>
+      <el-table-column  align="center" label="姓名" prop="name"/>
+      <el-table-column  align="center" label="手机号" prop="phone"/>
       <el-table-column  align="center" label="角色" prop="roleName"/>
       <el-table-column  align="center" label="区域权限" prop="areaName">
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="isEnabled">
-        <template slot-scope="{row}">
-          {{row.isEnabled|isEnabled}}
+      <el-table-column  align="center" label="状态" prop="isEnabled" width="100px">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.isEnabled?'success':'danger'"> {{scope.row.isEnabled|isEnabled}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt">
+      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px">
       </el-table-column>
       <el-table-column
         label="操作"
         align="center"
+        min-width="200px"
       >
         <template slot-scope="{row}">
-          <el-button type="text"  size="small" @click="handleCreateEdit('edit',row)">
+          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
             编辑
           </el-button>
-          <el-button type="text" size="small" @click="resetPassword(row)">
+          <el-button type="primary" size="small" @click="resetPassword(row)">
             重置密码
           </el-button>
-          <el-button type="text" size="small" @click="handleDelete(row)">
+          <el-button type="danger" size="small" @click="handleDelete(row)">
             删除
           </el-button>
         </template>
@@ -55,8 +59,8 @@
     />
     <el-dialog :title="isAdd==='create'?'添加用户':'编辑用户'" :visible.sync="addVisible" width="500px">
       <el-form :model="addForm" ref="addForm" label-width="100px" class="demo-ruleForm" :rules="addRules">
-        <el-form-item label="账户" prop="userName">
-          <el-input v-model="addForm.userName" placeholder="请输入账户"></el-input>
+        <el-form-item label="账号" prop="userName">
+          <el-input v-model="addForm.userName" placeholder="新增用户默认初始密码：123456"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name" placeholder="请输入姓名"></el-input>
@@ -92,19 +96,19 @@
             style="width: 100%"
           ></el-cascader>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createEditData('addForm')">确定</el-button>
-          <el-button type="primary" @click="addVisible=false">取消</el-button>
+        <el-form-item class="flex-x-end">
+          <el-button size="small" @click="addVisible=false">取消</el-button>
+          <el-button size='small' type="primary" @click="createEditData('addForm')">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
     <el-dialog title="修改密码" :visible.sync="pwdVisible" width="500px">
       <el-form :model="passForm" ref="passForm" label-width="100px" class="demo-ruleForm" :rules="passRules">
         <el-form-item label="新密码" prop="password">
-          <el-input v-model="passForm.password" placeholder="请输入新密码"></el-input>
+          <el-input v-model="passForm.password" type="password" placeholder="请输入新密码"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="rwd">
-          <el-input v-model="passForm.rwd" placeholder="请确认密码"></el-input>
+          <el-input v-model="passForm.rwd" type="password" placeholder="请确认密码"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAB('passForm')">确定</el-button>
@@ -122,6 +126,7 @@
   import {statusType} from '@/config/userManage'
   import {userApi,roleApi} from '@/api'
   import {validateRequire} from '@/utils/validate'
+  import {regroupCascaderData} from '@/utils'
   export default {
     name: "index",
     data(){
@@ -141,7 +146,8 @@
           children: 'areaList',
           label: 'name',
           value:'id',
-          checkStrictly:true
+          checkStrictly:true,
+          expandTrigger: 'hover'
         },
         listLoading: false,
         list: null,
@@ -267,7 +273,7 @@
           name:'',
           phone:'',
           roleId:'',
-          status:'',
+          status:1,
           areaId:''
         }
         this.areaArr=[]
@@ -301,19 +307,44 @@
           }
         })
       },
+      findNode(array, id) {
+    let stack = [];
+    let going = true;
+    let walker = (array, id) => {
+      array.forEach(item => {
+        if (!going) return;
+        stack.push(item['id']);
+        if (item['id'] === id) {
+          going = false;
+        } else if (item['areaList']) {
+          walker(item['areaList'], id);
+        } else {
+          stack.pop();
+        }
+      });
+      if (going) stack.pop();
+    }
+    walker(array, id);
+    return stack;
+  },
+
       // 创建或编辑 type create or edit
       async handleCreateEdit(type, row) {
         if (type == 'create') this.resetForm()
         if (type == 'edit') {
+          this.$nextTick(async()=>{
           const {result} = await userApi.queryById(row.id)
+            this.areaArr = this.findNode(this.areaOptions,row.areaId)
           this.addForm={
             userName:result.username,
             name:result.name,
             phone:result.phone,
             roleId:result.roleId,
             status:result.isEnabled,
-            areaId:row.areaId
+            areaId:result.areaId,
+            id:row.id
           }
+          })
         }
         this.isAdd = type
         this.addVisible = true

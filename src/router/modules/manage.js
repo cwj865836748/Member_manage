@@ -9,7 +9,7 @@ const webUserManageRouter = {
   name: 'webUserManage',
   meta: {
     title: '前端用户管理',
-    icon: 'lock'
+    icon: 'agent'
   },
   children: [
     {
@@ -28,7 +28,7 @@ const msgRouter = {
   name: 'msgManage',
   meta: {
     title: '消息管理',
-    icon: 'lock'
+    icon: 'project'
   },
   children: [
     {
@@ -47,7 +47,7 @@ const articleRouter = {
   name: 'articleManage',
   meta: {
     title: '文章管理',
-    icon: 'lock'
+    icon: 'clipboard'
   },
   children: [
     {

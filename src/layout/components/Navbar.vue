@@ -10,18 +10,20 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container"/>
 
     <div class="right-menu">
+      <div class="loginName">管理员：{{userInfo.username}}</div>
       <template v-if="device!=='mobile'">
+
         <search id="header-search" class="right-menu-item"/>
 
         <error-log class="errLog-container right-menu-item hover-effect"/>
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect"/>
+<!--        <screenfull id="screenfull" class="right-menu-item hover-effect"/>-->
 
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect"/>
-        </el-tooltip>
+<!--        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">-->
+<!--          <size-select id="size-select" class="right-menu-item hover-effect"/>-->
+<!--        </el-tooltip>-->
 
-        <lang-select class="right-menu-item hover-effect"/>
+<!--        <lang-select class="right-menu-item hover-effect"/>-->
 
         <!--<div class="right-menu-item hover-effect" id="message" v-if="staffId">-->
         <!--<el-button type="info" icon="el-icon-message" circle size="mini" plain></el-button>-->
@@ -31,7 +33,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" @command="handleCommand">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar">
+          <img src="../../assets/images/icon.png" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -45,9 +47,9 @@
               {{ $t('navbar.profile') }}
             </el-dropdown-item>
           </router-link>
-          <el-dropdown-item command="cp">
-            {{ $t('navbar.changePassword') }}
-          </el-dropdown-item>
+<!--          <el-dropdown-item command="cp">-->
+<!--            {{ $t('navbar.changePassword') }}-->
+<!--          </el-dropdown-item>-->
 
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
@@ -92,7 +94,8 @@
         'sidebar',
         'avatar',
         'device',
-        'staffId'
+        'staffId',
+        'userInfo'
       ])
     },
     methods: {
@@ -155,6 +158,15 @@
 
     .breadcrumb-container {
       float: left;
+    }
+    .loginName {
+      display: inline-block;
+      padding: 0 8px;
+      height: 100%;
+      font-size: 14px;
+      color: rgba(0,0,0,.45);
+      font-weight: bold;
+      vertical-align: text-bottom;
     }
 
     .errLog-container {

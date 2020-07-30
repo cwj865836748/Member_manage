@@ -92,6 +92,9 @@ export function appVersionTypeFilter(type, val) {
 export function isEnabled(val) {
   return val===1?'启用':'禁用'
 }
+export function isTaskEnabled(val) {
+  return val===0?'启用':'禁用'
+}
 export function sex(val) {
   return val===1?'男':'女'
 }
@@ -113,17 +116,30 @@ export function shelfType(val){
 export function logType(val){
   return val===1?'操作日志':'登录日志'
 }
+export function articleType(val){
+  return val===1?'已发布':'未发布'
+}
 export function activeType(val){
   switch (val) {
-    case 0:
-      return '待发布'
     case 1:
-      return '已发布'
+      return '待发布'
     case 2:
-      return '已开启'
+      return '已发布'
     case 3:
+      return '已开启'
+    case 4:
       return '已结束'
   }
 }
 
-
+export function safeColor(val){
+  if(val==='#19C919'){
+    return '绿色'
+  }else if(val==='#ED4014'){
+    return '红色'
+  }else if(val==='#F9E31C'){
+    return '黄色'
+  }else {
+    return '灰色'
+  }
+}

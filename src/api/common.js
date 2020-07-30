@@ -17,14 +17,37 @@ class CommonModel {
       isLoading: true
     })
   }
-
-  statistics(params) {
+  /**
+   * 顶部统计
+   * @param data
+   */
+  statistics() {
     return request({
-      url: '/admin/index/statistics',
-      method: 'get',
-      params,
+      url: '/web/statistics/miscellaneousStatistics',
+      method: 'get'
     })
   }
+
+  personStatisticsResult() {
+    return request({
+      url: '/web/statistics/personStatisticsResult',
+      method: 'get'
+    })
+  }
+  floorSecurityStatistics(){
+    return request({
+      url: '/web/statistics/floorSecurityStatistics',
+      method: 'get'
+    })
+  }
+  convertLogStatistics(params){
+    return request({
+      url: '/web/statistics/convertLogStatistics',
+      method: 'get',
+      params
+    })
+  }
+
   /**
    * 登录
    * @param data
@@ -50,10 +73,28 @@ class CommonModel {
    * 获取动态验证码
    * @param data
    */
+  getCode(params) {
+    return request({
+      url: '/web/sys/code',
+      method: 'get',
+      params
+    })
+  }
   getCaptcha() {
     return request({
       url: '/web/sys/createImg',
       method: 'get'
+    })
+  }
+  /**
+   * 修改密码
+   * @param data
+   */
+  editPassword(params) {
+    return request({
+      url: '/web/user/editPassword',
+      method: 'get',
+      params
     })
   }
   /**

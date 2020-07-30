@@ -13,32 +13,32 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column  align="center" label="标题" prop="title"/>
-      <el-table-column  align="center" label="浏览量" prop="count">
+      <el-table-column  align="center" label="浏览量" prop="count" width="150px">
       </el-table-column>
-      <el-table-column  align="center" label="积分值" prop="integral">
+      <el-table-column  align="center" label="积分值" prop="integral" width="150px">
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="status">
-        <template slot-scope="{row}">
-          {{row.status|isEnabled}}
+      <el-table-column  align="center" label="状态" prop="status" width="150px">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status?'success':'danger'"> {{scope.row.status|articleType}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt">
+      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px">
       </el-table-column>
       <el-table-column
         label="操作"
         align="center"
       >
         <template slot-scope="{row}">
-          <el-button type="text"  size="small" @click="handleCreateEdit('edit',row)">
+          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
             编辑
           </el-button>
-          <el-button type="text" size="small" @click="handleDelete(row)">
+          <el-button type="danger" size="small" @click="handleDelete(row)">
             删除
           </el-button>
         </template>
@@ -53,18 +53,18 @@
       @pagination="getList"
     />
     <el-dialog :title="isAdd==='create'?'添加文章':'编辑文章'" :visible.sync="addVisible" width="1000px">
-      <el-form :model="addForm" ref="addForm" label-width="100px" class="demo-ruleForm" :rules="addRules">
+      <el-form :model="addForm" ref="addForm" label-width="auto" label-position="right" class="demo-ruleForm" :rules="addRules">
         <el-form-item label="标题:" prop="title">
-          <el-input v-model="addForm.title"></el-input>
+          <el-input v-model="addForm.title" placeholder="请输入标题"></el-input>
         </el-form-item>
         <el-form-item label="内容:" prop="content">
-          <Tinymce v-model="addForm.content" :height="300"/>
+          <Tinymce ref="tinymce" v-model="addForm.content" :height="300" v-if="addVisible" />
         </el-form-item>
         <el-form-item label="积分:" prop="integral">
           <el-input-number size="mini" v-model="addForm.integral" controls-position="right"></el-input-number>
         </el-form-item>
         <el-form-item label="状态:" prop="status">
-          <el-select v-model="addForm.status">
+          <el-select v-model="addForm.status" placeholder="请选择状态">
           <el-option
             v-for="item in statusType"
             :key="item.value"
@@ -72,9 +72,10 @@
             :value="item.value"/>
           </el-select>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createEditData('addForm')">确定</el-button>
-          <el-button type="primary" @click="resetForm">取消</el-button>
+        <el-form-item class="flex-x-end">
+          <el-button size="small" @click="addVisible=false">取消</el-button>
+
+          <el-button size="small" type="primary" @click="createEditData('addForm')">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -160,6 +161,9 @@
           if (type == 'create') this.resetForm()
           if (type == 'edit') {
             this.addForm = JSON.parse(JSON.stringify(row))
+            this.$nextTick(() => {
+              this.$refs.tinymce.setContent(this.addForm.content)
+            })
           }
           this.isAdd = type
           this.addVisible = true

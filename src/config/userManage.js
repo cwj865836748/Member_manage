@@ -49,10 +49,10 @@ export const redemptionType = [
   {label: '已过期', value: 2, type: ''}
 ]
 export const activeType = [
-  {label: '待发布', value: 0, type: ''},
-  {label: '已发布', value: 1, type: ''},
-  {label: '已开启', value: 2, type: ''},
-  {label: '已结束', value: 3, type: ''}
+  {label: '待发布', value: 1, type: ''},
+  {label: '已发布', value: 2, type: ''},
+  {label: '已开启', value: 3, type: ''},
+  {label: '已结束', value: 4, type: ''}
 ]
 export const shelfType = [
   {label: '未上架', value: 0, type: ''},

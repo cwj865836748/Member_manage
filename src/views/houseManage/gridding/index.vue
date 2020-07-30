@@ -1,9 +1,11 @@
+import fileDownload from "js-file-download";
 <template>
   <div class="app-container">
-  <el-row :gutter="40">
-    <el-col :span="5" style="background: #fff;padding: 30px 0">
-      <el-row class="flex-y-center" style="margin-bottom: 10px" >
-       <el-col :span="4" style="text-align: right">网格:</el-col>
+  <el-row :gutter="40" style="margin: 0">
+    <el-col :span="5" :xl="5" :lg="6" :md="7" :sm="8" :xs="8" style="padding: 0">
+      <el-card shadow="always">
+      <el-row :gutter="5" class="flex-y-center" style="margin-bottom: 10px" >
+       <el-col :span="4" class="wgSize">网格:</el-col>
         <el-col :span="14">
        <el-input
          placeholder="请输入"
@@ -13,7 +15,7 @@
         <el-col :span="6"> <el-button type="primary" size="small" @click="$refs.tree.filter(treeKey)">查询</el-button></el-col>
       </el-row>
       <el-row>
-        <el-col :span="10" class="flex-x-bottom">
+        <el-col :span="10">
        <el-button size="small" type="primary" icon="el-icon-plus"  @click="createOrUpdate('create')">新建网格</el-button>
         </el-col>
       </el-row>
@@ -29,37 +31,40 @@
          ref="tree">
             <span class="custom-tree-node" slot-scope="{ node }">
         <span>{{ node.label }}</span>
-        <span v-if="node.level===3">
+        <span v-if="node.data.isLast">
           <el-button
             type="text"
             size="mini"
             @click.stop="createOrUpdate('create',node)">
-            +
+            <i class="el-icon-circle-plus" style="font-size: 16px"></i>
           </el-button>
         </span>
       </span>
        </el-tree>
+      </el-card>
     </el-col>
-    <el-col :span="19">
+    <el-col :span="19" :xl="19" :lg="18" :md="17" :sm="16" :xs="16">
+      <el-card shadow="always">
       <el-row class="head">
         <el-col :span="8">
           <div class="wgName margin20">{{gridDetail.gridName}}</div>
-          <div class="margin20">理事：{{gridDetail.personName}}</div>
-          <div class="margin20">创建时间：{{gridDetail.createAt}}</div>
-          <div>描述：{{gridDetail.content}}</div>
+          <div class="margin20 wgName2">理事：{{gridDetail.personName}}</div>
+          <div class="margin20 wgName2">创建时间：{{gridDetail.createAt}}</div>
+          <div class="wgName2">描述：{{gridDetail.content}}</div>
         </el-col>
         <el-col :span="8" style="padding-top: 40px">
-          <div class="margin20">手机号：{{gridDetail.phone}}</div>
-          <div>管理房源：{{gridDetail.houseCount}}</div>
+          <div class="margin20 wgName2">手机号：{{gridDetail.phone}}</div>
+          <div style="color: #1890FF" class="wgName2">管理房源：{{gridDetail.houseCount}}</div>
         </el-col>
-        <el-col :span="8" class="f">
-          <el-button :disabled="!gridDetail.gridName" type="primary" size="small" @click="createOrUpdate('edit')">编辑</el-button>
-          <el-button :disabled="!gridDetail.gridName" size="small" @click="handleDelete('grid')">删除</el-button>
+        <el-col :span="8">
+          <el-button :disabled="!gridDetail.gridName" type="warning" size="small" @click="createOrUpdate('edit')">编辑</el-button>
+          <el-button :disabled="!gridDetail.gridName" size="small"  type="danger" @click="handleDelete('grid')">删除</el-button>
         </el-col>
       </el-row>
       <el-row class="head">
       <search ref="search" :gridDetail="gridDetail" :fields="searchFields" @change="handleSearch" @getArea="getArea"/>
-      <div class="filter-container">
+      <div class="filter-container" >
+        <div class="flex-x-start">
         <el-button
           class="filter-item"
           type="primary"
@@ -70,22 +75,11 @@
         >
           添加
         </el-button>
-        <el-button
-          class="filter-item"
-          size="small"
-          :disabled="!gridDetail.gridName"
-        >
-          导入模板
-        </el-button>
-        <el-button
-          class="filter-item"
-          size="small"
-          :disabled="!gridDetail.gridName"
-        >
-          导入
-        </el-button>
+
+        <UploadXls v-if="gridDetail.gridName" @downMo="downMo" @uploadFile="uploadFile"/>
+        </div>
         <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-          <el-table-column  align="center" fixed :label="$t('common.serial')">
+          <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
             <template slot-scope="scope">
               {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
             </template>
@@ -108,7 +102,7 @@
             align="center"
           >
             <template slot-scope="{row}">
-              <el-button type="text" size="small" @click="handleDelete('house',row)">
+              <el-button type="danger" size="small" @click="handleDelete('house',row)">
                 删除
               </el-button>
             </template>
@@ -123,14 +117,15 @@
         />
       </div>
       </el-row>
+      </el-card>
     </el-col>
   </el-row>
   <el-dialog
-    :title="isAdd?'新建网格':'编辑网格'"
+    :title="isAdd==='create'?'新建网格':'编辑网格'"
     :visible.sync="addVisible"
     width="500px"
   >
-    <el-form :model="addForm" ref="addForm" label-width="100px" class="demo-ruleForm" :rules="addRules">
+    <el-form :model="addForm" ref="addForm" label-width="auto" label-position="right" class="demo-ruleForm" :rules="addRules">
       <el-form-item label="所属区域" prop="areaId" placeholder="请选择所属区域">
         <el-cascader
           v-model="areaArr"
@@ -146,11 +141,9 @@
         <el-select
           v-model="addForm.gridPersonId"
           filterable
-          remote
-          reserve-keyword
           placeholder="请输入关键词"
-          :remote-method="remoteMethod"
-          :loading="selectLoading">
+          :filter-method="remoteMethod"
+          >
           <el-option
             v-for="item in gridPersonOptions"
             :key="item.value"
@@ -160,11 +153,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="描述" prop="content">
-        <el-input type="textarea" v-model="addForm.content" placeholder="请输入描述"/>
+        <el-input type="textarea" autosize v-model="addForm.content" placeholder="请输入描述"/>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('addForm')">确定</el-button>
-        <el-button type="primary" @click="addVisible=false">取消</el-button>
+      <el-form-item class="flex-x-end">
+        <el-button  @click="addVisible=false" size="small">取消</el-button>
+        <el-button type="primary" @click="submitForm('addForm')" size="small">确定</el-button>
       </el-form-item>
     </el-form>
 
@@ -172,17 +165,21 @@
   <el-dialog
     title="添加房源"
     :visible.sync="houseVisible"
+    width="80%"
+    :close-on-click-modal="false"
+    destroy-on-close
   >
-    <search ref="abc" :fields="houseFields" @change="addHouse" />
-    <el-button size="small" type="primary" @click="addGridFloor">确定</el-button>
-    <el-table ref="multipleTable" @selection-change="handleselectRow" :data="houseList" border fit highlight-current-row stripe style="width: 100%">
+        <search ref="abc" :fields="houseFields" @change="addHouse" />
+
+    <el-table ref="multipleTable" row-key="systemid" @selection-change="handleselectRow" :data="houseList" border fit highlight-current-row stripe style="width: 100%">
       <el-table-column
         type="selection"
+        :reserve-selection="true"
         prop="id"
         align="center"
         width="55">
       </el-table-column>
-      <el-table-column  align="center" fixed :label="$t('common.serial')">
+      <el-table-column  align="center" fixed :label="$t('common.serial')" width="80px">
         <template slot-scope="scope">
           {{ (houseQuery.pageNo - 1) * houseQuery.pageSize + scope.$index + 1 }}
         </template>
@@ -200,14 +197,15 @@
       <el-table-column  align="center" label="详细地址" prop="address">
       </el-table-column>
     </el-table>
+    <el-button size="small" style="margin-top: 10px" type="primary" @click="addGridFloor">确定</el-button>
 
     <pagination
-      v-show="houseTotal>0"
-      :total="houseTotal"
-      :pageNo.sync="houseQuery.pageNo"
-      :pageSize.sync="houseQuery.pageSize"
-      @pagination="getHouseList"
-    />
+        v-show="houseTotal>0"
+        :total="houseTotal"
+        :pageNo.sync="houseQuery.pageNo"
+        :pageSize.sync="houseQuery.pageSize"
+        @pagination="getHouseList"
+      />
 
   </el-dialog>
 </div>
@@ -218,10 +216,11 @@
   import Search from '@/components/Search'
   import {houseApi} from '@/api'
   import {validateRequire} from '@/utils/validate'
-
+  import UploadXls from "@/components/Upload/UploadXls";
+  import fileDownload from "js-file-download"
   export default {
         name: "index",
-    components: {Pagination, Search},
+    components: {Pagination, Search,UploadXls},
       data(){
 
         return {
@@ -230,7 +229,7 @@
             {type: 0, label: '详细地址', value: '', options: '', field: 'address'},
           ],
           houseFields: [
-            {type: 6, label: '所属区域', value: [], options: [], field: 'areaId'},
+            // {type: 6, label: '所属区域', value: [], options: [], field: 'areaId'},
             {type: 0, label: '详细地址', value: '', options: '', field: 'address'},
           ],
           listLoading:false,
@@ -283,9 +282,11 @@
           optionProps: {
               children: 'areaList',
               label: 'name',
-              value:'id'
+              value:'id',
+              expandTrigger: 'hover'
           },
           selectLoading:false,
+          gridPersonOption:[],
           gridPersonOptions:[],
           gridDetail:{
             gridName:'',
@@ -304,19 +305,29 @@
           selectList:[]
         }
       },
+    watch:{
+      addVisible(newVal,oldVal){
+        if (!newVal){
+          //this.areaArr=[]
+        }
+      }
+    },
       created() {
           this.getTree()
+          this.getAllGrid()
       },
       methods:{
           //获取树节点点击之后的网格信息
         getGridList(data, node){
-          if (node.level!==4){
+          if (node.data.isLast){
+            this.areaArr=this.getNodeId(node)
             return false
           }
-          this.listLoading = true
-          this.searchFields[0].value=[node.parent.parent.parent.data.id,node.parent.parent.data.id,node.parent.data.id]
-          this.areaArr=[node.parent.parent.parent.data.id,node.parent.parent.data.id,node.parent.data.id]
-          this.houseFields[0].value=[node.parent.parent.parent.data.id,node.parent.parent.data.id,node.parent.data.id]
+          if (!node.data.isGrid){
+            return false
+          }
+          this.searchFields[0].value=this.getNodeParentId(node)
+          // this.houseFields[0].value=[node.parent.parent.parent.data.id,node.parent.parent.data.id,node.parent.data.id]
           this.listQuery.id = node.data.id//网格id
           this.getGridInfo()
           this.getGridFloorList()
@@ -372,20 +383,21 @@
           if (!value) return true;
           return data.name.indexOf(value) !== -1;
         },
+       async getAllGrid(){
+         houseApi.getAllRole('').then(re=>{
+           re.result&&re.result.forEach(item=>{
+             let obj ={
+               label:item.name,
+               value:item.id
+             }
+             this.gridPersonOption.push(obj)
+             this.gridPersonOptions.push(obj)
+           })
+         })
+        },
         //获取理事
         remoteMethod(query) {
-
-          this.selectLoading = true;
-          houseApi.getAllRole(query).then(re=>{
-            this.selectLoading = false;
-            re.result&&re.result.forEach(item=>{
-              let obj ={
-                label:item.name,
-                  value:item.id
-              }
-              this.gridPersonOptions.push(obj)
-            })
-          })
+          this.gridPersonOptions= this.gridPersonOption.filter(item=>item.label.includes(query))
         },
 
         //搜索
@@ -401,7 +413,6 @@
               cancelButtonText: this.$t('common.cancel'),
               type: 'warning'
             }).then(() => {
-
               houseApi.delete(this.gridDetail.gridId).then(res => {
                 this.list=null
                 this.total=0
@@ -422,8 +433,9 @@
                   message: res.msg || this.$t('common.success'),
                   type: 'success'
                 })
+                this.getTree()
+                this.searchFields[0].value=[]
               })
-              this.getTree()
             }).catch(() => {
               this.$message({
                 type: 'info',
@@ -443,6 +455,7 @@
               const flag = --this.total % this.listQuery.pageSize
               if (!flag && this.total) this.listQuery.pageNo--
               this.getGridFloorList()
+              this.getGridInfo()
               this.$message({
                 message: res.msg || this.$t('common.success'),
                 type: 'success'
@@ -464,7 +477,6 @@
             gridPersonId:'',
             name:''
           }
-          this.areaArr=[]
         },
 
         //打开表单
@@ -472,7 +484,7 @@
           if (type == 'create') {
             this.resetForm()
             if (node){
-              this.areaArr=[node.parent.parent.data.id,node.parent.data.id,node.data.id]
+              this.areaArr=this.getNodeId(node)
             }
           }
           if (type == 'edit') {
@@ -483,6 +495,7 @@
               name:this.gridDetail.gridName,
               id:this.gridDetail.gridId
             }
+            this.areaArr=this.searchFields[0].value
           }
           this.isAdd=type
           this.addVisible = true
@@ -490,6 +503,29 @@
             this.$refs['addForm'].clearValidate()
           })
         },
+        getNodeId(node){
+          const arr = []
+          arr.unshift(node.data.id)
+          if (node.parent){
+            arr.unshift(node.parent.data.id)
+            if (node.parent.parent){
+              arr.unshift(node.parent.parent.data.id)
+            }
+          }
+          return arr
+        },
+        getNodeParentId(node){
+          const arr = []
+          arr.unshift(node.parent.data.id)
+          if (node.parent.parent){
+            arr.unshift(node.parent.parent.data.id)
+            if (node.parent.parent.parent){
+              arr.unshift(node.parent.parent.parent.data.id)
+            }
+          }
+          return arr
+        },
+
         //提交表单
         submitForm(form){
           this.addForm.areaId=this.areaArr[this.areaArr.length-1]
@@ -509,6 +545,8 @@
                 houseApi.edit(this.addForm).then((res) => {
                   this.getGridInfo()
                   this.getTree()
+                  this.searchFields[0].value=this.areaArr
+                  // this.houseFields[0].value=this.areaArr
                   this.$message({
                     message: res.message || this.$t('common.success'),
                     type: 'success'
@@ -526,11 +564,11 @@
         },
         //获取房源列表
         getHouseList(data={}){
-          const areaId =this.houseFields[0].value[this.houseFields[0].value.length-1]
+          const areaId =this.searchFields[0].value[this.searchFields[0].value.length-1]
           if(!areaId){
             return  this.$message.error('所属区域不能为空');
           }
-          houseApi.findAllFloorList({...this.houseQuery,address:this.houseFields[1].value,areaId,...data}).then(res => {
+          houseApi.findAllFloorList({...this.houseQuery,address:this.houseFields[0].value,areaId,...data}).then(res => {
             this.houseList=res.result.records
             this.houseTotal = res.result.total
             this.listLoading = false
@@ -543,7 +581,7 @@
 
         addGridFloor(){
           if(!this.selectList.length){
-            return
+            return this.$message.warning('请选择要添加的房源')
           }
           const floorsDtos=[]
           this.selectList.forEach(item=>{
@@ -551,19 +589,53 @@
           })
           const obj={
             gridId:this.listQuery.id,
-            areaId:this.houseFields[0].value[this.houseFields[0].value.length-1],
+            areaId:this.searchFields[0].value[this.searchFields[0].value.length-1],
             // floorsDtos:JSON.stringify(floorsDtos)
             floorsDtos:floorsDtos
           }
 
             houseApi.addGridFloor(obj).then((res) => {
               this.getGridFloorList()
+              this.getGridInfo()
               this.$message({
                 message: res.message || this.$t('common.success'),
                 type: 'success'
               })
             })
           this.houseVisible=false
+        },
+        uploadFile(file){
+          return new Promise((resolve, reject) => {
+            const formData = new FormData()
+            formData.append('file', file.file)
+            formData.append('areaId', this.gridDetail.area)
+            formData.append('gridId', this.gridDetail.gridId)
+            houseApi.exportXls(formData).then((res) => {
+              let buf = new Buffer(res).toString();
+              //判断大小 小于80即有错误码，判断
+              if (buf.length <= 80) {
+                this.$message({
+                  message: '导入成功',
+                  type: 'success'
+                })
+                this.getGridInfo()
+                this.getGridFloorList()
+              }else {
+                fileDownload(res, `模板导入失败.xls`);
+                this.$message({
+                  message: '导入失败',
+                  type: 'error'
+                })
+              }
+              resolve(true)
+            }).catch(err => {
+              reject(false)
+            })
+          })
+        },
+        async downMo(){
+          const data = await houseApi.exportTemplate()
+          fileDownload(data, `房源网格模板.xls`);
         }
       }
 
@@ -578,11 +650,21 @@
       font-size: 20px;
       font-weight: 600;
     }
+  .wgName2{
+    font-size: 15px;
+    color: #606266;
+  }
 }
 .head:first-child {
   border-bottom: 1px #E8E8E8 solid;
 }
   .margin20 {
     margin-bottom: 20px;
+  }
+  .wgSize {
+    font-size: 16px;
+    color: #606266;
+    text-align: center;
+    min-width: 45px;
   }
 </style>

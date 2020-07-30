@@ -6,14 +6,14 @@
         <div class="name">房源地址：{{houseDetail.address}}</div>
         <div class="detail flex-x-between">
           <div class="msg">
-            <div>业主：{{houseDetail.ownerName}}</div>
-            <div>房东：{{houseDetail.landlordName}}</div>
-            <div>理事：{{houseDetail.gridPersonName}}</div>
+            <div class="formSize">业主：{{houseDetail.ownerName}}</div>
+            <div class="formSize">房东：{{houseDetail.landlordName}}</div>
+            <div class="formSize">理事：{{houseDetail.gridPersonName}}</div>
           </div>
           <div class="msg">
-            <div>手机号：{{houseDetail.ownerPhone}}</div>
-            <div>手机号：{{houseDetail.landlordPhone}}</div>
-            <div>网格：{{houseDetail.gridName}}</div>
+            <div class="formSize">手机号：{{houseDetail.ownerPhone}}</div>
+            <div class="formSize">手机号：{{houseDetail.landlordPhone}}</div>
+            <div class="formSize">网格：{{houseDetail.gridName}}</div>
           </div>
         </div>
       </div>
@@ -23,29 +23,42 @@
           <el-button style="margin-left: 30px" size="small" @click="$router.push('/houseManage/houseList')">返回上一级</el-button>
         </div>
         <div class="textSize flex-x-center flex-x-bottom">
-          <span>住户</span>
-          <div style="margin: 0 0 10px 120px">{{houseDetail.residentCount}}</div>
+          <span class="formSize">住户</span>
+          <div class="formSize" style="margin: 0 0 20px 120px">{{houseDetail.residentCount}}</div>
         </div>
-        <div class="textSize flex-x-center flex-x-bottom">
-          <span>安全消防等级</span>
-          <div style="margin-left: 100px">{{houseDetail.fireRating}}</div>
+        <div class="textSize flex-xy-center flex-x-bottom">
+          <span class="formSize">安全消防等级</span>
+          <div class="formSize" :style="{marginLeft: '100px'}" >
+            <el-tag :type="houseDetail.fireRating==='#19C919'?'success':(houseDetail.fireRating==='#ED4014'?'danger':(houseDetail.fireRating==='#F9E31C'?'warning':'info'))">
+              {{houseDetail.fireRating|safeColor}}
+            </el-tag>
+           </div>
         </div>
       </div>
     </div>
     <div class="content_in">
        <div class="search">
-         <span>房间号：</span>
+         <span class="formSize">房间号：</span>
          <el-input v-model="listQuery.roomName"  placeholder="请输入房间号" style="width: 250px"></el-input>
          <el-button type="primary" size="small" style="margin: 0 10px" @click="search()">查询</el-button>
-         <el-button size="small">取消</el-button>
+         <el-button size="small" @click="resetSearch()">重置</el-button>
        </div>
       <div class="card flex-wrap">
-         <div class="cardMsg flex-x-around" v-for="(item,index) in list " :key="index" @click="edit('user',item.systemId)">
-            <div class="headPic"></div>
-            <div class="nameDetail flex-y-around">
-              <div>{{item.roomNo}}</div>
-              <div>户主：{{item.roomPersonName}}</div>
-              <div>住户：{{item.roomMateCount}}</div>
+         <div class="cardMsg" v-for="(item,index) in list " :key="index" @click="edit('user',item)">
+           <div class="cardHead flex-xy-center">
+             <img src="../../../assets/images/room_num.png"/>
+             <span class="roomSize">房间号</span>
+             <span class="roomNumber">{{item.roomNo}}</span>
+           </div>
+            <div class="nameDetail flex-x-around">
+              <div class="formSize flex-xy-center flex-col">
+                <div class="name">{{item.roomPersonName?item.roomPersonName:'暂无'}}</div>
+                <div class="ch">户主</div>
+              </div>
+              <div class="formSize flex-xy-center flex-col">
+              <div class="name">{{item.roomMateCount?item.roomMateCount:0}}</div>
+              <div class="ch">租户数量</div>
+              </div>
             </div>
          </div>
       </div>
@@ -89,13 +102,16 @@
               roomName:'',
             },
             total: 0,
-            houseId:sessionStorage.getItem("houseId")
+            houseId:JSON.parse(sessionStorage.getItem("house")).id
           }
       },
     watch: {
       '$route': function (to, from) {
-       if(from.name==='houseList'){
-         this.houseId=sessionStorage.getItem("houseId")
+       if(from.name==='houseList'&&to.name==='detail'){
+         this.houseId=JSON.parse(sessionStorage.getItem("house")).id
+         this.findFloorRoomList()
+         this.findFloorDetail()
+       }else if(from.name==='detailMsg'&&to.name==='detail'){
          this.findFloorRoomList()
          this.findFloorDetail()
        }
@@ -123,14 +139,21 @@
           this.listQuery.pageNo=1
           this.findFloorRoomList()
         },
-       edit(identity,id){
+      resetSearch(){
+          this.listQuery.roomName=''
+          this.search()
+      },
+
+       edit(identity,room=''){
+          if(room){
+            sessionStorage.setItem('room',JSON.stringify(room))
+          }
          this.$router.push({
            path:'/houseManage/detailMsg',
            query:{
              identity
            }
          })
-         sessionStorage.setItem('systemId',id)
        }
 
       }
@@ -178,24 +201,56 @@
           cursor: pointer;
           height: 200px;
           border-radius: 8px;
-          border: 2px solid #E9E9E9;
-          width: 23%;
+          border: 1px solid #E9E9E9;
+          width: 21%;
           margin: 0 20px 20px 0;
           padding: 20px 10px;
-          .headPic {
-            border-radius: 50%;
-            border: 1px slategrey solid;
-            width: 70px;
-            height: 70px;
+          .cardHead {
+            height: 50%;
+            margin-bottom: 15px;
+              img {
+                width: 50px;
+                height: 50px;
+              }
+            .roomSize {
+               color: #BCBDBE;
+              margin-left: 5px;
+             }
+            .roomNumber {
+              color: #6D94D1;
+              font-size: 26px;
+              font-weight: 600;
+              margin-left:5px;
+            }
           }
-          .nameDetail {
-            font-size: 19px;
-          }
-
         }
         .cardMsg :last-child {
           margin-right: 0;
         }
+      }
+    }
+    .nameDetail {
+      position: relative;
+    }
+    .nameDetail::after {
+      content: '';
+      display: block;
+      position: absolute;
+      background:#BCBDBE;
+      top:0;
+      left: 50%;
+      width:1px;
+      height: 40px;
+    }
+    .formSize {
+      .name {
+        font-size: 24px;
+        font-weight: 600;
+        color: #3D3C3C;
+        margin-bottom: 5px;
+      }
+      .ch {
+        color: #BCBDBE;
       }
     }
   }

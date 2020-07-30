@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  $bg:#F0F2F5;
+  $bg:#FFF;
 .app-main {
   /* 50= navbar  50  */
   min-height: calc(100vh - 50px);

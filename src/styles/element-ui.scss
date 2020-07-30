@@ -14,7 +14,33 @@
 .el-upload__input {
   display: none;
 }
+.el-dialog__header {
+  padding: 20px 30px;
+  border-bottom: 1px solid #e5e5e5;
+}
 
+.el-dialog__headerbtn {
+  font-size: 24px;
+  .el-dialog__close {
+    color: #333333;
+  }
+}
+
+.el-dialog__body {
+  padding: 30px 30px 10px;
+}
+
+.el-dialog__footer {
+  padding: 10px 80px 20px;
+}
+.el-cascader-panel{
+  .el-radio{
+    height: 100%;
+    width: 150px;
+    position: absolute;
+    z-index: 10;
+  }
+}
 .cell {
   .el-tag {
     margin-right: 0px;
@@ -52,8 +78,19 @@
   left: 0;
   position: relative;
   margin: 0 auto;
+  border-radius: 6px;
+}
+.el-cascader-node__label {
+  width: 157px;
 }
 
+.el-cascader-panel .el-radio__input {
+  visibility: hidden;
+}
+
+.el-cascader-panel .el-cascader-node__postfix {
+  top: 10px;
+}
 // refine element ui upload
 .upload-container {
   .el-upload {

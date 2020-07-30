@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
     <el-form
+      @keyup.enter.native="handleLogin"
       ref="loginForm"
       :model="loginForm"
       :rules="loginRules"
@@ -18,12 +19,12 @@
 
       <el-form-item prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="email"/>
+          <svg-icon icon-class="user"/>
         </span>
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="请输入账号"
+          placeholder="账号"
           name="username"
           type="text"
           tabindex="1"
@@ -55,7 +56,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-form-item prop="captcha" style="border:none;background: transparent" >
+      <el-form-item prop="captcha" >
         <el-input
           ref="captcha"
           v-model="loginForm.captcha"
@@ -64,9 +65,9 @@
           type="text"
           tabindex="3"
           autocomplete="off"
-          style="width:65%;background: rgba(0,0,0,0.1)"
+          style="width:74.4%;background: rgba(0,0,0,0.1)"
         />
-        <img :src="captchaImg" @click="getCaptcha" style="vertical-align: top;height: 47px"/>
+        <img :src="captchaImg" @click="getCaptcha" class="captcha"/>
 
       </el-form-item>
 
@@ -82,26 +83,41 @@
 <!--      <el-button type="text" class="fr" @click="handleForgotPassword">-->
 <!--        {{ $t('login.forgotPassword') }}-->
 <!--      </el-button>-->
-
+      <div  style="width:100%;text-align: right">
+        <el-button type="text" v-if="!isLogin" @click="forMM">忘记密码?</el-button>
+      </div>
     </el-form>
-
+    <el-dialog title="忘记密码" :visible.sync="isLogin" width="500px">
+      <el-form :model="passForm" ref="passForm" label-width="70px" class="demo-ruleForm" :rules="passRules">
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="passForm.phone" placeholder="请输入手机号"></el-input>
+        </el-form-item>
+        <el-form-item label="验证码" prop="code" >
+          <div style="display: flex">
+          <el-input v-model="passForm.captcha" placeholder="请输入验证码"></el-input>
+          <el-button size="small" type="primary" @click="getCode" :disabled="initTime?true:false">{{codeName}}</el-button>
+          </div>
+        </el-form-item>
+        <el-form-item label="新密码" prop="password">
+          <el-input v-model="passForm.password" placeholder="请输入新密码"></el-input>
+        </el-form-item>
+        <el-form-item style="float: right">
+          <el-button size="small" @click="isLogin=false">取消</el-button>
+          <el-button size="small" type="primary" @click="handleAB('passForm')">确定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import {validateRequire, validEmail} from '@/utils/validate'
+  import {validateRequire,validatePhone} from '@/utils/validate'
   import {Common} from '../../api'
 
   export default {
     name: 'Login',
     data() {
-      const validateRePass = (rule, value, callback) => {
-        if (value !== this.temp.password) {
-          callback(new Error(rule.text))
-        } else {
-          callback()
-        }
-      }
+
 
       const validatePassword = (rule, value, callback) => {
         if (value.length < 6|| value.length > 18) {
@@ -122,17 +138,30 @@
           password: [{required: true, trigger: 'blur', validator: validatePassword, text: this.$t('login.password')}],
           captcha: [{required: true, trigger: 'blur', validator: validateRequire, text: '验证码'}]
         },
+        passRules:{
+          phone: [{required: true, trigger: 'blur', validator: validatePhone, text: '手机号'}],
+          password: [{required: true, trigger: 'blur', validator: validateRequire, text:'密码'}],
+          captcha: [{required: true, trigger: 'blur', validator: validateRequire, text:'验证码'}]
+        },
         passwordType: 'password',
         capsTooltip: false,
         loading: false,
         redirect: undefined,
-        otherQuery: {}
+        otherQuery: {},
+        isLogin:false,
+        passForm:{
+          phone:'',
+          password:'',
+          captcha:''
+        },
+        initTime:null,
+        codeName:'获取验证码'
       }
     },
+
     watch: {
       $route: {
         handler: function (route) {
-          console.log(route)
           const query = route.query
           if (query) {
             this.redirect = query.redirect
@@ -146,15 +175,40 @@
       this.getCaptcha()
     },
     mounted() {
+
       if (this.loginForm.username === '') {
         this.$refs.username.focus()
       } else if (this.loginForm.password === '') {
         this.$refs.password.focus()
       }
     },
+    beforeDestroy() {
+      if (this.initTime){
+        clearInterval(this.initTime)
+        this.initTime=null
+      }
+    },
     methods: {
+      async getCode(){
+        if(!(/^1[3456789]\d{9}$/.test(this.passForm.phone))){
+          return this.$message.error('手机号码有误')
+        }
+        const {code,message} = await Common.getCode({mobile:this.passForm.phone})
+        if(code!==200){
+          return this.$message.error(message)
+        }
+        this.codeName=180
+        this.initTime=setInterval(()=>{
+          if (this.codeName){
+            this.codeName--
+          }else {
+            this.codeName='重新获取验证码'
+            clearInterval(this.initTime)
+            this.initTime=null
+          }
+        },1000)
+      },
       async getCaptcha() {
-
         const {result} = await Common.getCaptcha()
         this.captchaImg = `data:image/png;base64,${result}`
       },
@@ -170,6 +224,38 @@
           this.capsTooltip = false
         }
       },
+       handleAB(form){
+        this.$refs[form].validate(valid => {
+          if (valid) {
+           Common.editPassword(this.passForm).then(res=>{
+             if(res.code===200){
+               this.$message.success('修改密码成功')
+             }
+           })
+           this.isLogin=false
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      forMM(){
+          this.isLogin=true,
+          this.passForm={
+          phone:'',
+            password:'',
+            captcha:''
+        }
+        this.codeName='获取验证码'
+        if (this.initTime){
+          clearInterval(this.initTime)
+          this.initTime=null
+        }
+
+        this.$nextTick(() => {
+          this.$refs.passForm.clearValidate()
+        })
+      },
       showPwd() {
         if (this.passwordType === 'password') {
           this.passwordType = ''
@@ -184,7 +270,6 @@
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true
-            debugger
             this.$store.dispatch('user/login', this.loginForm)
               .then(() => {
                 this.$router.push({path: this.redirect || '/', query: this.otherQuery})
@@ -293,6 +378,11 @@
           margin-right: 16px;
         }
       }
+    }
+    .captcha {
+      vertical-align: top;
+      height: 47px;
+      cursor: pointer;
     }
 
     .svg-container {

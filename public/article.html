@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.1/lib/index.css">
+</head>
+<script src="https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"></script>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vant@2.1/lib/vant.min.js"></script>
+<style>
+  html,body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .btnBottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px -4px 5px 0px rgba(0,0,0,0.04);
+    width: 100%;
+    background: #fff;
+  }
+  .secondDate {
+    font-size: 19px;
+    color: rgba(29,104,209,1);
+    font-weight: 500;
+  }
+  .secondSize {
+    font-size: 15px;
+    color: rgba(102,102,102,1);
+  }
+  .myArticle{
+    padding: 14px 18px 42px;
+    font-family: SourceHanSansSC, SourceHanSansSC-Medium;
+  }
+  .title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 13px;
+  }
+  .content {
+    font-size: 14px;
+    color: #444444;
+    line-height: 25px;
+  }
+</style>
+<body>
+<div id="app"></div>
+</body>
+<script>
+  var vue = new Vue({
+    el: '#app',
+    template:"<div class='myArticle' >" +
+      "<div class='title'>{{articleObj.title}}</div>"+
+      "<div class='content' v-html='this.articleObj.content'/>"+
+      "<div class=\"btnBottom\" v-if='!articleObj.isRead'>\n" +
+      "<div class=\"secondDate\">{{time}}S</div>\n" +
+      "  <div class=\"secondSize\">后获得文章积分</div>\n" +
+      "</div>"+
+      "</div>",
+    data: {
+      articleObj:{
+        title:''
+      },
+      btnfooter:true,
+      time:5,
+      initNum:null,
+      urlObj:null
+    },
+    created() {
+      const url = window.location.href
+      var temp1 = url.split('?');
+      var pram = temp1[1];
+      var keyValue = pram.split('&');
+      var obj = {};
+      for (var i = 0; i<keyValue.length; i++){
+        var item = keyValue[i].split('=');
+        var key = item[0];
+        var value = item[1];
+        obj[key] = value;
+      }
+     this.urlObj=obj
+      this.getArticle()
+    },
+    mounted(){
+      let _this = this;
+      window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+        //滚动条到底部的条件
+        if(scrollTop+windowHeight == scrollHeight){
+          //到了这个就可以进行业务逻辑加载后台数据了
+          _this.getBtn()
+        }
+      }
+    },
+    beforeDestroy(){
+      if (this.initNum){
+        clearInterval(this.initNum)
+        this.initNum=null
+      }
+    },
+    methods: {
+      getArticle() {
+        const that = this
+        $.ajax({
+          type:"get", // 请求类型 GET/POST
+          headers: {
+            'X-Access-Token': that.urlObj.token
+        },
+          url:"https://mis.synbop.com/small/article/queryById", // 请求路径
+          dataType:"json", // 预期服务器返回的数据类型
+          data:{ // 请求参数，键值对的json对象
+            id:that.urlObj.id
+          },
+          success:function(res){ // 请求成功时的回调函数
+            that.articleObj= res.result
+          }
+        });
+
+      },
+      getBtn(){
+        const _this=this
+        if(this.btnfooter&&!this.articleObj.isRead){
+          _this.btnfooter=false
+           this.initinitNum=setInterval(()=>{
+             if(this.time!==0){
+               this.time--
+             }else {
+               clearInterval(this.initinitNum)
+               this.initinitNum=false
+               $.ajax({
+                 type:"post", // 请求类型 GET/POST
+                 headers: {
+                   'X-Access-Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTYwMTQzOTMsInVzZXJuYW1lIjoiMTgzOTYzMjg3MDkgIn0.p0QV45_L9WYQqttcvVyWhkh-s_s0JiGn91n4xIYUrMo'
+                 },
+                 url:"https://mis.synbop.com/small/article/readArticle", // 请求路径
+                 dataType:"json", // 预期服务器返回的数据类型
+                 data:{ // 请求参数，键值对的json对象
+                   articleId:_this.urlObj.id
+                 },
+                 success:function(res){ // 请求成功时的回调函数
+                   vant.Toast({
+                     message:res.message
+                   })
+                   _this.getArticle()
+                 }
+               });
+             }
+           },1000)
+        }
+      }
+    },
+  })
+</script>
+</html>
