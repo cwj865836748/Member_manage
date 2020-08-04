@@ -1,9 +1,9 @@
 import fileDownload from "js-file-download";
 <template>
-  <div class="app-container">
-  <el-row :gutter="40" style="margin: 0">
-    <el-col :span="5" :xl="5" :lg="6" :md="7" :sm="8" :xs="8" style="padding: 0">
-      <el-card shadow="always">
+  <div class="app-container mh">
+  <el-row :gutter="40" style="margin: 0" class="mh">
+    <el-col :span="5" :xl="5" :lg="6" :md="7" :sm="8" :xs="8" class="mh" style="padding: 0">
+      <el-card shadow="always" class="mh">
       <el-row :gutter="5" class="flex-y-center" style="margin-bottom: 10px" >
        <el-col :span="4" class="wgSize">网格:</el-col>
         <el-col :span="14">
@@ -43,8 +43,8 @@ import fileDownload from "js-file-download";
        </el-tree>
       </el-card>
     </el-col>
-    <el-col :span="19" :xl="19" :lg="18" :md="17" :sm="16" :xs="16">
-      <el-card shadow="always">
+    <el-col :span="19" :xl="19" :lg="18" :md="17" :sm="16" :xs="16" class="mh">
+      <el-card shadow="always" class="mh" v-if="gridDetail.gridName">
       <el-row class="head">
         <el-col :span="8">
           <div class="wgName margin20">{{gridDetail.gridName}}</div>
@@ -56,7 +56,7 @@ import fileDownload from "js-file-download";
           <div class="margin20 wgName2">手机号：{{gridDetail.phone}}</div>
           <div style="color: #1890FF" class="wgName2">管理房源：{{gridDetail.houseCount}}</div>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" style="text-align: right">
           <el-button :disabled="!gridDetail.gridName" type="warning" size="small" @click="createOrUpdate('edit')">编辑</el-button>
           <el-button :disabled="!gridDetail.gridName" size="small"  type="danger" @click="handleDelete('grid')">删除</el-button>
         </el-col>
@@ -79,27 +79,27 @@ import fileDownload from "js-file-download";
         <UploadXls v-if="gridDetail.gridName" @downMo="downMo" @uploadFile="uploadFile"/>
         </div>
         <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-          <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+          <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
             <template slot-scope="scope">
               {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column  align="center" label="所属区域" prop="county"/>
-          <el-table-column  align="center" label="乡镇街道" prop="town">
+          <el-table-column  align="left" label="所属区域" prop="county"/>
+          <el-table-column  align="left" label="乡镇街道" prop="town">
             <!--        <template slot-scope="{row}">-->
             <!--          <span>{{ row.areaCode +'  '+ row.mobile }}</span>-->
             <!--        </template>-->
           </el-table-column>
 
-          <el-table-column  align="center" label="居村委" prop="village">
+          <el-table-column  align="left" label="居村委" prop="village">
           </el-table-column>
-          <el-table-column  align="center" label="详细地址" prop="address">
+          <el-table-column  align="left" label="详细地址" prop="address">
           </el-table-column>
-          <el-table-column  align="center" label="更新时间" prop="updatedAt">
+          <el-table-column  align="left" label="更新时间" prop="updatedAt">
           </el-table-column>
           <el-table-column
             label="操作"
-            align="center"
+            align="left"
           >
             <template slot-scope="{row}">
               <el-button type="danger" size="small" @click="handleDelete('house',row)">
@@ -117,6 +117,9 @@ import fileDownload from "js-file-download";
         />
       </div>
       </el-row>
+      </el-card>
+      <el-card shadow="always" class="mh flex-xy-center" >
+        <span style="color: #909399">暂无数据</span>
       </el-card>
     </el-col>
   </el-row>
@@ -165,7 +168,7 @@ import fileDownload from "js-file-download";
   <el-dialog
     title="添加房源"
     :visible.sync="houseVisible"
-    width="80%"
+    width="90%"
     :close-on-click-modal="false"
     destroy-on-close
   >
@@ -176,25 +179,25 @@ import fileDownload from "js-file-download";
         type="selection"
         :reserve-selection="true"
         prop="id"
-        align="center"
+        align="left"
         width="55">
       </el-table-column>
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="80px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="80px">
         <template slot-scope="scope">
           {{ (houseQuery.pageNo - 1) * houseQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="systemid" prop="systemid"/>
-      <el-table-column  align="center" label="所属区域" prop="county"/>
-      <el-table-column  align="center" label="乡镇街道" prop="town">
+      <el-table-column  align="left" label="systemid" prop="systemid"/>
+      <el-table-column  align="left" label="所属区域" prop="county"/>
+      <el-table-column  align="left" label="乡镇街道" prop="town">
         <!--        <template slot-scope="{row}">-->
         <!--          <span>{{ row.areaCode +'  '+ row.mobile }}</span>-->
         <!--        </template>-->
       </el-table-column>
 
-      <el-table-column  align="center" label="居村委" prop="village">
+      <el-table-column  align="left" label="居村委" prop="village">
       </el-table-column>
-      <el-table-column  align="center" label="详细地址" prop="address">
+      <el-table-column  align="left" label="详细地址" prop="address">
       </el-table-column>
     </el-table>
     <el-button size="small" style="margin-top: 10px" type="primary" @click="addGridFloor">确定</el-button>
@@ -320,13 +323,13 @@ import fileDownload from "js-file-download";
           //获取树节点点击之后的网格信息
         getGridList(data, node){
           if (node.data.isLast){
-            this.areaArr=this.getNodeId(node)
+            this.areaArr=this.findNode(this.treeData,node.data.id)
             return false
           }
           if (!node.data.isGrid){
             return false
           }
-          this.searchFields[0].value=this.getNodeParentId(node)
+          this.searchFields[0].value=this.findNode(this.treeData,node.parent.data.id)
           // this.houseFields[0].value=[node.parent.parent.parent.data.id,node.parent.parent.data.id,node.parent.data.id]
           this.listQuery.id = node.data.id//网格id
           this.getGridInfo()
@@ -337,6 +340,26 @@ import fileDownload from "js-file-download";
           houseApi.getGridInfo({id:this.listQuery.id}).then(res => {
             this.gridDetail=res.result
           })
+        },
+        findNode(array, id) {
+          let stack = [];
+          let going = true;
+          let walker = (array, id) => {
+            array.forEach(item => {
+              if (!going) return;
+              stack.push(item['id']);
+              if (item['id'] === id) {
+                going = false;
+              } else if (item['areaList']) {
+                walker(item['areaList'], id);
+              } else {
+                stack.pop();
+              }
+            });
+            if (going) stack.pop();
+          }
+          walker(array, id);
+          return stack;
         },
         getGridFloorList(data={}){
           this.listLoading=true
@@ -484,7 +507,7 @@ import fileDownload from "js-file-download";
           if (type == 'create') {
             this.resetForm()
             if (node){
-              this.areaArr=this.getNodeId(node)
+              this.areaArr=this.findNode(this.treeData,node.data.id)
             }
           }
           if (type == 'edit') {
@@ -502,28 +525,6 @@ import fileDownload from "js-file-download";
           this.$nextTick(() => {
             this.$refs['addForm'].clearValidate()
           })
-        },
-        getNodeId(node){
-          const arr = []
-          arr.unshift(node.data.id)
-          if (node.parent){
-            arr.unshift(node.parent.data.id)
-            if (node.parent.parent){
-              arr.unshift(node.parent.parent.data.id)
-            }
-          }
-          return arr
-        },
-        getNodeParentId(node){
-          const arr = []
-          arr.unshift(node.parent.data.id)
-          if (node.parent.parent){
-            arr.unshift(node.parent.parent.data.id)
-            if (node.parent.parent.parent){
-              arr.unshift(node.parent.parent.parent.data.id)
-            }
-          }
-          return arr
         },
 
         //提交表单
@@ -666,5 +667,8 @@ import fileDownload from "js-file-download";
     color: #606266;
     text-align: center;
     min-width: 45px;
+  }
+  .mh {
+   min-height: calc(100vh - 124px)
   }
 </style>

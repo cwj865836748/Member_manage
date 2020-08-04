@@ -19,15 +19,15 @@
 
       <el-table-column  align="left" label="菜单名称" prop="name"/>
 
-      <el-table-column  align="center" label="菜单类型" prop="menuType">
+      <el-table-column  align="left" label="菜单类型" prop="menuType">
       </el-table-column>
-<!--      <el-table-column  align="center" label="路径" prop="updatedAt">-->
+<!--      <el-table-column  align="left" label="路径" prop="updatedAt">-->
 <!--      </el-table-column>-->
-      <el-table-column  align="center" label="排序" prop="sortNo">
+      <el-table-column  align="left" label="排序" prop="sortNo">
       </el-table-column>
       <el-table-column
         label="操作"
-        align="center"
+        align="left"
       >
         <template slot-scope="{row}">
           <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">

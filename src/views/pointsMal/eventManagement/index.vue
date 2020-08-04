@@ -13,52 +13,52 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="活动名称" prop="name"/>
-      <el-table-column  align="center" label="活动时间" prop="startTime" width="300px">
+      <el-table-column  align="left" label="活动名称" prop="name"/>
+      <el-table-column  align="left" label="活动时间" prop="startTime" width="300px">
         <template slot-scope="{row}">
           {{row.startTime}}~{{row.endTime}}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="奖品数量" prop="prizeCount"/>
+      <el-table-column  align="left" label="奖品数量" prop="prizeCount"/>
 
-      <el-table-column  align="center" label="已兑数量" prop="exchangeCount"/>
-      <el-table-column  align="center" label="状态" prop="status" width="150px">
+      <el-table-column  align="left" label="已兑数量" prop="exchangeCount"/>
+      <el-table-column  align="left" label="状态" prop="status" width="150px">
         <template slot-scope="{row}">
           <el-tag :type="row.status===1?'danger':(row.status===2?'success':(row.status===3?'':'info'))"> {{row.status|activeType}}</el-tag>
         </template>
       </el-table-column>
 
 
-      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px"/>
+      <el-table-column  align="left" label="更新时间" prop="updatedAt" width="200px"/>
 
       <el-table-column
         label="操作"
-        align="center"
+        align="left"
         width="300px"
       >
         <template slot-scope="{row}">
-          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===1">
+          <el-button   size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===1">
             编辑
           </el-button>
-          <el-button type="primary" size="small" @click="handleView(row)">
+          <el-button  size="small" @click="handleView(row)">
             查看
           </el-button>
-          <el-button type="success" size="small" @click="sendMsg(row)" v-if="row.status===1">
+          <el-button  size="small" @click="sendMsg(row)" v-if="row.status===1">
             发布
           </el-button>
-          <el-button type="danger" size="small" @click="handleOver(row)" v-if="row.status===3">
+          <el-button  size="small" @click="handleOver(row)" v-if="row.status===3">
             结束
+          </el-button>
+          <el-button size="small" @click="handleOut(row)" v-if="row.status===2">
+            撤回
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)" v-if="row.status===1||row.status===2">
             删除
-          </el-button>
-          <el-button type="info" size="small" @click="handleOut(row)" v-if="row.status===2">
-            撤回
           </el-button>
         </template>
       </el-table-column>
@@ -85,6 +85,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             :default-time="['00:00:00', '23:59:59']"
+            style="width: 100%"
           >
           </el-date-picker>
         </el-form-item>

@@ -13,26 +13,26 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="标题" prop="title"/>
-      <el-table-column  align="center" label="浏览量" prop="count" width="150px">
+      <el-table-column  align="left" label="标题" prop="title"/>
+      <el-table-column  align="left" label="浏览量" prop="count" width="150px">
       </el-table-column>
-      <el-table-column  align="center" label="积分值" prop="integral" width="150px">
+      <el-table-column  align="left" label="积分值" prop="integral" width="150px">
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="status" width="150px">
+      <el-table-column  align="left" label="状态" prop="status" width="150px">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status?'success':'danger'"> {{scope.row.status|articleType}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px">
+      <el-table-column  align="left" label="更新时间" prop="updatedAt" width="200px">
       </el-table-column>
       <el-table-column
         label="操作"
-        align="center"
+        align="left"
       >
         <template slot-scope="{row}">
           <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
@@ -61,7 +61,7 @@
           <Tinymce ref="tinymce" v-model="addForm.content" :height="300" v-if="addVisible" />
         </el-form-item>
         <el-form-item label="积分:" prop="integral">
-          <el-input-number size="mini" v-model="addForm.integral" controls-position="right"></el-input-number>
+          <el-input-number size="mini" v-model="addForm.integral" :min="0" controls-position="right"></el-input-number>
         </el-form-item>
         <el-form-item label="状态:" prop="status">
           <el-select v-model="addForm.status" placeholder="请选择状态">
@@ -152,7 +152,7 @@
           this.addForm={
             content:'',
             integral:0,
-            status:'',
+            status:1,
             title:''
           }
         },

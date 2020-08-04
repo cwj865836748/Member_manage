@@ -20,7 +20,7 @@
         <el-card shadow="always">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="agent" class-name="card-panel-icon"/>
+            <svg-icon icon-class="peoples" class-name="card-panel-icon"/>
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
@@ -64,13 +64,13 @@
     </el-row>
     <el-row :gutter="40">
        <el-col :xs="24" :sm="24" :lg="12" style="margin-bottom: 32px">
-         <el-card shadow="always">
+         <el-card shadow="always" style="padding-top: 10px">
          <Pie ref="Pie" :pieData="pieData" v-if="flag"/>
          </el-card>
        </el-col>
       <el-col :xs="24" :sm="24" :lg="12" style="margin-bottom: 32px">
-        <el-card shadow="always" style="position: relative">
-        <el-select v-model="days" placeholder="请选择天数" style="position: absolute;right: 110px;top:15px;z-index:100">
+        <el-card shadow="always" style="position: relative;padding-top: 10px">
+        <el-select v-model="days" placeholder="请选择天数" style="position: absolute;right: 5%;top:15px;z-index:100">
           <el-option label="7天" :value="7"/>
           <el-option label="15天" :value="15"/>
           <el-option label="30天" :value="30"/>
@@ -81,7 +81,7 @@
     </el-row>
     <el-row>
       <el-col style="margin-bottom: 32px">
-      <el-card shadow="always">
+      <el-card shadow="always" style="padding-top: 10px">
       <City ref="City" :cityData="cityData" v-if="flags"/>
       </el-card>
       </el-col>
@@ -315,6 +315,6 @@
     }
   }
   /deep/.el-card__body {
-    padding: 20px 20px 0;
+    padding: 0;
   }
 </style>

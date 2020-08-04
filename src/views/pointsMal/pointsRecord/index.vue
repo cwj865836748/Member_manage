@@ -7,18 +7,22 @@ import fileDownload from "js-file-download";
      <UploadXls :temOut="false" :inExcel="false" :btnShow="true" @upOut="upOut"/>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="积分栏目" prop="type"/>
-      <el-table-column  align="center" label="积分使用" prop="content" width="200px"/>
-      <el-table-column  align="center" label="用户" prop="memberName"/>
-      <el-table-column  align="center" label="积分" prop="operation"/>
-      <el-table-column  align="center" label="所属活动" prop="activityName"/>
-      <el-table-column  align="center" label="兑换数量" prop="count"/>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px"/>
+      <el-table-column  align="left" label="积分栏目" prop="type"/>
+      <el-table-column  align="left" label="积分使用" prop="content" width="200px"/>
+      <el-table-column  align="left" label="用户" prop="memberName"/>
+      <el-table-column  align="left" label="积分" prop="operation">
+        <template slot-scope="{row}">
+          {{row.operation|operation}}
+        </template>
+      </el-table-column>
+      <el-table-column  align="left" label="所属活动" prop="activityName"/>
+      <el-table-column  align="left" label="兑换数量" prop="count"/>
+      <el-table-column  align="left" label="更新时间" prop="updatedAt" width="200px"/>
     </el-table>
 
     <pagination

@@ -7,7 +7,9 @@
     :before-upload="beforeAvatarUpload"
     :on-success="handleImageSuccess"
   >
-    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+    <div  v-if="imageUrl"  class="avatar">
+      <img :src="imageUrl">
+    </div>
     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
   </el-upload>
 </template>
@@ -87,6 +89,15 @@
   .avatar {
     width: 178px;
     height: 178px;
-    display: block;
+    position: relative;
+    background: #F4F8FB;
+    img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 100%;
+      max-height: 100%;
+    }
   }
 </style>

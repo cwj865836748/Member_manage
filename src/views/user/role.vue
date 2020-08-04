@@ -13,20 +13,20 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="角色名称" prop="name"/>
+      <el-table-column  align="left" label="角色名称" prop="name"/>
 
-      <el-table-column  align="center" label="描述" prop="description">
+      <el-table-column  align="left" label="描述" prop="description">
       </el-table-column>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt">
+      <el-table-column  align="left" label="更新时间" prop="updatedAt">
       </el-table-column>
       <el-table-column
         label="操作"
-        align="center"
+        align="left"
         width="250px"
       >
         <template slot-scope="{row}">

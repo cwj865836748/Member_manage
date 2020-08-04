@@ -13,25 +13,25 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="任务类名" prop="jobClassName"/>
+      <el-table-column  align="left" label="任务类名" prop="jobClassName"/>
 
-      <el-table-column  align="center" label="cron表达式" prop="cronExpression">
+      <el-table-column  align="left" label="cron表达式" prop="cronExpression">
       </el-table-column>
-      <el-table-column  align="center" label="描述" prop="description">
+      <el-table-column  align="left" label="描述" prop="description">
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="status" width="100px">
+      <el-table-column  align="left" label="状态" prop="status" width="100px">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status===0?'success':'danger'"> {{scope.row.status|isTaskEnabled}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         label="操作"
-        align="center"
+        align="left"
         width="250px"
       >
         <template slot-scope="{row}">
@@ -161,7 +161,7 @@
           cronExpression:'',
           jobClassName:'',
           parameter:'',
-          status:''
+          status:0
         }
       },
       // 创建或编辑 type create or edit

@@ -2,7 +2,7 @@
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
 const CompressionPlugin = require('compression-webpack-plugin') // 压缩gzip 需nginx开启
-
+const Timestamp = new Date().getTime();
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -60,6 +60,10 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
+    },
+    output: { // 输出重构  打包编译后的 文件名称  【模块名称.版本号.时间戳】
+      filename: `[name].${process.env.VUE_APP_VERSION}.${Timestamp}.js`,
+      chunkFilename: `[name].${process.env.VUE_APP_VERSION}.${Timestamp}.js`
     },
     plugins: [
       new CompressionPlugin({

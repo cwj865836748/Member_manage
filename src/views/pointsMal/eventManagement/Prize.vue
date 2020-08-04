@@ -3,13 +3,13 @@
     <div class="app-content">
       <div class="prizeList">
         <el-row :gutter="20" >
-          <el-col :span="3" >
+          <el-col :span="3" :lg="4" :md="5" :sm="5" :xs="6" >
             <div class="leftImg">
               <img :src="activeDetail.cover?activeDetail.cover:$defaultImg" />
             </div>
 
           </el-col>
-          <el-col :span="17">
+          <el-col :span="17" :lg="16" :md="14" :sm="14" :xs="13">
             <div class="flex">
               <div class="activeName">{{activeDetail.name}}</div>
 
@@ -89,10 +89,10 @@
           <el-input  v-model="addForm.remarks" autosize type="textarea" placeholder="请输入兑换说明"/>
         </el-form-item>
         <el-form-item label="奖品数量:" prop="count">
-          <el-input-number v-model="addForm.count" controls-position="right" :min="0" size="mini"></el-input-number>
+          <el-input-number v-model="addForm.count" controls-position="right" :min="1" size="mini"></el-input-number>
         </el-form-item>
         <el-form-item label="兑奖数量限制:" prop="limitNum">
-          <el-input-number v-model="addForm.limitNum" controls-position="right" :min="0" size="mini"></el-input-number>
+          <el-input-number v-model="addForm.limitNum" controls-position="right" :min="1" size="mini"></el-input-number>
         </el-form-item>
         <el-form-item label="积分值:" prop="integral">
           <el-input-number v-model="addForm.integral" controls-position="right" :min="0" size="mini"></el-input-number>
@@ -167,11 +167,11 @@
             addVisible:false,
             isAdd:'create',
             addForm:{
-              count:0,
+              count:1,
               integral:0,
               name:'',
               cover:'',
-              limitNum:0,
+              limitNum:1,
               remarks:'',
               status:''
             },
@@ -225,14 +225,14 @@
         // 重置
         resetForm() {
           this.addForm={
-            count:0,
+            count:1,
             id:'',
             integral:0,
             name:'',
             cover:'',
-            limitNum:0,
+            limitNum:1,
             remarks:'',
-            status:''
+            status:0
           }
         },
         myUpload(val){
@@ -370,9 +370,14 @@
      &-head{
        height: 50%;
        position: relative;
+       background: #F4F8FB;
        img {
-         width: 100%;
-         height: 100%;
+         max-height: 100%;
+         max-width: 100%;
+         position: absolute;
+         left: 50%;
+         top: 50%;
+         transform: translate(-50%,-50%);
        }
        .title {
          position: absolute;
@@ -405,15 +410,23 @@
        &-size {
          font-size: 16px;
          color: #606266;
-         height:50px;
-         padding: 10px 0 0 30px;
+         padding: 10px 0 0 10px;
          box-sizing: border-box;
+         text-overflow: -o-ellipsis-lastline;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         display: -webkit-box;
+         -webkit-line-clamp: 2;
+         line-clamp: 2;
+         -webkit-box-orient: vertical;
+         height: 46px;
+
        }
        &-count {
          display: flex;
+         padding-top: 10px;
          &-sz {
            width: 33%;
-           border-right: 1px slategrey solid;
            display: flex;
            flex-direction: column;
            align-items: center;
@@ -421,10 +434,27 @@
            justify-content: center;
            font-size: 14px;
            color: #606266;
+           position: relative;
          }
-         &-sz:last-child {
-           border-right:none;
+         &-sz::after {
+           content: '';
+           width: 1px;
+           height: 10px;
+           background: #333333;
+           position: absolute;
+           right: 0;
+           top: 20px;
          }
+         &-sz:last-child::after {
+           content: '';
+           width: 1px;
+           height: 10px;
+           background: #fff;
+           position: absolute;
+           right: 0;
+           top: 20px;
+         }
+
        }
      }
    }

@@ -20,31 +20,18 @@ export default {
   },
   mounted () {
     let color = [
-      {
-        c1: '#FEB692',
-        c2: '#EA5455' //业主
-      },
-      {
-        c1: '#FDEB71',
-        c2: '#F8D800'//房东
-      },
-      {
-        c1: '#ABDCFF',//理事
-        c2: '#0396FF'
-      },
-      {
-        c1: '#81FBB8',//租户
-        c2: '#28C76F'
-      }]
+      '#ff5454','#ffd200','#00b4ff','#00eacb']
     let option= {
 
       tooltip: {
         trigger: 'item',
+        confine:true,
+        //extraCssText:'height:600px;',
         formatter:(params)=>{
-          let icon  =`<div style='background: linear-gradient(${color[0].c1}, ${color[0].c2});;height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
-          let icon1  =`<div style='background: linear-gradient(${color[1].c1}, ${color[1].c2});height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
-          let icon2  =`<div style='background: linear-gradient(${color[2].c1}, ${color[2].c2});height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
-          let icon3  =`<div style='background: linear-gradient(${color[3].c1}, ${color[3].c2});height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
+          let icon  =`<div style='background: ${color[0]};height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
+          let icon1  =`<div style='background: ${color[1]};height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
+          let icon2  =`<div style='background: ${color[2]};height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
+          let icon3  =`<div style='background: ${color[3]};height: 8px;width: 8px;margin-top:7px;margin-left: 10px;display: inline-block'></div>`
            let tip=''
           this.cityData.result[params.dataIndex].villageFloor.forEach(item=>{
             const title = item.areaName+icon+item.ownerCount+icon1+item.landlordCount+icon2+item.gridPersonCount+icon3+item.tenantCount+'<br>'
@@ -64,15 +51,15 @@ export default {
             align: 'center'
           }
         }],
-      dataZoom: [
-        {
-          show: true,
-          realtime: true,
-          height: 10,
-          start: 0,
-          end: 50
-        }
-      ],
+      // dataZoom: [
+      //   {
+      //     show: true,
+      //     realtime: true,
+      //     height: 10,
+      //     start: 0,
+      //     end: 50
+      //   }
+      // ],
 
       legend: {
         // orient 设置布局方式，默认水平布局，可选值：'horizontal'（水平） ¦ 'vertical'（垂直）
@@ -120,22 +107,22 @@ export default {
           name: '业主数量',
           type: 'bar',
           data: this.cityData.ownerCount,
-          barWidth: 30,
+          barWidth: 20,
           // barGap: '100%',
           itemStyle: {
             normal: {
               label: {
                 show: true, // 开启显示
-                position: 'inside', // 在上方显示
-                formatter: '{c}'
+                position: 'top', // 在上方显示
+                formatter: (params)=>{
+                  if (params.value>0){
+                    return params.value
+                  }else {
+                    return ''
+                  }
+                }
               },
-              color: new this.$echarts.graphic.LinearGradient(
-                0, 0, 0, 1,
-                [
-                  {offset: 0, color: `${color[0].c1}`},
-                  {offset: 1, color: `${color[0].c2}`}
-                ]
-              )
+              color: color[0]
             }
           }
         },
@@ -143,22 +130,22 @@ export default {
           name: '房东数量',
           type: 'bar',
           data: this.cityData.landlordCount,
-          barWidth: 30,
+          barWidth: 20,
           // barGap: '100%',
           itemStyle: {
             normal: {
               label: {
                 show: true, // 开启显示
-                position: 'inside', // 在上方显示
-                formatter: '{c}'
+                position: 'top', // 在上方显示
+                formatter: (params)=>{
+                  if (params.value>0){
+                    return params.value
+                  }else {
+                    return ''
+                  }
+                }
               },
-              color: new this.$echarts.graphic.LinearGradient(
-                0, 0, 0, 1,
-                [
-                  {offset: 0, color: `${color[1].c1}`},
-                  {offset: 1, color: `${color[1].c2}`}
-                ]
-              )
+              color: color[1]
             }
           }
         },
@@ -166,22 +153,22 @@ export default {
           name: '理事数量',
           type: 'bar',
           data: this.cityData.gridPersonCount,
-          barWidth: 30,
+          barWidth: 20,
           // barGap: '100%',
           itemStyle: {
             normal: {
               label: {
                 show: true, // 开启显示
-                position: 'inside', // 在上方显示
-                formatter: '{c}'
+                position: 'top', // 在上方显示
+                formatter: (params)=>{
+                  if (params.value>0){
+                    return params.value
+                  }else {
+                    return ''
+                  }
+                }
               },
-            color: new this.$echarts.graphic.LinearGradient(
-              0, 0, 0, 1,
-              [
-                {offset: 0, color: `${color[2].c1}`},
-                {offset: 1, color: `${color[2].c2}`}
-              ]
-            )
+            color:color[2]
             }
           }
         },
@@ -189,26 +176,26 @@ export default {
           name: '租户数量',
           type: 'bar',
           data: this.cityData.tenantCount,
-          barWidth: 30,
+          barWidth: 20,
           // barGap: '100%',
           itemStyle: {
             normal: {
               label: {
                 show: true, // 开启显示
-                position: 'inside', // 在上方显示
+                position: 'top', // 在上方显示
                 // textStyle: { // 数值样式
                 //   color: '#fff',
                 //   fontSize: 9
                 // },
-                formatter: '{c}'
+                formatter: (params)=>{
+                  if (params.value>0){
+                    return params.value
+                  }else {
+                    return ''
+                  }
+                }
               },
-              color: new this.$echarts.graphic.LinearGradient(
-                0, 0, 0, 1,
-                [
-                  {offset: 0, color: `${color[3].c1}`},
-                  {offset: 1, color: `${color[3].c2}`}
-                ]
-              )
+              color:color[3]
             }
           }
         }
@@ -223,7 +210,7 @@ export default {
 
 <style lang="scss" scoped>
 .pic {
-  height: 350px;
+  height: 450px;
   background: #fff;
 
 }

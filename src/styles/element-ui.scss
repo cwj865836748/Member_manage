@@ -4,6 +4,16 @@
 .el-breadcrumb__inner a {
   font-weight: 400 !important;
 }
+.el-button--success {
+  color: #fff;
+  background-color: #42B984;
+  border-color: #42B984;
+}
+.el-tag.el-tag--success {
+  background-color:rgba(66,185,132,.1);
+  border-color: rgba(66,185,132,.5);
+  color: rgba(66,185,132,1);
+}
 
 .el-upload {
   input[type="file"] {
@@ -46,6 +56,9 @@
     margin-right: 0px;
   }
 }
+.el-time-panel {
+  display: none;
+}
 
 .small-padding {
   .cell {
@@ -73,6 +86,7 @@
 }
 
 // to fixed https://github.com/ElemeFE/element/issues/2461
+
 .el-dialog {
   transform: none;
   left: 0;
@@ -90,6 +104,21 @@
 
 .el-cascader-panel .el-cascader-node__postfix {
   top: 10px;
+}
+.el-picker-panel__link-btn:first-child{
+  width: 51px;
+  height: 28px;
+  color: #606266;
+  background: #fff;
+  border: 1px solid #DCDFE6;
+  text-align: center;
+  margin-right: 5px;
+}
+.el-picker-panel__link-btn:nth-child(2){
+  color: #fff;
+  background: #1890FF;
+  text-align: center;
+
 }
 // refine element ui upload
 .upload-container {

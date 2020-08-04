@@ -8,7 +8,7 @@ const userRouter = {
   redirect: 'noRedirect',
   name: 'User',
   meta: {
-    title: 'user',
+    title: '系统管理',
     icon: 'user'
   },
   children: [

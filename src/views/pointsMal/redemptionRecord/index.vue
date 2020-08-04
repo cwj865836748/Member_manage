@@ -4,23 +4,23 @@
     <search ref="search" :fields="searchFields" @change="handleSearch"/>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="兑换码" prop="code"/>
-      <el-table-column  align="center" label="奖品名称" prop="prizeName"/>
-      <el-table-column  align="center" label="兑换用户" prop="memberName"/>
-      <el-table-column  align="center" label="所属活动" prop="activityName"/>
-      <el-table-column  align="center" label="兑换数量" prop="count"/>
-      <el-table-column  align="center" label="兑奖时间" prop="createdAt" width="200px"/>
-      <el-table-column  align="center" label="状态" prop="status" width="150px">
+      <el-table-column  align="left" label="兑换码" prop="code"/>
+      <el-table-column  align="left" label="奖品名称" prop="prizeName"/>
+      <el-table-column  align="left" label="兑换用户" prop="memberName"/>
+      <el-table-column  align="left" label="所属活动" prop="activityName"/>
+      <el-table-column  align="left" label="兑换数量" prop="count"/>
+      <el-table-column  align="left" label="兑奖时间" prop="createdAt" width="200px"/>
+      <el-table-column  align="left" label="状态" prop="status" width="150px">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status?'success':(scope.row.status===1?'info':'danger')"> {{scope.row.status|redemptionType}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="操作">
+      <el-table-column  align="left" label="操作">
         <template slot-scope="{row}">
           <el-button v-if="row.status===0" type="primary" size="small" @click="handleRedeem(row)">
             兑奖

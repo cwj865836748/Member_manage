@@ -13,33 +13,33 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="消息内容" prop="content" width="250px"/>
-      <el-table-column  align="center" label="类型" prop="type">
+      <el-table-column  align="left" label="消息内容" prop="content" width="250px"/>
+      <el-table-column  align="left" label="类型" prop="type">
         <template slot-scope="{row}">
           {{row.type|msgType}}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="已读数量" prop="readCount">
+      <el-table-column  align="left" label="已读数量" prop="readCount">
       </el-table-column>
-      <el-table-column  align="center" label="角色" prop="rolesName" />
+      <el-table-column  align="left" label="角色" prop="rolesName" />
 
-      <el-table-column  align="center" label="区域" prop="areaName" width="250px">
+      <el-table-column  align="left" label="区域" prop="areaName" width="250px">
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="status" width="150px">
+      <el-table-column  align="left" label="状态" prop="status" width="150px">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status?'success':'danger'"> {{scope.row.status|msgStatusType}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="更新时间" prop="updateAt" width="200px"/>
+      <el-table-column  align="left" label="更新时间" prop="updateAt" width="200px"/>
 
       <el-table-column
         label="操作"
-        align="center"
+        align="left"
         width="250"
       >
         <template slot-scope="{row}">
@@ -70,11 +70,10 @@
         </el-form-item>
         <el-form-item label="区域:" prop="area">
           <el-cascader
+            style="width: 100%"
             v-model="addForm.area"
             :options="options"
-            :props="{   children: 'areaList',
-          label: 'name',
-          value:'id' }"
+            :props="optionProps"
             ></el-cascader>
         </el-form-item>
         <el-form-item label="角色:" prop="roles">
@@ -126,6 +125,13 @@
         listQuery: {
           pageNo: 1,
           pageSize: 10
+        },
+        optionProps: {
+          children: 'areaList',
+          label: 'name',
+          value:'id',
+          checkStrictly:true,
+          expandTrigger: 'hover'
         },
         addRules: {
           content: [{

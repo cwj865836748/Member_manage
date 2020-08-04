@@ -9,60 +9,67 @@
           <el-button size="small" @click="cleanObj(addForm)">清空</el-button>
         </div>
       </div>
-      <el-form :model="addForm" label-position="top"  ref="addForm" class="demo-ruleForm" style="padding: 0 20px">
-        <el-row :gutter="80">
-          <el-col :span="8">
+      <el-form :model="addForm" label-position="top"  ref="addForm" class="demo-ruleForm">
+        <el-row :gutter="80" style="margin: 0">
+          <el-col :span="6">
               <el-form-item label="上传正面照:" prop="photoPath">
                 <Upload @input="myUpload" :url="addForm.photoPath" ref="addUpload" :type="1" v-if="uploadShow"/>
+
               </el-form-item>
-              <el-form-item label="性别:" prop="sex">
-                <el-select v-model="addForm.sex" placeholder="请选择性别" style="width: 100%" disabled>
-                  <el-option label="男" :value="1"></el-option>
-                  <el-option label="女" :value="2"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="户籍:" prop="census">
-                <el-input v-model="addForm.census" placeholder="请输入户籍" style="width: 100%" disabled/>
-              </el-form-item>
+
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
               <el-form-item label="姓名:" prop="name">
-                <el-input v-model="addForm.name" placeholder="请输入姓名" style="width: 100%" disabled/>
+                <el-input v-model="addForm.name" placeholder="请输入姓名" style="width: 100%" :disabled="addFormDisable"/>
               </el-form-item>
               <el-form-item label="证件类型：" prop="certificateType">
-                <el-select v-model="addForm.certificateType" placeholder="请选择证件类型" style="width: 100%" disabled>
+                <el-select v-model="addForm.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="addFormDisable">
                   <el-option label="身份证" :value="1"></el-option>
                   <el-option label="护照" :value="2"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="民族：" prop="nation">
-                <el-input v-model="addForm.nation" placeholder="请输入民族" style="width: 100%" disabled/>
+                <el-input v-model="addForm.nation" placeholder="请输入民族" style="width: 100%" :disabled="addFormDisable"/>
               </el-form-item>
 
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
               <el-form-item label="手机号:" prop="phone">
                 <el-input v-model="addForm.phone" placeholder="请输入手机号" style="width: 100%"/>
               </el-form-item>
 
               <el-form-item label="证件号码：" prop="cardNo">
-                <el-input v-model="addForm.cardNo" placeholder="请输入证件号码" style="width: 100%" disabled/>
+                <el-input v-model="addForm.cardNo" placeholder="请输入证件号码" style="width: 100%" :disabled="addFormDisable"/>
               </el-form-item>
 
               <el-form-item label="出生日期：" prop="birthday">
                 <el-date-picker
-                  disabled
+                  :disabled="addFormDisable"
                   v-model="addForm.birthday"
                   type="date"
+                  style="width: 100%"
                   value-format="yyyy-MM-dd"
                   placeholder="选择日期">
                 </el-date-picker>
               </el-form-item>
 
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="性别:" prop="sex">
+              <el-select v-model="addForm.sex" placeholder="请选择性别" style="width: 100%" :disabled="addFormDisable">
+                <el-option label="男" :value="1"></el-option>
+                <el-option label="女" :value="2"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="户籍:" prop="census">
+              <el-input v-model="addForm.census" placeholder="请输入户籍" style="width: 100%" :disabled="addFormDisable"/>
+            </el-form-item>
+          </el-col>
         </el-row>
+
+
       </el-form>
     </div>
     <div class="detail_top">
@@ -73,58 +80,62 @@
           <el-button size="small" @click="cleanObj(landlordForm)">清空</el-button>
         </div>
       </div>
-      <el-form :model="landlordForm" label-position="top"  ref="addForm" class="demo-ruleForm" style="padding: 0 20px">
-        <el-row :gutter="80">
-          <el-col :span="8">
+      <el-form :model="landlordForm" label-position="top"  ref="addForm" class="demo-ruleForm">
+        <el-row :gutter="80" style="margin: 0">
+          <el-col :span="6">
             <el-form-item label="上传正面照:" prop="photoPath">
               <Upload @input="myUpload" :url="landlordForm.photoPath" ref="landlordUpload" :type="2" v-if="uploadShow"/>
             </el-form-item>
-            <el-form-item label="性别:" prop="sex">
-              <el-select v-model="landlordForm.sex" placeholder="请选择性别" style="width: 100%" disabled>
-                <el-option label="男" :value="1"></el-option>
-                <el-option label="女" :value="2"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="户籍:" prop="census">
-              <el-input v-model="landlordForm.census" placeholder="请输入户籍" style="width: 100%" disabled/>
-            </el-form-item>
+
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
             <el-form-item label="姓名:" prop="name">
-              <el-input v-model="landlordForm.name" placeholder="请输入姓名" style="width: 100%" disabled/>
+              <el-input v-model="landlordForm.name" placeholder="请输入姓名" style="width: 100%" :disabled="landlordFormDisable"/>
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
-              <el-select v-model="landlordForm.certificateType" placeholder="请选择证件类型" style="width: 100%" disabled>
+              <el-select v-model="landlordForm.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="landlordFormDisable">
                 <el-option label="身份证" :value="1"></el-option>
                 <el-option label="护照" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="民族：" prop="nation">
-              <el-input v-model="landlordForm.nation" placeholder="请输入民族" style="width: 100%" disabled/>
+              <el-input v-model="landlordForm.nation" placeholder="请输入民族" style="width: 100%" :disabled="landlordFormDisable"/>
             </el-form-item>
 
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
             <el-form-item label="手机号:" prop="phone">
               <el-input v-model="landlordForm.phone" placeholder="请输入手机号" style="width: 100%"/>
             </el-form-item>
 
             <el-form-item label="证件号码：" prop="cardNo">
-              <el-input v-model="landlordForm.cardNo" placeholder="请输入证件号码" style="width: 100%" disabled/>
+              <el-input v-model="landlordForm.cardNo" placeholder="请输入证件号码" style="width: 100%" :disabled="landlordFormDisable"/>
             </el-form-item>
 
             <el-form-item label="出生日期：" prop="birthday">
               <el-date-picker
-                disabled
+                :disabled="landlordFormDisable"
                 v-model="landlordForm.birthday"
                 type="date"
+                style="width: 100%"
                 value-format="yyyy-MM-dd"
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
 
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="户籍:" prop="census">
+              <el-input v-model="landlordForm.census" placeholder="请输入户籍" style="width: 100%" :disabled="landlordFormDisable"/>
+            </el-form-item>
+            <el-form-item label="性别:" prop="sex">
+              <el-select v-model="landlordForm.sex" placeholder="请选择性别" style="width: 100%" :disabled="landlordFormDisable">
+                <el-option label="男" :value="1"></el-option>
+                <el-option label="女" :value="2"></el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -137,58 +148,61 @@
           <el-button size="small" @click="cleanObj(landlordForm2)">清空</el-button>
         </div>
       </div>
-      <el-form :model="landlordForm2" label-position="top"  ref="addForm" class="demo-ruleForm" style="padding: 0 20px">
-        <el-row :gutter="80">
-          <el-col :span="8">
+      <el-form :model="landlordForm2" label-position="top"  ref="addForm" class="demo-ruleForm">
+        <el-row :gutter="80" style="margin: 0">
+          <el-col :span="6">
             <el-form-item label="上传正面照:" prop="photoPath">
               <Upload @input="myUpload" :url="landlordForm2.photoPath" ref="landlord2Upload" :type="3" v-if="uploadShow"/>
             </el-form-item>
-            <el-form-item label="性别:" prop="sex">
-              <el-select v-model="landlordForm2.sex" placeholder="请选择性别" style="width: 100%" disabled>
-                <el-option label="男" :value="1"></el-option>
-                <el-option label="女" :value="2"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="户籍:" prop="census">
-              <el-input v-model="landlordForm2.census" placeholder="请输入户籍" style="width: 100%" disabled/>
-            </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
             <el-form-item label="姓名:" prop="name">
-              <el-input v-model="landlordForm2.name" placeholder="请输入姓名" style="width: 100%" disabled/>
+              <el-input v-model="landlordForm2.name" placeholder="请输入姓名" style="width: 100%" :disabled="landlordForm2Disable"/>
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
-              <el-select v-model="landlordForm2.certificateType" placeholder="请选择证件类型" style="width: 100%" disabled>
+              <el-select v-model="landlordForm2.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="landlordForm2Disable">
                 <el-option label="身份证" :value="1"></el-option>
                 <el-option label="护照" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="民族：" prop="nation">
-              <el-input v-model="landlordForm2.nation" placeholder="请输入民族" style="width: 100%" disabled/>
+              <el-input v-model="landlordForm2.nation" placeholder="请输入民族" style="width: 100%" :disabled="landlordForm2Disable"/>
             </el-form-item>
 
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
             <el-form-item label="手机号:" prop="phone">
               <el-input v-model="landlordForm2.phone" placeholder="请输入手机号" style="width: 100%"/>
             </el-form-item>
 
             <el-form-item label="证件号码：" prop="cardNo">
-              <el-input v-model="landlordForm2.cardNo" placeholder="请输入证件号码" style="width: 100%" disabled/>
+              <el-input v-model="landlordForm2.cardNo" placeholder="请输入证件号码" style="width: 100%" :disabled="landlordForm2Disable"/>
             </el-form-item>
 
             <el-form-item label="出生日期：" prop="birthday">
               <el-date-picker
-                disabled
+                :disabled="landlordForm2Disable"
                 v-model="landlordForm2.birthday"
                 type="date"
+                style="width: 100%"
                 value-format="yyyy-MM-dd"
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
 
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="户籍:" prop="census">
+              <el-input v-model="landlordForm2.census" placeholder="请输入户籍" style="width: 100%" :disabled="landlordForm2Disable"/>
+            </el-form-item>
+            <el-form-item label="性别:" prop="sex">
+              <el-select v-model="landlordForm2.sex" placeholder="请选择性别" style="width: 100%" :disabled="landlordForm2Disable">
+                <el-option label="男" :value="1"></el-option>
+                <el-option label="女" :value="2"></el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -203,60 +217,68 @@
           <el-button size="small" @click="cleanObj(householdForm)">清空</el-button>
         </div>
       </div>
-      <el-form :model="householdForm" label-position="top"  ref="householdForm" class="demo-ruleForm" style="padding: 0 20px">
-        <el-row :gutter="80">
-          <el-col :span="8">
+      <el-form :model="householdForm" label-position="top"  ref="householdForm" class="demo-ruleForm">
+        <el-row :gutter="80" style="margin: 0">
+          <el-col :span="6">
             <el-form-item label="上传正面照:" prop="photoPath">
               <Upload @input="myUpload" :url="householdForm.photoPath" ref="householdUpload" :type="-1" v-if="uploadShow"/>
             </el-form-item>
-            <el-form-item label="性别:" prop="sex">
-              <el-select v-model="householdForm.sex" placeholder="请选择性别" style="width: 100%" disabled>
-                <el-option label="男" :value="1"></el-option>
-                <el-option label="女" :value="2"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="户籍:" prop="census">
-              <el-input v-model="householdForm.census" placeholder="请输入户籍" style="width: 100%" disabled/>
-            </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
             <el-form-item label="姓名:" prop="name">
-              <el-input v-model="householdForm.name" placeholder="请输入姓名" style="width: 100%" disabled/>
+              <el-input v-model="householdForm.name" placeholder="请输入姓名" style="width: 100%" :disabled="householdFormDisable"/>
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
-              <el-select v-model="householdForm.certificateType" placeholder="请选择证件类型" style="width: 100%" disabled>
+              <el-select v-model="householdForm.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="householdFormDisable">
                 <el-option label="身份证" :value="1"></el-option>
                 <el-option label="护照" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="民族：" prop="nation">
-              <el-input v-model="householdForm.nation" placeholder="请输入民族" style="width: 100%" disabled/>
+              <el-input v-model="householdForm.nation" placeholder="请输入民族" style="width: 100%" :disabled="householdFormDisable"/>
             </el-form-item>
 
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
             <el-form-item label="手机号:" prop="phone">
               <el-input v-model="householdForm.phone" placeholder="请输入手机号" style="width: 100%"/>
             </el-form-item>
 
             <el-form-item label="证件号码：" prop="cardNo">
-              <el-input v-model="householdForm.cardNo" placeholder="请输入证件号码" style="width: 100%" disabled/>
+              <el-input v-model="householdForm.cardNo" placeholder="请输入证件号码" style="width: 100%" :disabled="householdFormDisable"/>
             </el-form-item>
 
             <el-form-item label="出生日期：" prop="birthday">
               <el-date-picker
-                disabled
+                :disabled="householdFormDisable"
                 v-model="householdForm.birthday"
                 type="date"
+                style="width: 100%"
                 value-format="yyyy-MM-dd"
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
 
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="户籍:" prop="census">
+              <el-input v-model="householdForm.census" placeholder="请输入户籍" style="width: 100%" :disabled="householdFormDisable"/>
+            </el-form-item>
+            <el-form-item label="性别:" prop="sex">
+              <el-select v-model="householdForm.sex" placeholder="请选择性别" style="width: 100%" :disabled="householdFormDisable">
+                <el-option label="男" :value="1"></el-option>
+                <el-option label="女" :value="2"></el-option>
+              </el-select>
+            </el-form-item>
+
+          </el-col>
         </el-row>
+
+
+
+
       </el-form>
     </div>
 <!--     租户信息-->
@@ -268,58 +290,62 @@
           <el-button size="small" @click="cleanObj(item,index)">删除</el-button>
         </div>
       </div>
-      <el-form :model="item" label-position="top"  ref="addForm" class="demo-ruleForm" style="padding: 0 20px">
-        <el-row :gutter="80">
-          <el-col :span="8">
+      <el-form :model="item" label-position="top"  ref="addForm" class="demo-ruleForm">
+        <el-row :gutter="80" style="margin: 0">
+          <el-col :span="6">
             <el-form-item label="上传正面照:" prop="photoPath">
               <Upload @input="myUpload" :url="item.photoPath" ref="Upload" :type="index" v-if="uploadShow"/>
             </el-form-item>
-            <el-form-item label="性别:" prop="sex">
-              <el-select v-model="item.sex" placeholder="请选择性别" style="width: 100%" disabled>
-                <el-option label="男" :value="1"></el-option>
-                <el-option label="女" :value="2"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="户籍:" prop="census">
-              <el-input v-model="item.census" placeholder="请输入户籍" style="width: 100%" disabled/>
-            </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
             <el-form-item label="姓名:" prop="name">
-              <el-input v-model="item.name" placeholder="请输入姓名" style="width: 100%" disabled/>
+              <el-input v-model="item.name" placeholder="请输入姓名" style="width: 100%" :disabled="item.disabled"/>
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
-              <el-select v-model="item.certificateType" placeholder="请选择证件类型" style="width: 100%" disabled>
+              <el-select v-model="item.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="item.disabled">
                 <el-option label="身份证" :value="1"></el-option>
                 <el-option label="暂住证" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="民族：" prop="nation">
-              <el-input v-model="item.nation" placeholder="请输入民族" style="width: 100%" disabled/>
+              <el-input v-model="item.nation" placeholder="请输入民族" style="width: 100%" :disabled="item.disabled"/>
             </el-form-item>
 
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
 
             <el-form-item label="手机号:" prop="phone">
               <el-input v-model="item.phone" placeholder="请输入手机号" style="width: 100%"/>
             </el-form-item>
 
             <el-form-item label="证件号码：" prop="cardNo">
-              <el-input v-model="item.cardNo" placeholder="请输入证件号码" style="width: 100%" disabled/>
+              <el-input v-model="item.cardNo" placeholder="请输入证件号码" style="width: 100%" :disabled="item.disabled"/>
             </el-form-item>
 
             <el-form-item label="出生日期：" prop="birthday">
               <el-date-picker
-                disabled
+                :disabled="item.disabled"
                 v-model="item.birthday"
                 type="date"
+                style="width: 100%"
                 value-format="yyyy-MM-dd"
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
 
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="户籍:" prop="census">
+              <el-input v-model="item.census" placeholder="请输入户籍" style="width: 100%" :disabled="item.disabled"/>
+            </el-form-item>
+
+            <el-form-item label="性别:" prop="sex">
+              <el-select v-model="item.sex" placeholder="请选择性别" style="width: 100%" :disabled="item.disabled">
+                <el-option label="男" :value="1"></el-option>
+                <el-option label="女" :value="2"></el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -332,7 +358,6 @@
      <el-button style="margin-right: 10px" @click="$router.push('/houseManage/detail')">取消</el-button>
     <el-button type="primary" @click="handleSubmit">提交</el-button>
   </div>
-
 </div>
 </template>
 
@@ -352,7 +377,11 @@
           identity:this.$route.query.identity,
           uploadShow:true,
           house:JSON.parse(sessionStorage.getItem("house")),
-          room:JSON.parse(sessionStorage.getItem("room"))
+          room:JSON.parse(sessionStorage.getItem("room")),
+          addFormDisable:false,
+          landlordFormDisable:false,
+          landlordForm2Disable:false,
+          householdFormDisable:false,
         }
       },
     components:{
@@ -365,10 +394,15 @@
             this.house=JSON.parse(sessionStorage.getItem("house"))
             this.room=JSON.parse(sessionStorage.getItem("room"))
             this.addForm={}
-            this.landlordForm={},
-            this.landlordForm2={},
-              this.householdForm={},
-            this.tenantList=[],
+            this.landlordForm={}
+            this.landlordForm2={}
+            this.householdForm={}
+            this.tenantList=[]
+            this.addFormDisable=false
+            this.landlordFormDisable=false
+            this.landlordForm2Disable=false
+            this.householdFormDisable=false
+            this.tenantList.length&&this.tenantList.forEach(item=>item.disabled=false)
             this.getList()
             this.$forceUpdate()
           }
@@ -385,10 +419,13 @@
                  result.forEach(item=>{
                    if(item.type===1){
                      this.addForm=item
+                     this.addFormDisable=true
                    }else if (item.type===2){
                      this.landlordForm=item
+                     this.landlordFormDisable=true
                    }else {
                      this.landlordForm2=item
+                     this.landlordForm2Disable=true
                    }
                  })
                }
@@ -396,9 +433,13 @@
                const {result}=await houseListApi.getTenantDetailList({systemId:this.room.systemId})
                if(result.length){
                  this.tenantList=result.filter(v=>v.type===2)
+                 this.tenantList.length&&this.tenantList.forEach(item=>{
+                   item.disabled=true
+                 })
                  const householdForm=result.filter(v=>v.type===1)
                  if(householdForm.length){
                    this.householdForm=householdForm[0]
+                   this.householdFormDisable=true
                  }
                }
              }
@@ -412,7 +453,6 @@
           this.uploadShow=false
           if(this.identity==='landlord') {
             if (type === 1) {
-              this.uploadShow=false
               this.addForm.photoPath = val
             } else if (type === 2) {
               this.landlordForm.photoPath = val
@@ -423,7 +463,6 @@
             if(type === -1){
                 this.householdForm.photoPath = val
             }else {
-              console.log(val)
               this.tenantList[type].photoPath=val
               this.$forceUpdate()
             }
@@ -440,6 +479,14 @@
               if(this.identity==='landlord'){
                 const {code}=await houseListApi.removeLandlord({infoId:form.infoId})
                 if(code===200){
+
+                  if (form.type === 1) {
+                    this.addFormDisable=false
+                  } else if (form.type === 2) {
+                    this.landlordFormDisable=false
+                  } else {
+                    this.landlordForm2Disable=false
+                  }
                   this.cleanData(form,index)
                   this.$message.success('清空成功')
                 }
@@ -447,6 +494,7 @@
                 if(index===-1){
                   const {code}=await houseListApi.removeFamily({infoId:form.infoId})
                   if(code===200){
+                    this.householdFormDisable=false
                     this.cleanData(form,index)
                     this.$message.success('清空成功')
                   }
@@ -458,6 +506,7 @@
                   }).then(async() => {
                     const {code}=await houseListApi.removeFamily({infoId:form.infoId})
                     if(code===200){
+                      this.tenantList[index].disabled=false
                       this.$message.success('删除成功')
                       this.cleanData(form,index)
                     }
@@ -672,6 +721,8 @@
 <style lang="scss" scoped>
 .detail-contain {
   padding: 10px 70px;
+  min-height: calc(100vh - 84px);
+  background: rgba(0,0,0,.02);
   .detail_top{
     background: #fff;
     margin-bottom: 30px;
@@ -709,7 +760,7 @@
 }
   .addPerson {
     height: 30px;
-    border: 1px solid rgba(0,0,0,.45);
+    border: 1px dashed rgba(0,0,0,.25);
     cursor: pointer;
   }
 </style>

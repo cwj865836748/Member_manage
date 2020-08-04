@@ -34,14 +34,14 @@ export default {
           }
         }],
         // 环形颜色
-      //color: ['#C23531','#91C7AE','#FCCE10','#2F4554','#61A0A8','#D48265'],
+      color: ['#ff5454','#ffd200','#00b4ff','#00eacb','#954eff','#1c68da'],
         legend: {
 
         orient: 'vertical',
           itemWidth: 15,//宽
           itemHeight: 10,//高
           itemGap: 20,//图例之间的间距
-          right: '10%',  //图例距离左的距离
+          right: '5%',  //图例距离左的距离
           y: 'center',  //图例上下居中
           icon:"circle",
           data: ["业主","房东","理事","租户","户主","二房东"],
@@ -67,46 +67,46 @@ export default {
           type: 'pie',
           radius: ['55%', '85%'],
           center: ['50%', '50%'],
-          itemStyle: {
-            normal: {
-              color: (params)=> {
-                let colorList = [
-                  {
-                    c1: '#FEB692',
-                    c2: '#EA5455' //业主
-                  },
-                  {
-                    c1: '#FDEB71',
-                    c2: '#F8D800'//房东
-                  },
-                  {
-                    c1: '#ABDCFF',//理事
-                    c2: '#0396FF'
-                  },
-                  {
-                    c1: '#81FBB8',//租户
-                    c2: '#28C76F'
-                  },
-                  {
-                    c1: '#CE9FFC',//户主
-                    c2: '#7367F0'
-                  },
-                  {
-                    c1: '#FCCF31',//二房东
-                    c2: '#F55555'
-                  }]
-                return new this.$echarts.graphic.LinearGradient(1, 0, 0, 0, [{ //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
-
-                  offset: 0,
-                  color: colorList[params.dataIndex].c1
-                }, {
-                  offset: 1,
-                  color: colorList[params.dataIndex].c2
-                }])
-                /*  return colorList[params.dataIndex]*/
-              }
-            }
-          },
+          // itemStyle: {
+          //   normal: {
+          //     color: (params)=> {
+          //       let colorList = [
+          //         {
+          //           c1: '#FEB692',
+          //           c2: '#EA5455' //业主
+          //         },
+          //         {
+          //           c1: '#FDEB71',
+          //           c2: '#F8D800'//房东
+          //         },
+          //         {
+          //           c1: '#ABDCFF',//理事
+          //           c2: '#0396FF'
+          //         },
+          //         {
+          //           c1: '#81FBB8',//租户
+          //           c2: '#28C76F'
+          //         },
+          //         {
+          //           c1: '#CE9FFC',//户主
+          //           c2: '#7367F0'
+          //         },
+          //         {
+          //           c1: '#FCCF31',//二房东
+          //           c2: '#F55555'
+          //         }]
+          //       return new this.$echarts.graphic.LinearGradient(1, 0, 0, 0, [{ //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+          //
+          //         offset: 0,
+          //         color: colorList[params.dataIndex].c1
+          //       }, {
+          //         offset: 1,
+          //         color: colorList[params.dataIndex].c2
+          //       }])
+          //       /*  return colorList[params.dataIndex]*/
+          //     }
+          //   }
+          // },
           label: {
             normal: {
               position: 'inner',

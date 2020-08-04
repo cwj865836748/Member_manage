@@ -35,15 +35,15 @@ export default {
             align: 'center'
           }
         }],
-        dataZoom: [
-        {
-          show: true,
-          realtime: true,
-          height: 10,
-          start: 0,
-          end: 50
-        }
-      ],
+      //   dataZoom: [
+      //   {
+      //     show: true,
+      //     realtime: true,
+      //     height: 10,
+      //     start: 0,
+      //     end: 50
+      //   }
+      // ],
       xAxis: [{
         type: 'category',
         boundaryGap: true,

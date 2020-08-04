@@ -15,32 +15,32 @@ import fileDownload from "js-file-download";
       <UploadXls  @downMo="downMo" @uploadFile="uploadFile" :btnShow="true" @upOut="upOut"/>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="姓名" prop="name"/>
-      <el-table-column  align="center" label="手机号" prop="phone">
+      <el-table-column  align="left" label="姓名" prop="name"/>
+      <el-table-column  align="left" label="手机号" prop="phone">
 <!--        <template slot-scope="{row}">-->
 <!--          <span>{{ row.areaCode +'  '+ row.mobile }}</span>-->
 <!--        </template>-->
       </el-table-column>
 
-      <el-table-column  align="center" label="角色" prop="roleName">
+      <el-table-column  align="left" label="角色" prop="roleName">
       </el-table-column>
-      <el-table-column  align="center" label="积分" prop="integral">
+      <el-table-column  align="left" label="积分" prop="integral">
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="isEnabled" width="150px">
+      <el-table-column  align="left" label="状态" prop="isEnabled" width="150px">
         <template slot-scope="scope">
           <el-tag :type="scope.row.isEnabled?'success':'danger'"> {{scope.row.isEnabled|isEnabled}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px">
+      <el-table-column  align="left" label="更新时间" prop="updatedAt" width="200px">
       </el-table-column>
       <el-table-column
         label="操作"
-        align="center"
+        align="left"
       >
         <template slot-scope="{row}">
           <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
@@ -91,7 +91,9 @@ import fileDownload from "js-file-download";
             v-model="addForm.birthday"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择日期">
+            placeholder="选择日期"
+            style="width: 100%"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
@@ -125,7 +127,7 @@ import fileDownload from "js-file-download";
       </el-form>
 
     </el-dialog>
-    <el-dialog title="用户信息" v-if="userVisible" :visible.sync="userVisible" width="1000px">
+    <el-dialog title="用户信息" v-if="userVisible" :visible.sync="userVisible" width="75%" class="houseDetail">
       <el-row>
         <el-col :span="5">
           <div class="formSize">正面照</div>
@@ -145,30 +147,29 @@ import fileDownload from "js-file-download";
           <div class="formSize">积分：{{detailList.integral}}</div>
         </el-col>
       </el-row>
-      <el-row>
+
         <div class="formSize" style="font-weight: bold">房源信息</div>
         <el-table v-loading="listLoading" :data="detailList.roles" border fit highlight-current-row stripe style="width: 100%">
           <el-table-column
-            fixed
-            align="center" label="序号"
+            align="left" label="序号"
             type="index"
             width="50">
           </el-table-column>
-          <el-table-column  align="center" label="所属区域" prop="county" width="150px"/>
-          <el-table-column  align="center" label="乡镇街道" prop="town" width="150px">
+          <el-table-column  align="left" label="所属区域" prop="county" width="150px"/>
+          <el-table-column  align="left" label="乡镇街道" prop="town" width="150px">
             <!--        <template slot-scope="{row}">-->
             <!--          <span>{{ row.areaCode +'  '+ row.mobile }}</span>-->
             <!--        </template>-->
           </el-table-column>
-          <el-table-column  align="center" label="居村委" prop="village" width="150px"/>
-          <el-table-column  align="center" label="详细地址" prop="areaName" width="250px"/>
-          <el-table-column  align="center" label="户室" prop="roomName" width="150px"/>
-          <el-table-column  align="center" label="网格" prop="gridName" width="150px"/>
-          <el-table-column  align="center" label="理事" prop="gridPerName" width="150px"/>
-          <el-table-column  align="center" label="所属角色" prop="roleName" width="150px"/>
+          <el-table-column  align="left" label="居村委" prop="village" width="150px"/>
+          <el-table-column  align="left" label="详细地址" prop="areaName"/>
+          <el-table-column  align="left" label="户室" prop="roomName" width="150px"/>
+          <el-table-column  align="left" label="网格" prop="gridName" width="150px"/>
+          <el-table-column  align="left" label="理事" prop="gridPerName" width="150px"/>
+          <el-table-column  align="left" label="所属角色" prop="roleName" width="150px"/>
         </el-table>
 
-      </el-row>
+
     </el-dialog>
 
   </div>
@@ -235,6 +236,12 @@ import fileDownload from "js-file-download";
                 trigger: 'blur',
                 validator: validateRequire,
                 text: '证件号码'
+              }],
+              isEnabled: [{
+                required: true,
+                trigger: 'blur',
+                validator: validateRequire,
+                text: '状态'
               }]
             },
             isAdd:'create'
@@ -292,7 +299,7 @@ import fileDownload from "js-file-download";
             cardNo:'',
             census:'',
             certificateType:'',
-            isEnabled:'',
+            isEnabled:1,
             name:'',
             nation:'',
             phone:'',
@@ -414,4 +421,10 @@ import fileDownload from "js-file-download";
   color: #606266;
 
 }
+.houseDetail {
+  /deep/.el-dialog__body {
+    padding: 30px 30px 40px;
+  }
+}
+
 </style>

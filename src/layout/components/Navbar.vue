@@ -10,12 +10,12 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container"/>
 
     <div class="right-menu">
-      <div class="loginName">管理员：{{userInfo.username}}</div>
+
       <template v-if="device!=='mobile'">
 
         <search id="header-search" class="right-menu-item"/>
 
-        <error-log class="errLog-container right-menu-item hover-effect"/>
+<!--        <error-log class="errLog-container right-menu-item hover-effect"/>-->
 
 <!--        <screenfull id="screenfull" class="right-menu-item hover-effect"/>-->
 
@@ -33,7 +33,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" @command="handleCommand">
         <div class="avatar-wrapper">
-          <img src="../../assets/images/icon.png" class="user-avatar">
+          <div class="loginName">{{userInfo.username}}</div>
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -205,7 +205,7 @@
         margin-right: 30px;
 
         .avatar-wrapper {
-          margin-top: 5px;
+          //margin-top: 5px;
           position: relative;
 
           .user-avatar {
@@ -219,7 +219,7 @@
             cursor: pointer;
             position: absolute;
             right: -20px;
-            top: 25px;
+            top: 20px;
             font-size: 12px;
           }
         }

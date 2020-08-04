@@ -45,25 +45,30 @@
        </div>
       <div class="card flex-wrap">
          <div class="cardMsg" v-for="(item,index) in list " :key="index" @click="edit('user',item)">
-           <div class="cardHead flex-xy-center">
-             <img src="../../../assets/images/room_num.png"/>
-             <span class="roomSize">房间号</span>
-             <span class="roomNumber">{{item.roomNo}}</span>
+           <div class="cardHead ">
+             <div class="roomSize">房间号</div>
+             <div class="roomNumber">{{item.roomNo}}</div>
            </div>
-            <div class="nameDetail flex-x-around">
-              <div class="formSize flex-xy-center flex-col">
-                <div class="name">{{item.roomPersonName?item.roomPersonName:'暂无'}}</div>
+            <div class="nameDetail">
+              <el-col :span="14">
+              <div class="formSize flex-col">
                 <div class="ch">户主</div>
+                <div class="name">{{item.roomPersonName?item.roomPersonName:'暂无'}}</div>
               </div>
-              <div class="formSize flex-xy-center flex-col">
+              </el-col>
+              <el-col :span="8">
+              <div class="formSize flex-col">
+                <div class="ch">租户数量</div>
               <div class="name">{{item.roomMateCount?item.roomMateCount:0}}</div>
-              <div class="ch">租户数量</div>
+
               </div>
+              </el-col>
             </div>
          </div>
       </div>
     </div>
   </div>
+  <div class="myPagination">
   <pagination
     v-show="total>0"
     :total="total"
@@ -71,6 +76,7 @@
     :limit.sync="listQuery.pageSize"
     @pagination="findFloorRoomList"
   />
+  </div>
 </div>
 </template>
 
@@ -98,7 +104,7 @@
             },
             listQuery: {
               pageNo: 1,
-              pageSize: 8,
+              pageSize: 10,
               roomName:'',
             },
             total: 0,
@@ -199,28 +205,34 @@
         margin-top: 30px;
         .cardMsg {
           cursor: pointer;
-          height: 200px;
+          height: 180px;
           border-radius: 8px;
-          border: 1px solid #E9E9E9;
+          border: 2px solid #F5F5F5;
           width: 21%;
           margin: 0 20px 20px 0;
-          padding: 20px 10px;
           .cardHead {
             height: 50%;
-            margin-bottom: 15px;
-              img {
-                width: 50px;
-                height: 50px;
-              }
+            border-bottom: 2px solid #F5F5F5;
             .roomSize {
-               color: #BCBDBE;
-              margin-left: 5px;
+               color: #77A6FD;
+              padding: 15px 20px 5px ;
+              font-size: 15px;
+              position: relative;
              }
+            .roomSize::before {
+              content: '';
+              width: 5px;
+              height: 15px;
+              position: absolute;
+              left: 0;
+              top: 16px;
+              background: #2D79FC;
+            }
             .roomNumber {
-              color: #6D94D1;
-              font-size: 26px;
-              font-weight: 600;
-              margin-left:5px;
+              color: #2D79FC;
+              font-size: 32px;
+              font-weight: 500;
+              padding-left:20px ;
             }
           }
         }
@@ -231,28 +243,28 @@
     }
     .nameDetail {
       position: relative;
-    }
-    .nameDetail::after {
-      content: '';
-      display: block;
-      position: absolute;
-      background:#BCBDBE;
-      top:0;
-      left: 50%;
-      width:1px;
-      height: 40px;
+      padding: 20px 20px;
+      display: flex;
     }
     .formSize {
       .name {
-        font-size: 24px;
+        font-size: 20px;
         font-weight: 600;
-        color: #3D3C3C;
-        margin-bottom: 5px;
+        color: #020202;
+
       }
       .ch {
-        color: #BCBDBE;
+        color: #020202;
+        font-size: 15px;
+        margin-bottom: 5px;
       }
     }
+
+
+  }
+  .myPagination {
+    box-sizing: border-box;
+    padding-left:82px ;
   }
 }
 </style>

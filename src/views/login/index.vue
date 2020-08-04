@@ -95,13 +95,13 @@
         <el-form-item label="验证码" prop="code" >
           <div style="display: flex">
           <el-input v-model="passForm.captcha" placeholder="请输入验证码"></el-input>
-          <el-button size="small" type="primary" @click="getCode" :disabled="initTime?true:false">{{codeName}}</el-button>
+          <el-button size="small" type="primary" @click="getCode" :disabled="this.initTime">{{codeName}}</el-button>
           </div>
         </el-form-item>
         <el-form-item label="新密码" prop="password">
-          <el-input v-model="passForm.password" placeholder="请输入新密码"></el-input>
+          <el-input type="password" v-model="passForm.password" placeholder="请输入新密码"></el-input>
         </el-form-item>
-        <el-form-item style="float: right">
+        <el-form-item class="flex-x-end">
           <el-button size="small" @click="isLogin=false">取消</el-button>
           <el-button size="small" type="primary" @click="handleAB('passForm')">确定</el-button>
         </el-form-item>
@@ -197,7 +197,7 @@
         if(code!==200){
           return this.$message.error(message)
         }
-        this.codeName=180
+        this.codeName=60
         this.initTime=setInterval(()=>{
           if (this.codeName){
             this.codeName--
@@ -440,6 +440,11 @@
   .el-button--primary {
     background: #004FBF;
     border-color: #004FBF;
+  }
+  /deep/.is-disabled {
+    color: #fff;
+    background-color: #8cc8ff !important;
+    border-color: #8cc8ff !important;
   }
 
   .el-button--text {

@@ -13,20 +13,20 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="字典名称" prop="dictName"/>
-      <el-table-column  align="center" label="字典编号" prop="dictCode">
+      <el-table-column  align="left" label="字典名称" prop="dictName"/>
+      <el-table-column  align="left" label="字典编号" prop="dictCode">
       </el-table-column>
-      <el-table-column  align="center" label="描述" prop="description">
+      <el-table-column  align="left" label="描述" prop="description">
       </el-table-column>
 
       <el-table-column
         label="操作"
-        align="center"
+        align="left"
         width="300px"
       >
         <template slot-scope="{row}">
@@ -82,19 +82,19 @@
         </el-button>
       </div>
       <el-table v-loading="listLoading" :data="dictionaryList" border fit highlight-current-row stripe style="width: 100%">
-        <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px" fixed>
+        <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px" fixed>
           <template slot-scope="scope">
             {{ (dictionaryQuery.pageNo - 1) * dictionaryQuery.pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column  align="center" label="字典项" prop="itemText"/>
-        <el-table-column  align="center" label="字典项值" prop="itemValue">
+        <el-table-column  align="left" label="字典项" prop="itemText"/>
+        <el-table-column  align="left" label="字典项值" prop="itemValue">
         </el-table-column>
-        <el-table-column  align="center" label="排序" prop="sortOrder">
+        <el-table-column  align="left" label="排序" prop="sortOrder">
         </el-table-column>
-        <el-table-column  align="center" label="描述" prop="description" width="200px">
+        <el-table-column  align="left" label="描述" prop="description" width="200px">
         </el-table-column>
-        <el-table-column  align="center" label="状态" prop="status">
+        <el-table-column  align="left" label="状态" prop="status">
           <template slot-scope="scope">
             <el-tag :type="scope.row.status?'success':'danger'"> {{scope.row.status|isEnabled}}</el-tag>
           </template>
@@ -102,7 +102,7 @@
 
         <el-table-column
           label="操作"
-          align="center"
+          align="left"
           width="200px"
         >
           <template slot-scope="{row}">
@@ -132,6 +132,9 @@
         <el-form-item label="字典项值：" prop="itemValue">
           <el-input v-model="dictionaryForm.itemValue"  placeholder="请输入字典项值"></el-input>
         </el-form-item>
+        <el-form-item label="描述：" prop="description">
+          <el-input type="description"  v-model="dictionaryForm.description" autosize  placeholder="请输入描述"></el-input>
+        </el-form-item>
         <el-form-item label="排序：" prop="sortOrder">
           <el-input  v-model="dictionaryForm.sortOrder"  placeholder="请输入排序"></el-input>
         </el-form-item>
@@ -145,8 +148,8 @@
           </el-select>
         </el-form-item>
         <el-form-item class="flex-x-end">
-          <el-button type="primary" size="small" @click="dictionaryAddVisible=false">取消</el-button>
-          <el-button size="small" @click="dCreateEditData('dictionaryForm')">确定</el-button>
+          <el-button  size="small" @click="dictionaryAddVisible=false">取消</el-button>
+          <el-button type="primary" size="small" @click="dCreateEditData('dictionaryForm')">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -356,7 +359,7 @@
       // 重置
       resetDictionaryForm() {
        this.dictionaryForm={
-            status:'',
+            status:1,
             sortOrder:'',
             itemValue:'',
             itemText:'',

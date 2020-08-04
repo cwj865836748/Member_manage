@@ -143,3 +143,8 @@ export function safeColor(val){
     return '灰色'
   }
 }
+export function operation(val){
+
+   return  val>0? `+${val}`:val
+
+}

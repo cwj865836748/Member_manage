@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="40">
-    <el-col :span="12">
+
   <el-upload
     class="avatar-uploader"
     action=""
@@ -9,16 +9,17 @@
     :before-upload="beforeAvatarUpload"
     :on-success="handleImageSuccess"
   >
+    <div  v-if="url"  class="avatar">
+      <img :src="url">
+    </div>
 
-    <i class="el-icon-plus avatar-uploader-icon"></i>
+    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
   </el-upload>
-    </el-col>
-    <el-col :span="12">
-      <img v-if="url" :src="url" class="avatar" @click="showPic">
-    </el-col>
-    <el-dialog title="图片" :visible.sync="addVisible" width="500px">
-      <img :src="url" class="avatar" @click="showPic" style="width: 100%;height: 100%">
-    </el-dialog>
+
+
+<!--    <el-dialog title="图片" :visible.sync="addVisible" width="500px">-->
+<!--      <img :src="url" class="avatar" @click="showPic" style="width: 100%;height: 100%">-->
+<!--    </el-dialog>-->
   </el-row>
 </template>
 
@@ -62,14 +63,14 @@
         beforeAvatarUpload(file) {
           const isJPG = file.type === 'image/jpeg';
           const isPNG = file.type ==='image/png'
-          const isLt2M = file.size / 1024 / 1024 < 2;
+          // const isLt2M = file.size / 1024 / 1024 < 2;
 
           if (!isJPG&&!isPNG) {
             return this.$message.error('上传封面只能是 JPG或Png 格式!');
           }
-          if (!isLt2M) {
-            return this.$message.error('上传封面大小不能超过 2MB!');
-          }
+          // if (!isLt2M) {
+          //   return this.$message.error('上传封面大小不能超过 2MB!');
+          // }
         },
         uploadFile(file) {
           const that = this
@@ -89,6 +90,9 @@
 </script>
 
 <style lang="scss" scoped>
+  .avatar-uploader {
+
+  }
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -102,14 +106,23 @@
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 242px;
+    height: 242px;
+    line-height: 242px;
     text-align: center;
   }
   .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
+    width: 242px;
+    height: 242px;
+    position: relative;
+    background: #F4F8FB;
+    img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 100%;
+      max-height: 100%;
+    }
   }
 </style>

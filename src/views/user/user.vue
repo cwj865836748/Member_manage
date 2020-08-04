@@ -8,33 +8,35 @@
         icon="el-icon-plus"
         @click="handleCreateEdit('create')"
         size="small"
+        v-if="btnShow"
       >
         添加
       </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-      <el-table-column  align="center" fixed :label="$t('common.serial')" width="50px">
+      <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
         <template slot-scope="scope">
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="账号" prop="username"/>
-      <el-table-column  align="center" label="姓名" prop="name"/>
-      <el-table-column  align="center" label="手机号" prop="phone"/>
-      <el-table-column  align="center" label="角色" prop="roleName"/>
-      <el-table-column  align="center" label="区域权限" prop="areaName">
+      <el-table-column  align="left" label="账号" prop="username"/>
+      <el-table-column  align="left" label="姓名" prop="name"/>
+      <el-table-column  align="left" label="手机号" prop="phone"/>
+      <el-table-column  align="left" label="角色" prop="roleName"/>
+      <el-table-column  align="left" label="区域权限" prop="areaName">
       </el-table-column>
-      <el-table-column  align="center" label="状态" prop="isEnabled" width="100px">
+      <el-table-column  align="left" label="状态" prop="isEnabled" width="100px">
         <template slot-scope="scope">
           <el-tag :type="scope.row.isEnabled?'success':'danger'"> {{scope.row.isEnabled|isEnabled}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="更新时间" prop="updatedAt" width="200px">
+      <el-table-column  align="left" label="更新时间" prop="updatedAt" width="200px">
       </el-table-column>
       <el-table-column
         label="操作"
-        align="center"
+        align="left"
         min-width="200px"
+        v-if="btnShow"
       >
         <template slot-scope="{row}">
           <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
@@ -126,7 +128,6 @@
   import {statusType} from '@/config/userManage'
   import {userApi,roleApi} from '@/api'
   import {validateRequire} from '@/utils/validate'
-  import {regroupCascaderData} from '@/utils'
   export default {
     name: "index",
     data(){
@@ -151,6 +152,7 @@
         },
         listLoading: false,
         list: null,
+        btnShow:true,
         listQuery: {
           pageNo: 1,
           pageSize: 10
@@ -228,6 +230,9 @@
     methods: {
       getArea(arr){
         this.areaOptions=arr
+        if (!this.areaOptions[0].areaList){
+          this.btnShow=false
+        }
       },
       async getRole(){
         const {result} = await roleApi.allList()
