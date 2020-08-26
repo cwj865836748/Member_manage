@@ -18,7 +18,7 @@
           {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column  align="left" label="消息内容" prop="content" width="250px"/>
+      <el-table-column  align="left" label="消息内容" prop="content" min-width="250px"/>
       <el-table-column  align="left" label="类型" prop="type">
         <template slot-scope="{row}">
           {{row.type|msgType}}
@@ -43,10 +43,10 @@
         width="250"
       >
         <template slot-scope="{row}">
-          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===0">
+          <el-button size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===0">
             编辑
           </el-button>
-          <el-button type="primary" size="small" @click="sendMessage(row)" v-if="row.status===0">
+          <el-button size="small" @click="sendMessage(row)" v-if="row.status===0">
             发送
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)" >

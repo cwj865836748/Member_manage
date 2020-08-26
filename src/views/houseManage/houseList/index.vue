@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <search ref="search" :fields="searchFields" @change="handleSearch"/>
+    <search ref="search" :fields="searchFields" @change="handleSearch" :firstDisable="true"/>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
       <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
@@ -23,7 +23,7 @@
       </el-table-column>
       <el-table-column  align="left" label="操作" prop="cz">
         <template slot-scope="{row}">
-          <el-button type="primary" size="small" @click="handleView(row)">
+          <el-button size="small" @click="handleView(row)">
             查看
           </el-button>
         </template>
@@ -71,7 +71,7 @@
     },
     methods: {
       handleSearch() {
-        this.listQuery.page = 1
+        this.listQuery.pageNo = 1
         this.getList()
       },
       // 获取数据

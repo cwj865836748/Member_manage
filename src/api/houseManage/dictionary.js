@@ -87,6 +87,13 @@ class dictionaryModel {
       params
     })
   }
+  getDictItem(params){
+    return request({
+      url: '/web/dict/getDictItem',
+      method: 'get',
+      params
+    })
+  }
 }
 
 export const dictionaryApi = new dictionaryModel()

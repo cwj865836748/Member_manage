@@ -59,8 +59,8 @@ export const shelfType = [
   {label: '已上架', value: 1, type: ''}
 ]
 export const logType = [
-  {label: '操作日志', value: 1, type: ''},
-  {label: '登录日志', value: 2, type: ''}
+  {label: '操作日志', value: 2, type: ''},
+  {label: '登录日志', value: 1, type: ''}
 ]
 
 

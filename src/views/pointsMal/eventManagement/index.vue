@@ -290,8 +290,28 @@
         })
       },
       //结束
-      handleOver(){
-
+      handleOver(row){
+        this.$confirm('确定结束该活动？', {
+          confirmButtonText: this.$t('common.confirm'),
+          cancelButtonText: this.$t('common.cancel'),
+          type: 'warning'
+        }).then(() => {
+          recordApi.stopActivity({id:row.id}).then(res=>{
+            if(res.code===200){
+              this.getList()
+              this.$message({
+                message: res.msg || this.$t('common.success'),
+                type: 'success'
+              })
+            }
+          })
+        }).catch(err => {
+          console.log(err)
+          this.$message({
+            type: 'info',
+            message: this.$t('common.isCancel')
+          })
+        })
       },
       //撤回
       handleOut(row){

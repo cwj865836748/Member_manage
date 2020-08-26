@@ -35,13 +35,13 @@
         width="250px"
       >
         <template slot-scope="{row}">
-          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===-1">
+          <el-button  size="small" @click="handleCreateEdit('edit',row)" v-if="row.status===-1">
             编辑
           </el-button>
-          <el-button type="success" size="small" @click="resume(row)" v-if="row.status===-1">
+          <el-button  size="small" @click="resume(row)" v-if="row.status===-1">
             恢复
           </el-button>
-          <el-button type="info" size="small" @click="pause(row)" v-if="row.status===0">
+          <el-button size="small" @click="pause(row)" v-if="row.status===0">
             暂停
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)">

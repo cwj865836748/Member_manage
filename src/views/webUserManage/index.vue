@@ -43,10 +43,10 @@ import fileDownload from "js-file-download";
         align="left"
       >
         <template slot-scope="{row}">
-          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
+          <el-button   size="small" @click="handleCreateEdit('edit',row)">
             编辑
           </el-button>
-          <el-button type="primary" size="small" @click="handleView(row)">
+          <el-button  size="small" @click="handleView(row)">
             查看
           </el-button>
 <!--          <el-button type="text" size="small" @click="handleDelete(row)" style="color: red">-->
@@ -131,7 +131,9 @@ import fileDownload from "js-file-download";
       <el-row>
         <el-col :span="5">
           <div class="formSize">正面照</div>
-          <img :src="detailList.photo?detailList.photo:require('@/assets/images/photo@2x.png')" style="width: 80px;height: 80px">
+          <div class="zmz">
+            <img :src="detailList.photo?detailList.photo:require('@/assets/images/photo@2x.png')" >
+          </div>
         </el-col>
         <el-col :span="9">
           <div class="formSize">姓名：{{detailList.name}}</div>
@@ -248,6 +250,21 @@ import fileDownload from "js-file-download";
           }
       },
       components: {Pagination, Search,UploadSFZ,UploadXls},
+      watch:{
+        'addForm.cardNo':{
+          deep:true,
+          handler:function(newVal,oldVal){
+            if (newVal.length===18){
+               const y=newVal.substring(6,10)
+               const m =newVal.substring(10,12)
+               const d =newVal.substring(12,14)
+               const sex = (newVal.substring(16,17))%2 ===0?2:1
+               this.addForm.birthday=`${y}-${m}-${d}`
+               this.addForm.sex=sex
+            }
+          }
+        }
+      },
       created() {
         this.getList()
       },
@@ -420,6 +437,20 @@ import fileDownload from "js-file-download";
   font-size: 14px;
   color: #606266;
 
+}
+.zmz {
+  width: 92px;
+  height: 92px;
+  position: relative;
+  background: #F4F8FB;
+  img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
 .houseDetail {
   /deep/.el-dialog__body {

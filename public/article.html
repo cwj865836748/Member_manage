@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+  <title>文章详情</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.1/lib/index.css">
 </head>
 <script src="https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"></script>
@@ -41,15 +42,20 @@
     font-family: SourceHanSansSC, SourceHanSansSC-Medium;
   }
   .title {
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 17px;
+    font-weight: 600;
     color: #333333;
     margin-bottom: 13px;
+    text-align: center;
   }
   .content {
     font-size: 14px;
     color: #444444;
     line-height: 25px;
+    width: 100%;
+  }
+  img {
+    max-width: 100%;
   }
 </style>
 <body>
@@ -87,21 +93,27 @@
         var value = item[1];
         obj[key] = value;
       }
-     this.urlObj=obj
+      this.urlObj=obj
       this.getArticle()
     },
     mounted(){
       let _this = this;
       window.onscroll = function(){
-        //变量scrollTop是滚动条滚动时，距离顶部的距离
-        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
-        //变量windowHeight是可视区的高度
-        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        //变量scrollHeight是滚动条的总高度
-        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
-        //滚动条到底部的条件
-        if(scrollTop+windowHeight == scrollHeight){
-          //到了这个就可以进行业务逻辑加载后台数据了
+        // //变量scrollTop是滚动条滚动时，距离顶部的距离
+        // var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        // //变量windowHeight是可视区的高度
+        // var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        // //变量scrollHeight是滚动条的总高度
+        // var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+        // //滚动条到底部的条件
+        // if(scrollTop+windowHeight == scrollHeight){
+        //   //到了这个就可以进行业务逻辑加载后台数据了
+        //   _this.getBtn()
+        // }
+        var totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop());
+
+        //当前文档高度   小于或等于   滚动条所在位置高度  则是页面底部
+        if(($(document).height()) <= totalheight+5) {
           _this.getBtn()
         }
       }
@@ -119,7 +131,7 @@
           type:"get", // 请求类型 GET/POST
           headers: {
             'X-Access-Token': that.urlObj.token
-        },
+          },
           url:"https://mis.synbop.com/small/article/queryById", // 请求路径
           dataType:"json", // 预期服务器返回的数据类型
           data:{ // 请求参数，键值对的json对象
@@ -135,34 +147,34 @@
         const _this=this
         if(this.btnfooter&&!this.articleObj.isRead){
           _this.btnfooter=false
-           this.initinitNum=setInterval(()=>{
-             if(this.time!==0){
-               this.time--
-             }else {
-               clearInterval(this.initinitNum)
-               this.initinitNum=false
-               $.ajax({
-                 type:"post", // 请求类型 GET/POST
-                 headers: {
-                   'X-Access-Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTYwMTQzOTMsInVzZXJuYW1lIjoiMTgzOTYzMjg3MDkgIn0.p0QV45_L9WYQqttcvVyWhkh-s_s0JiGn91n4xIYUrMo'
-                 },
-                 url:"https://mis.synbop.com/small/article/readArticle", // 请求路径
-                 dataType:"json", // 预期服务器返回的数据类型
-                 data:{ // 请求参数，键值对的json对象
-                   articleId:_this.urlObj.id
-                 },
-                 success:function(res){ // 请求成功时的回调函数
-                   vant.Toast({
-                     message:res.message
-                   })
-                   _this.getArticle()
-                 }
-               });
-             }
-           },1000)
+          this.initinitNum=setInterval(()=>{
+            if(this.time!==0){
+              this.time--
+            }else {
+              clearInterval(this.initinitNum)
+              this.initinitNum=false
+              $.ajax({
+                type:"post", // 请求类型 GET/POST
+                headers: {
+                  'X-Access-Token': _this.urlObj.token                },
+                url:"https://mis.synbop.com/small/article/readArticle", // 请求路径
+                dataType:"json", // 预期服务器返回的数据类型
+                data:{ // 请求参数，键值对的json对象
+                  articleId:_this.urlObj.id
+                },
+                success:function(res){ // 请求成功时的回调函数
+                  vant.Toast({
+                    message:res.message
+                  })
+                  _this.getArticle()
+                }
+              });
+            }
+          },1000)
         }
       }
     },
   })
 </script>
 </html>
+

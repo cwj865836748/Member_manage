@@ -30,7 +30,7 @@
         align="left"
       >
         <template slot-scope="{row}">
-          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
+          <el-button   size="small" @click="handleCreateEdit('edit',row)">
             编辑
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)">

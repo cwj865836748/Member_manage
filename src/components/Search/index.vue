@@ -241,9 +241,9 @@
       getTreeData(data){
         // 循环遍历json数据
         for(var i=0;i<data.length;i++){
-          if(this.firstDisable&&data[i].id===this.$store.state.user.userInfo.area&&this.$store.state.user.userInfo.username!=='synbop'){
-            data[i].disabled=true
-          }
+          // if(this.firstDisable&&data[i].id===this.$store.state.user.userInfo.area&&this.$store.state.user.userInfo.username!=='synbop'){
+          //   data[i].disabled=true
+          // }
           if(data[i].areaList&&data[i].areaList.length<1){
             // children若为空数组，则将children设为undefined
             data[i].areaList=undefined;

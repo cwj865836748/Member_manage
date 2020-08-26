@@ -30,10 +30,10 @@
         width="300px"
       >
         <template slot-scope="{row}">
-          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
+          <el-button  size="small" @click="handleCreateEdit('edit',row)">
             编辑
           </el-button>
-          <el-button type="primary" size="small" @click="handleView(row)">
+          <el-button size="small" @click="handleView(row)">
             字典配置
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)">
@@ -106,7 +106,7 @@
           width="200px"
         >
           <template slot-scope="{row}">
-            <el-button type="warning"  size="small" @click="dictionaryCreateEdit('edit',row)">
+            <el-button  size="small" @click="dictionaryCreateEdit('edit',row)">
               编辑
             </el-button>
             <el-button type="danger" size="small" @click="dictionaryDelete(row)">

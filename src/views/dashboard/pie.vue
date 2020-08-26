@@ -107,6 +107,18 @@ export default {
           //     }
           //   }
           // },
+          itemStyle: { // 此配置
+            normal: {
+              borderWidth: 2,
+              borderColor: '#ffffff',
+            },
+            // emphasis: {
+            //   borderWidth: 0,
+            //   shadowBlur: 10,
+            //   shadowOffsetX: 0,
+            //   shadowColor: 'rgba(0, 0, 0, 0.5)'
+            // }
+          },
           label: {
             normal: {
               position: 'inner',

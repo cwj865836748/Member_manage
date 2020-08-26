@@ -39,10 +39,10 @@
         v-if="btnShow"
       >
         <template slot-scope="{row}">
-          <el-button type="warning"  size="small" @click="handleCreateEdit('edit',row)">
+          <el-button   size="small" @click="handleCreateEdit('edit',row)">
             编辑
           </el-button>
-          <el-button type="primary" size="small" @click="resetPassword(row)">
+          <el-button  size="small" @click="resetPassword(row)">
             重置密码
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)">
@@ -228,7 +228,13 @@
       this.getRole()
     },
     methods: {
-      getArea(arr){
+      getArea(tree){
+        const arr = JSON.parse(JSON.stringify(tree))
+        for(let i=0;i<arr.length;i++){
+          if(arr[i].id===this.$store.state.user.userInfo.area&&this.$store.state.user.userInfo.username!=='synbop'){
+            arr[i].disabled=true
+          }
+        }
         this.areaOptions=arr
         if (!this.areaOptions[0].areaList){
           this.btnShow=false

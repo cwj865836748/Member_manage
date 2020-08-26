@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="40">
+
 
   <el-upload
     class="avatar-uploader"
@@ -20,7 +20,7 @@
 <!--    <el-dialog title="图片" :visible.sync="addVisible" width="500px">-->
 <!--      <img :src="url" class="avatar" @click="showPic" style="width: 100%;height: 100%">-->
 <!--    </el-dialog>-->
-  </el-row>
+
 </template>
 
 <script>
@@ -99,6 +99,7 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
+
   }
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;
@@ -106,14 +107,14 @@
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 242px;
-    height: 242px;
-    line-height: 242px;
+    width: 270px;
+    height: 270px;
+    line-height: 270px;
     text-align: center;
   }
   .avatar {
-    width: 242px;
-    height: 242px;
+    width: 270px;
+    height: 270px;
     position: relative;
     background: #F4F8FB;
     img {

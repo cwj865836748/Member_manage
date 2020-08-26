@@ -13,7 +13,7 @@ import fileDownload from "js-file-download";
         </template>
       </el-table-column>
       <el-table-column  align="left" label="积分栏目" prop="type"/>
-      <el-table-column  align="left" label="积分使用" prop="content" width="200px"/>
+      <el-table-column  align="left" label="积分使用" prop="content" min-width="250px"/>
       <el-table-column  align="left" label="用户" prop="memberName"/>
       <el-table-column  align="left" label="积分" prop="operation">
         <template slot-scope="{row}">

@@ -2,14 +2,14 @@
   <div class="app-container">
     <div class="app-content">
       <div class="prizeList">
-        <el-row :gutter="20" >
-          <el-col :span="3" :lg="4" :md="5" :sm="5" :xs="6" >
+        <el-row :gutter="140">
+          <el-col :span="3" :lg="3" :md="5" :sm="5" :xs="6" >
             <div class="leftImg">
               <img :src="activeDetail.cover?activeDetail.cover:$defaultImg" />
             </div>
 
           </el-col>
-          <el-col :span="17" :lg="16" :md="14" :sm="14" :xs="13">
+          <el-col :span="17" :lg="17" :md="14" :sm="14" :xs="13">
             <div class="flex">
               <div class="activeName">{{activeDetail.name}}</div>
 
@@ -36,13 +36,13 @@
           <UploadXls  @downMo="downMo" @uploadFile="uploadFile"/>
 
         </div>
-        <el-row :gutter="40">
-          <el-col :span="4" style="margin-bottom: 10px">
+        <div class="flex-wrap">
+          <div style="margin-bottom: 10px;margin-right: 30px;">
              <div class="prizeDetail" @click="handleCreateEdit('create')">
                <div class="text">+添加奖品</div>
              </div>
-          </el-col>
-          <el-col :span="4" v-for="(item,index) in list" :key="index" style="margin-bottom: 10px">
+          </div>
+          <div v-for="(item,index) in list" :key="index" style="margin-bottom: 10px;margin-right: 30px;">
             <div class="prizeDetail" @click="handleCreateEdit('edit',item)">
                <div class="prizeDetail-head">
                  <img :src="item.cover?item.cover:$defaultImg">
@@ -53,24 +53,17 @@
                    {{item.name}}
                  </div>
                  <div class="prizeDetail-content-count">
-                    <div class="prizeDetail-content-count-sz">
-                      <div class="font">总数</div>
-                      <div class="font">{{item.count}}</div>
+                    <div class="prizeDetail-content-count-sz ">
+                      <div class="font">总数 {{item.count}}</div>
+                      <div class="font">已兑 {{item.redeemedCount}}</div>
+                      <div class="font">积分 {{item.integral}}</div>
                     </div>
-                   <div class="prizeDetail-content-count-sz">
-                     <div class="font">已兑</div>
-                     <div class="font">{{item.redeemedCount}}</div>
-                   </div>
-                   <div class="prizeDetail-content-count-sz">
-                     <div class="font">积分</div>
-                     <div class="font">{{item.integral}}</div>
-                   </div>
                  </div>
                </div>
             </div>
-          </el-col>
+          </div>
 
-        </el-row>
+        </div>
       </div>
     </div>
     <pagination
@@ -355,8 +348,8 @@
     }
   }
   .prizeDetail {
-     width: 100%;
-     height: 270px;
+     width: 265px;
+     height: 265px;
      border: 1px solid #E8E8E8 ;
      position: relative;
      .text {
@@ -368,7 +361,7 @@
        cursor: pointer;
      }
      &-head{
-       height: 50%;
+       height: 66%;
        position: relative;
        background: #F4F8FB;
        img {
@@ -404,8 +397,8 @@
        }
      }
      &-content{
-       height: 50%;
-       padding: 10px 10px 0 10px;
+       height: 33%;
+       padding: 0 10px ;
        box-sizing: content-box;
        &-size {
          font-size: 16px;
@@ -423,38 +416,15 @@
 
        }
        &-count {
-         display: flex;
-         padding-top: 10px;
+         padding-top: 15px;
          &-sz {
-           width: 33%;
-           display: flex;
-           flex-direction: column;
-           align-items: center;
-           height: 50px;
-           justify-content: center;
            font-size: 14px;
+           display: flex;
            color: #606266;
-           position: relative;
+           .font {
+             padding-left: 12px;
+           }
          }
-         &-sz::after {
-           content: '';
-           width: 1px;
-           height: 10px;
-           background: #333333;
-           position: absolute;
-           right: 0;
-           top: 20px;
-         }
-         &-sz:last-child::after {
-           content: '';
-           width: 1px;
-           height: 10px;
-           background: #fff;
-           position: absolute;
-           right: 0;
-           top: 20px;
-         }
-
        }
      }
    }
@@ -464,10 +434,15 @@
   .leftImg {
     height: 150px;
     width: 150px;
+    position: relative;
+    background: #F4F8FB;
     img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-height: 100%;
+      max-width: 100%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
     }
   }
 .formSize {

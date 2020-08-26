@@ -140,6 +140,13 @@ class record {
       responseType:'arraybuffer'
     })
   }
+  stopActivity(data){
+    return request({
+      url: '/web/activity/stop',
+      method: 'post',
+      data
+    })
+  }
 }
 
 export const recordApi = new record()

@@ -40,6 +40,16 @@ class HouseManage {
       method: 'delete'
     })
   }
+  /**
+   * 批量删除房源信息
+   * @param paramss
+   */
+  deleteGridFloorBatch(ids) {
+    return request({
+      url: `/web/grid/deleteGridFloorBatch?ids=${ids}`,
+      method: 'delete'
+    })
+  }
   edit(data){
     return request({
       url: `/web/grid/edit`,

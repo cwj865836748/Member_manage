@@ -65,7 +65,7 @@
           type="text"
           tabindex="3"
           autocomplete="off"
-          style="width:74.4%;background: rgba(0,0,0,0.1)"
+          style="width:73.5%;background: rgba(0,0,0,0.1)"
         />
         <img :src="captchaImg" @click="getCaptcha" class="captcha"/>
 
@@ -93,10 +93,8 @@
           <el-input v-model="passForm.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
         <el-form-item label="验证码" prop="code" >
-          <div style="display: flex">
           <el-input v-model="passForm.captcha" placeholder="请输入验证码"></el-input>
           <el-button size="small" type="primary" @click="getCode" :disabled="this.initTime">{{codeName}}</el-button>
-          </div>
         </el-form-item>
         <el-form-item label="新密码" prop="password">
           <el-input type="password" v-model="passForm.password" placeholder="请输入新密码"></el-input>
@@ -383,6 +381,7 @@
       vertical-align: top;
       height: 47px;
       cursor: pointer;
+      margin-left: 2px;
     }
 
     .svg-container {

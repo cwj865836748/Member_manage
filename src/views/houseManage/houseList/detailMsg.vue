@@ -25,8 +25,9 @@
               </el-form-item>
               <el-form-item label="证件类型：" prop="certificateType">
                 <el-select v-model="addForm.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="addFormDisable">
-                  <el-option label="身份证" :value="1"></el-option>
-                  <el-option label="护照" :value="2"></el-option>
+                  <el-option v-for="item in certificateTypeList" :key="index"
+                   :label="item.itemText" :value="Number(item.itemValue)"
+                  />
                 </el-select>
               </el-form-item>
               <el-form-item label="民族：" prop="nation">
@@ -95,8 +96,9 @@
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
               <el-select v-model="landlordForm.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="landlordFormDisable">
-                <el-option label="身份证" :value="1"></el-option>
-                <el-option label="护照" :value="2"></el-option>
+                <el-option v-for="item in certificateTypeList" :key="index"
+                           :label="item.itemText" :value="Number(item.itemValue)"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="民族：" prop="nation">
@@ -162,8 +164,9 @@
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
               <el-select v-model="landlordForm2.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="landlordForm2Disable">
-                <el-option label="身份证" :value="1"></el-option>
-                <el-option label="护照" :value="2"></el-option>
+                <el-option v-for="item in certificateTypeList" :key="index"
+                           :label="item.itemText" :value="Number(item.itemValue)"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="民族：" prop="nation">
@@ -231,8 +234,9 @@
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
               <el-select v-model="householdForm.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="householdFormDisable">
-                <el-option label="身份证" :value="1"></el-option>
-                <el-option label="护照" :value="2"></el-option>
+                <el-option v-for="item in certificateTypeList" :key="index"
+                           :label="item.itemText" :value="Number(item.itemValue)"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="民族：" prop="nation">
@@ -304,8 +308,9 @@
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
               <el-select v-model="item.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="item.disabled">
-                <el-option label="身份证" :value="1"></el-option>
-                <el-option label="暂住证" :value="2"></el-option>
+                <el-option v-for="item in certificateTypeList" :key="index"
+                           :label="item.itemText" :value="Number(item.itemValue)"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="民族：" prop="nation">
@@ -362,7 +367,7 @@
 </template>
 
 <script>
-  import {houseListApi} from '@/api'
+  import {houseListApi,dictionaryApi} from '@/api'
   import Upload from '@/components/Upload/Upload'
   import UploadSFZ from '@/components/Upload/UploadSFZ'
   export default {
@@ -382,6 +387,7 @@
           landlordFormDisable:false,
           landlordForm2Disable:false,
           householdFormDisable:false,
+          certificateTypeList:[]
         }
       },
     components:{
@@ -389,6 +395,7 @@
     },
       watch: {
         '$route': function (to, from) {
+          console.log(123)
           if(from.name==='detail'&&to.name==='detailMsg'){
             this.identity=this.$route.query.identity
             this.house=JSON.parse(sessionStorage.getItem("house"))
@@ -406,13 +413,86 @@
             this.getList()
             this.$forceUpdate()
           }
+        },
+        'addForm':{
+          deep:true,
+          handler:function(newVal,oldVal){
+            if (newVal&&newVal.cardNo&&newVal.cardNo.length===18){
+              const y=newVal.cardNo.substring(6,10)
+              const m =newVal.cardNo.substring(10,12)
+              const d =newVal.cardNo.substring(12,14)
+              const sex = (newVal.cardNo.substring(16,17))%2 ===0?2:1
+              this.addForm.birthday=`${y}-${m}-${d}`
+              this.addForm.sex=sex
+            }
+          }
+        },
+        'landlordForm':{
+          deep:true,
+          handler:function(newVal,oldVal){
+            if (newVal&&newVal.cardNo&&newVal.cardNo.length===18){
+              const y=newVal.cardNo.substring(6,10)
+              const m =newVal.cardNo.substring(10,12)
+              const d =newVal.cardNo.substring(12,14)
+              const sex = (newVal.cardNo.substring(16,17))%2 ===0?2:1
+              this.landlordForm.birthday=`${y}-${m}-${d}`
+              this.landlordForm.sex=sex
+            }
+          }
+        },
+        'landlordForm2':{
+          deep:true,
+          handler:function(newVal,oldVal){
+            console.log(newVal)
+            if (newVal&&newVal.cardNo&&newVal.cardNo.length===18){
+              const y=newVal.cardNo.substring(6,10)
+              const m =newVal.cardNo.substring(10,12)
+              const d =newVal.cardNo.substring(12,14)
+              const sex = (newVal.cardNo.substring(16,17))%2 ===0?2:1
+              this.landlordForm2.birthday=`${y}-${m}-${d}`
+              this.landlordForm2.sex=sex
+            }
+          }
+        },
+        'householdForm':{
+          deep:true,
+          handler:function(newVal,oldVal){
+            if (newVal&&newVal.cardNo&&newVal.cardNo.length===18){
+              const y=newVal.cardNo.substring(6,10)
+              const m =newVal.cardNo.substring(10,12)
+              const d =newVal.cardNo.substring(12,14)
+              const sex = (newVal.cardNo.substring(16,17))%2 ===0?2:1
+              this.householdForm.birthday=`${y}-${m}-${d}`
+              this.householdForm.sex=sex
+            }
+          }
+        },
+        'tenantList':{
+          deep:true,
+          handler:function(newVal,oldVal){
+            console.log(newVal)
+            newVal.length&&newVal.forEach((item,i)=>{
+              if (newVal[i]&&newVal[i].cardNo&&newVal[i].cardNo.length===18){
+                console.log(newVal[i])
+                const y=newVal[i].cardNo.substring(6,10)
+                const m =newVal[i].cardNo.substring(10,12)
+                const d =newVal[i].cardNo.substring(12,14)
+                const sex = (newVal[i].cardNo.substring(16,17))%2 ===0?2:1
+                newVal[i].birthday=`${y}-${m}-${d}`
+                newVal[i].sex=sex
+
+              }
+            })
+
+          }
         }
       },
       created() {
-          this.getList()
+        this.getList()
+        this.getSex()
       },
       methods: {
-          async getList(){
+        async getList(){
              if (this.identity==='landlord'){
                const {result}=await houseListApi.getLandlordDetailList({floorId:this.house.id})
                if(result.length) {
@@ -444,6 +524,10 @@
                }
              }
           },
+        async getSex(){
+          const {result} = await dictionaryApi.getDictItem({code:'certificate_type'})
+          this.certificateTypeList = result.reverse()
+        },
         addPerson(){
             const form={}
             this.tenantList.push(form)
@@ -763,4 +847,7 @@
     border: 1px dashed rgba(0,0,0,.25);
     cursor: pointer;
   }
+.el-form-item {
+  margin-bottom: 35px;
+}
 </style>

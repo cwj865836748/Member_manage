@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column  align="left" label="操作">
         <template slot-scope="{row}">
-          <el-button v-if="row.status===0" type="primary" size="small" @click="handleRedeem(row)">
+          <el-button v-if="row.status===0" size="small" @click="handleRedeem(row)">
             兑奖
           </el-button>
         </template>

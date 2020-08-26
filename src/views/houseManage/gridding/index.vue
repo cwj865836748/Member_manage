@@ -3,7 +3,7 @@ import fileDownload from "js-file-download";
   <div class="app-container mh">
   <el-row :gutter="40" style="margin: 0" class="mh">
     <el-col :span="5" :xl="5" :lg="6" :md="7" :sm="8" :xs="8" class="mh" style="padding: 0">
-      <el-card shadow="always" class="mh">
+      <el-card shadow="always" class="mymh">
       <el-row :gutter="5" class="flex-y-center" style="margin-bottom: 10px" >
        <el-col :span="4" class="wgSize">网格:</el-col>
         <el-col :span="14">
@@ -44,7 +44,7 @@ import fileDownload from "js-file-download";
       </el-card>
     </el-col>
     <el-col :span="19" :xl="19" :lg="18" :md="17" :sm="16" :xs="16" class="mh">
-      <el-card shadow="always" class="mh" v-if="gridDetail.gridName">
+      <el-card shadow="always" class="mh" v-show="gridDetail.gridName">
       <el-row class="head">
         <el-col :span="8">
           <div class="wgName margin20">{{gridDetail.gridName}}</div>
@@ -77,12 +77,26 @@ import fileDownload from "js-file-download";
         </el-button>
 
         <UploadXls v-if="gridDetail.gridName" @downMo="downMo" @uploadFile="uploadFile"/>
+          <el-button
+            class="filter-item"
+            type="danger"
+            @click="deleteSome"
+            size="small"
+            :disabled="!deleteList.length"
+          >
+            批量删除
+          </el-button>
         </div>
-        <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
-          <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px">
-            <template slot-scope="scope">
-              {{ (listQuery.pageNo - 1) * listQuery.pageSize + scope.$index + 1 }}
-            </template>
+        <el-table v-loading="listLoading" row-key="id" ref="multipleTable" @selection-change="handleDeleteRow" :data="list" border fit highlight-current-row stripe style="width: 100%">
+          <el-table-column
+            type="selection"
+            :reserve-selection="true"
+            prop="id"
+            align="left"
+            width="55">
+          </el-table-column>
+          <el-table-column  align="left" fixed :label="$t('common.serial')" width="50px" type="index">
+
           </el-table-column>
           <el-table-column  align="left" label="所属区域" prop="county"/>
           <el-table-column  align="left" label="乡镇街道" prop="town">
@@ -118,7 +132,7 @@ import fileDownload from "js-file-download";
       </div>
       </el-row>
       </el-card>
-      <el-card shadow="always" class="mh flex-xy-center" >
+      <el-card shadow="always" class="mh flex-xy-center" v-show="!gridDetail.gridName" >
         <span style="color: #909399">暂无数据</span>
       </el-card>
     </el-col>
@@ -159,7 +173,7 @@ import fileDownload from "js-file-download";
         <el-input type="textarea" autosize v-model="addForm.content" placeholder="请输入描述"/>
       </el-form-item>
       <el-form-item class="flex-x-end">
-        <el-button  @click="addVisible=false" size="small">取消</el-button>
+        <el-button  @click="closeForm" size="small">取消</el-button>
         <el-button type="primary" @click="submitForm('addForm')" size="small">确定</el-button>
       </el-form-item>
     </el-form>
@@ -305,7 +319,8 @@ import fileDownload from "js-file-download";
             pageSize: 10
           },
           houseTotal: 0,
-          selectList:[]
+          selectList:[],
+          deleteList:[]
         }
       },
     watch:{
@@ -363,6 +378,8 @@ import fileDownload from "js-file-download";
         },
         getGridFloorList(data={}){
           this.listLoading=true
+          this.listQuery.pageNo=data.pageNo?data.pageNo:this.listQuery.pageNo
+          this.listQuery.pageSize=data.pageSize?data.pageSize:this.listQuery.pageSize
           const obj = {
             pageNo:data.pageNo||this.listQuery.pageNo,
             pageSize:data.pageSize||this.listQuery.pageSize,
@@ -501,6 +518,10 @@ import fileDownload from "js-file-download";
             name:''
           }
         },
+        closeForm (){
+          this.addVisible=false
+          this.areaArr=[]
+        },
 
         //打开表单
         createOrUpdate(type,node){
@@ -557,6 +578,7 @@ import fileDownload from "js-file-download";
               this.addVisible=false
             }
           })
+          this.areaArr=[]
         },
         addHouse(){
           this.houseQuery.pageNo=1
@@ -579,7 +601,43 @@ import fileDownload from "js-file-download";
         handleselectRow(selection, row) {
           this.selectList=selection
         },
+        handleDeleteRow(selection, row){
+          console.log(selection)
+          this.deleteList=selection.length?selection:[]
+        },
+        //批量删除
+        deleteSome(){
+          this.$confirm('是否删除选择房源', {
+            confirmButtonText: this.$t('common.confirm'),
+            cancelButtonText: this.$t('common.cancel'),
+            type: 'warning'
+          }).then(() => {
+            let ids =[]
+            this.deleteList.forEach(item=>{
+              ids.push(item.id)
+            })
 
+            houseApi.deleteGridFloorBatch(ids.join(',')).then(res=>{
+              if (res.code===200){
+                this.deleteList=[]
+                this.$refs.multipleTable.clearSelection()
+                this.getGridFloorList()
+                this.getGridInfo()
+                this.$message({
+                  message: res.msg || this.$t('common.success'),
+                  type: 'success'
+                })
+              }
+            })
+
+
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: this.$t('common.isCancel')
+            })
+          })
+        },
         addGridFloor(){
           if(!this.selectList.length){
             return this.$message.warning('请选择要添加的房源')
@@ -670,5 +728,9 @@ import fileDownload from "js-file-download";
   }
   .mh {
    min-height: calc(100vh - 124px)
+  }
+  .mymh {
+    height: calc(100vh - 124px);
+    overflow-y: auto;
   }
 </style>
