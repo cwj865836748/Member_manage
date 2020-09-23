@@ -25,7 +25,7 @@
               </el-form-item>
               <el-form-item label="证件类型：" prop="certificateType">
                 <el-select v-model="addForm.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="addFormDisable">
-                  <el-option v-for="item in certificateTypeList" :key="index"
+                  <el-option v-for="(item,index) in certificateTypeList" :key="index"
                    :label="item.itemText" :value="Number(item.itemValue)"
                   />
                 </el-select>
@@ -33,7 +33,13 @@
               <el-form-item label="民族：" prop="nation">
                 <el-input v-model="addForm.nation" placeholder="请输入民族" style="width: 100%" :disabled="addFormDisable"/>
               </el-form-item>
-
+              <el-form-item label="政治面貌：" prop="politicalStatus">
+                <el-select v-model="addForm.politicalStatus" placeholder="请选择政治面貌" style="width: 100%" :disabled="addFormDisable">
+                  <el-option v-for="(item,index) in politicalTypeList" :key="index"
+                           :label="item.itemText" :value="Number(item.itemValue)"
+                  />
+                </el-select>
+             </el-form-item>
           </el-col>
           <el-col :span="6">
 
@@ -58,19 +64,23 @@
 
           </el-col>
           <el-col :span="6">
+            <el-form-item label="户籍:" prop="census">
+              <el-input v-model="addForm.census" placeholder="请输入户籍" style="width: 100%" :disabled="addFormDisable"/>
+            </el-form-item>
             <el-form-item label="性别:" prop="sex">
               <el-select v-model="addForm.sex" placeholder="请选择性别" style="width: 100%" :disabled="addFormDisable">
                 <el-option label="男" :value="1"></el-option>
                 <el-option label="女" :value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="户籍:" prop="census">
-              <el-input v-model="addForm.census" placeholder="请输入户籍" style="width: 100%" :disabled="addFormDisable"/>
+            <el-form-item label="是否自主经营:" prop="isManager">
+              <el-select v-model="addForm.isManager" placeholder="是否自主经营" style="width: 100%" :disabled="addFormDisable">
+                <el-option label="是" :value="true"></el-option>
+                <el-option label="否" :value="false"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-
-
       </el-form>
     </div>
     <div class="detail_top">
@@ -96,7 +106,7 @@
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
               <el-select v-model="landlordForm.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="landlordFormDisable">
-                <el-option v-for="item in certificateTypeList" :key="index"
+                <el-option v-for="(item,index) in certificateTypeList" :key="index"
                            :label="item.itemText" :value="Number(item.itemValue)"
                 />
               </el-select>
@@ -104,7 +114,13 @@
             <el-form-item label="民族：" prop="nation">
               <el-input v-model="landlordForm.nation" placeholder="请输入民族" style="width: 100%" :disabled="landlordFormDisable"/>
             </el-form-item>
-
+            <el-form-item label="政治面貌：" prop="politicalStatus">
+              <el-select v-model="landlordForm.politicalStatus" placeholder="请选择政治面貌" style="width: 100%" :disabled="landlordFormDisable">
+                <el-option v-for="(item,index) in politicalTypeList" :key="index"
+                           :label="item.itemText" :value="Number(item.itemValue)"
+                />
+              </el-select>
+            </el-form-item>
           </el-col>
           <el-col :span="6">
 
@@ -138,6 +154,12 @@
                 <el-option label="女" :value="2"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="是否自主经营:" prop="isManager">
+              <el-select v-model="landlordForm.isManager" placeholder="是否自主经营" style="width: 100%" :disabled="landlordFormDisable">
+                <el-option label="是" :value="true"></el-option>
+                <el-option label="否" :value="false"></el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -164,7 +186,7 @@
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
               <el-select v-model="landlordForm2.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="landlordForm2Disable">
-                <el-option v-for="item in certificateTypeList" :key="index"
+                <el-option v-for="(item,index) in certificateTypeList" :key="index"
                            :label="item.itemText" :value="Number(item.itemValue)"
                 />
               </el-select>
@@ -172,7 +194,13 @@
             <el-form-item label="民族：" prop="nation">
               <el-input v-model="landlordForm2.nation" placeholder="请输入民族" style="width: 100%" :disabled="landlordForm2Disable"/>
             </el-form-item>
-
+            <el-form-item label="政治面貌：" prop="politicalStatus">
+              <el-select v-model="landlordForm2.politicalStatus" placeholder="请选择政治面貌" style="width: 100%" :disabled="landlordForm2Disable">
+                <el-option v-for="(item,index) in politicalTypeList" :key="index"
+                           :label="item.itemText" :value="Number(item.itemValue)"
+                />
+              </el-select>
+            </el-form-item>
           </el-col>
           <el-col :span="6">
 
@@ -206,6 +234,12 @@
                 <el-option label="女" :value="2"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="是否自主经营:" prop="isManager">
+              <el-select v-model="landlordForm2.isManager" placeholder="是否自主经营" style="width: 100%" :disabled="landlordForm2Disable">
+                <el-option label="是" :value="true"></el-option>
+                <el-option label="否" :value="false"></el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -234,7 +268,7 @@
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
               <el-select v-model="householdForm.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="householdFormDisable">
-                <el-option v-for="item in certificateTypeList" :key="index"
+                <el-option v-for="(item,index) in certificateTypeList" :key="index"
                            :label="item.itemText" :value="Number(item.itemValue)"
                 />
               </el-select>
@@ -242,7 +276,12 @@
             <el-form-item label="民族：" prop="nation">
               <el-input v-model="householdForm.nation" placeholder="请输入民族" style="width: 100%" :disabled="householdFormDisable"/>
             </el-form-item>
-
+            <el-form-item label="职业：" prop="profession">
+              <el-input v-model="householdForm.profession" placeholder="请输入职业" style="width: 100%" :disabled="householdFormDisable"/>
+            </el-form-item>
+            <el-form-item label="车牌号：" prop="numberPlate">
+              <el-input v-model="householdForm.numberPlate" placeholder="请输入车牌号" style="width: 100%" :disabled="householdFormDisable"/>
+            </el-form-item>
           </el-col>
           <el-col :span="6">
 
@@ -264,7 +303,9 @@
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
-
+            <el-form-item label="服务处所：" prop="servicePremises">
+              <el-input v-model="householdForm.servicePremises" placeholder="请输入服务处所" style="width: 100%" :disabled="householdFormDisable"/>
+            </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="户籍:" prop="census">
@@ -276,13 +317,15 @@
                 <el-option label="女" :value="2"></el-option>
               </el-select>
             </el-form-item>
-
+            <el-form-item label="交通工具：" prop="transportation">
+              <el-select v-model="householdForm.transportation" placeholder="请选择交通工具" style="width: 100%" :disabled="householdFormDisable">
+                <el-option v-for="(item,index) in transportationList" :key="index"
+                           :label="item.itemText" :value="Number(item.itemValue)"
+                />
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
-
-
-
-
       </el-form>
     </div>
 <!--     租户信息-->
@@ -308,7 +351,7 @@
             </el-form-item>
             <el-form-item label="证件类型：" prop="certificateType">
               <el-select v-model="item.certificateType" placeholder="请选择证件类型" style="width: 100%" :disabled="item.disabled">
-                <el-option v-for="item in certificateTypeList" :key="index"
+                <el-option v-for="(item,index) in certificateTypeList" :key="index"
                            :label="item.itemText" :value="Number(item.itemValue)"
                 />
               </el-select>
@@ -316,7 +359,12 @@
             <el-form-item label="民族：" prop="nation">
               <el-input v-model="item.nation" placeholder="请输入民族" style="width: 100%" :disabled="item.disabled"/>
             </el-form-item>
-
+            <el-form-item label="职业：" prop="profession">
+              <el-input v-model="item.profession" placeholder="请输入职业" style="width: 100%" :disabled="item.disabled"/>
+            </el-form-item>
+            <el-form-item label="车牌号：" prop="numberPlate">
+              <el-input v-model="item.numberPlate" placeholder="请输入车牌号" style="width: 100%" :disabled="item.disabled"/>
+            </el-form-item>
           </el-col>
           <el-col :span="6">
 
@@ -338,7 +386,9 @@
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
-
+            <el-form-item label="服务处所：" prop="servicePremises">
+              <el-input v-model="item.servicePremises" placeholder="请输入服务处所" style="width: 100%" :disabled="item.disabled"/>
+            </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="户籍:" prop="census">
@@ -349,6 +399,13 @@
               <el-select v-model="item.sex" placeholder="请选择性别" style="width: 100%" :disabled="item.disabled">
                 <el-option label="男" :value="1"></el-option>
                 <el-option label="女" :value="2"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="交通工具：" prop="transportation">
+              <el-select v-model="item.transportation" placeholder="请选择交通工具" style="width: 100%" :disabled="item.disabled">
+                <el-option v-for="(item,index) in transportationList" :key="index"
+                           :label="item.itemText" :value="Number(item.itemValue)"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -387,7 +444,9 @@
           landlordFormDisable:false,
           landlordForm2Disable:false,
           householdFormDisable:false,
-          certificateTypeList:[]
+          certificateTypeList:[],
+          politicalTypeList:[],
+          transportationList:[]
         }
       },
     components:{
@@ -395,7 +454,6 @@
     },
       watch: {
         '$route': function (to, from) {
-          console.log(123)
           if(from.name==='detail'&&to.name==='detailMsg'){
             this.identity=this.$route.query.identity
             this.house=JSON.parse(sessionStorage.getItem("house"))
@@ -490,6 +548,8 @@
       created() {
         this.getList()
         this.getSex()
+        this.getPolitical()
+        this.getTransportation()
       },
       methods: {
         async getList(){
@@ -527,6 +587,14 @@
         async getSex(){
           const {result} = await dictionaryApi.getDictItem({code:'certificate_type'})
           this.certificateTypeList = result.reverse()
+        },
+        async getPolitical(){
+          const {result} = await dictionaryApi.getDictItem({code:'political_status'})
+          this.politicalTypeList = result
+        },
+        async getTransportation(){
+          const {result} = await dictionaryApi.getDictItem({code:'transportation_type'})
+          this.transportationList = result
         },
         addPerson(){
             const form={}
@@ -738,12 +806,15 @@
               const landlords=[]
               if (addForm){
                 this.addForm.systemId=this.house.systemId
+                this.addForm.type=1
                 landlords.push(this.addForm)
               }if (landlordForm){
                 this.landlordForm.systemId=this.house.systemId
+                this.landlordForm.type=2
                 landlords.push(this.landlordForm)
               }if (landlordForm2){
                 this.landlordForm2.systemId=this.house.systemId
+                this.landlordForm2.type=3
                 landlords.push(this.landlordForm2)
               }
               if(!landlords.length){
