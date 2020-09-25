@@ -279,9 +279,7 @@
             <el-form-item label="职业：" prop="profession">
               <el-input v-model="householdForm.profession" placeholder="请输入职业" style="width: 100%" :disabled="householdFormDisable"/>
             </el-form-item>
-            <el-form-item label="车牌号：" prop="numberPlate">
-              <el-input v-model="householdForm.numberPlate" placeholder="请输入车牌号" style="width: 100%" :disabled="householdFormDisable"/>
-            </el-form-item>
+
           </el-col>
           <el-col :span="6">
 
@@ -324,6 +322,9 @@
                 />
               </el-select>
             </el-form-item>
+            <el-form-item label="车牌号：" prop="numberPlate">
+              <el-input v-model="householdForm.numberPlate" placeholder="请输入车牌号" style="width: 100%" :disabled="householdFormDisable"/>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -361,9 +362,6 @@
             </el-form-item>
             <el-form-item label="职业：" prop="profession">
               <el-input v-model="item.profession" placeholder="请输入职业" style="width: 100%" :disabled="item.disabled"/>
-            </el-form-item>
-            <el-form-item label="车牌号：" prop="numberPlate">
-              <el-input v-model="item.numberPlate" placeholder="请输入车牌号" style="width: 100%" :disabled="item.disabled"/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -407,6 +405,9 @@
                            :label="item.itemText" :value="Number(item.itemValue)"
                 />
               </el-select>
+            </el-form-item>
+            <el-form-item label="车牌号：" prop="numberPlate">
+              <el-input v-model="item.numberPlate" placeholder="请输入车牌号" style="width: 100%" :disabled="item.disabled"/>
             </el-form-item>
           </el-col>
         </el-row>
